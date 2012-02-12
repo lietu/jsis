@@ -81,8 +81,47 @@ var EggdropReader = function(logData) {
 
 	// RegExp to extract necessary data off a line
 	var date = new XDate();
+
+	// Since at the beginning we really don't know what date is on the log lines that come in
+	// We need to keep track of the ones we create before knowing the real date, then update them later
+	var unknownDate = true;
+
 	this.currentDate = date.toString('ddd MMM dd yyyy');
 	this.tzData = 'GMT'+date.toString('zzz');
+
+	// List of timestamps created without knowing the date
+	var timeStampsWithUnknownDate = [];
+	this.setDate = function(date) {
+		this.currentDate = date;
+
+		// If we have timestamps with unknown dates, fix that now
+		if( unknownDate===true ) {
+
+			// Get a date for the previous date, since the logs should've been for the previous day
+			var newDate =  new XDate( new XDate(this.currentDate + ' 00:00:00 ' + this.tzData).getTime() - (1000 * 60 * 60 * 24) );
+
+			// Extract the interesting components
+			var day = newDate.getDate();
+			var month = newDate.getMonth();
+			var year = newDate.getFullYear();
+
+			// Loop through all created timestamp with bogus dates
+			for( var i=0, count=timeStampsWithUnknownDate.length; i<count; ++i ) {
+
+				// And set our new timestamp info to it
+				timeStampsWithUnknownDate[i].setDate(day);
+				timeStampsWithUnknownDate[i].setMonth(month);
+				timeStampsWithUnknownDate[i].setFullYear(year);
+
+			}
+
+			// No more timestamps to update
+			timeStampsWithUnknownDate = [];
+
+			// We now know the date
+			unknownDate = false;
+		}
+	};
 
 	/**
 	 * Parse a log buffer's contents, save data into our LogData object
@@ -100,7 +139,11 @@ var EggdropReader = function(logData) {
 		 * Build the timestamp for a line from the time string, e.g. "14:56"
 		 */
 		var lineTimeStamp = function(timestring) {
-			return new XDate(this.currentDate + ' ' +timestring + ':00 ' + this.tzData);
+			var date = new XDate(this.currentDate + ' ' +timestring + ':00 ' + this.tzData);
+			if( unknownDate===true ) {
+				timeStampsWithUnknownDate.push(date)
+			}
+			return date;
 		}.bind(this);
 
 		// Read all lines, line by line
@@ -117,7 +160,7 @@ var EggdropReader = function(logData) {
 
 
 				// Update the current date with the first selection's result
-				this.currentDate = data[2].replace(' +', ' ');
+				this.setDate( data[2].replace(' +', ' ') );
 
 			// Is this a line?
 			} else if( data = line.match( lineRegExp ) ) {

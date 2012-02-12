@@ -12,7 +12,9 @@ Generates statistics of IRC logs. If you don't know what IRC is, you probably do
 
 ## Why is this?
 
-I grew bored of looking at the old pisg etc. stats.
+I grew bored of looking at the old pisg etc. stats. Thought I'd make my own stats, with a more
+modern look. The code should also be somewhat easy to manage. Need to think a bit more of how
+to make creating new fragments easier, but it should be pretty easy.
 
 
 
@@ -21,18 +23,23 @@ I grew bored of looking at the old pisg etc. stats.
 Everything you need should be at [https://github.com/lietu/jsis](https://github.com/lietu/jsis)
 
 
+
 ## Is it ready?
 
-No. It's ready for use, but still missing several features. You're welcome to help.
+No. It's ready for use, to generate stats from eggdrop logs, but still missing several features. You're welcome to help.
 
 Some such features are:
-* Automatically following nicks through nick changes etc.
-* Configurable user details, aliases, gender, etc.
-* Calculating references to nicks
-* Better lists of foul & aggressive words, smileys, etc.
-* A few of the fragments, some might need some of the above features to finish.
-* Maybe copy a few more ideas off pisg/fisg/mIRCStats/others
 
+ - Automatically following nicks through nick changes etc.
+ - Configurable user details, aliases, gender, etc.
+ - Calculating references to nicks
+ - Rendering of when the top users are active
+ - Better lists of foul & aggressive words, smileys, etc.
+ - More themes are always nice to have, if everyones' stats look the same, it can get pretty boring
+ - A few of the fragments, some might need some of the above features to finish.
+ - Maybe copy a few more ideas off pisg/fisg/mIRCStats/others
+
+Also there's still some cleaning up needed for the code, after thinking of the existing and coming features a bit more.
 
 
 ## Requirements

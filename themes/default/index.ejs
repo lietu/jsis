@@ -89,21 +89,26 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
+	// Find all sections
 	$('section').each(function(index, element) {
+
+		// Convert the current element to a jQuery element
 		var $element = $(element);
 
+		// Get it's ID
 		var id = $element.attr('id');
-		console.log(id);
 
+		// Make a link to an anchor with the same name
 		var $link = $('<a></a>');
 		$link.attr('href',  '#' + id );
-		console.log($link);
 
+		// Find the title bar for this section
 		var bar = $element.find('.bar');
-		console.log(bar);
 
+		// Put the link inside that
 		$link.appendTo( bar );
 
+		// And move the header inside the link
 		bar.find('h2').appendTo($link);
 	})	
 });

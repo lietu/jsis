@@ -1,0 +1,42 @@
+<section id="mostReferencedUrls">
+	<a name="mostReferencedUrls"></a>
+	<div class="bar"><h2>Most referenced URLs</h2></div>
+
+	<table>
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>URL</th>
+				<th>Uses</th>
+				<th>Last used by</th>
+			</tr>
+
+		</thead>
+		<tbody>
+			<% for( var i=0, count=lines.length; i < count; ++i ) { %>
+
+				<tr class="<%= i%2===0?'odd':'even' %>">
+					<td class="pos">
+						<%= i+1 %>
+					</td>
+					<td class="url">
+						<a href="<%= lines[i].url %>"><%= lines[i].url %></a>
+					</td>
+					<td>
+						<%= lines[i].uses %>
+					</td>
+					<td>
+						<%= lines[i].by %>
+					</td>
+				</tr>
+
+			<% } %>
+
+		</tbody>
+
+	</table>
+
+	<p>The table lists the most commonly spammed URLs in the channel.</p>
+
+
+</section>

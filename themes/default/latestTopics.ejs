@@ -1,0 +1,38 @@
+<section id="latestTopics">
+	<a name="latestTopics"></a>
+	<div class="bar"><h2>Latest topics</h2></div>
+
+	<table>
+		<thead>
+			<tr>
+				<th>Topic</th>
+				<th>When was it set</th>
+				<th>Who set it</th>
+			</tr>
+
+		</thead>
+		<tbody>
+			<% for( var i=0, count=lines.length; i < count; ++i ) { %>
+
+				<tr class="<%= i%2===0?'odd':'even' %>">
+					<td>
+						<%= lines[i].topic %>
+					</td>
+					<td>
+						<%= lines[i].when %>
+					</td>
+					<td>
+						<%= lines[i].who %>
+					</td>
+				</tr>
+
+			<% } %>
+
+		</tbody>
+
+	</table>
+
+	<p>The table lists the latest topics on the channel.</p>
+
+
+</section>

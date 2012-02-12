@@ -1,0 +1,157 @@
+/*
+ * Application configuration
+ */
+var config = {
+
+	// Generate statistics for these channels:
+	channels: [
+		/*
+		 * Mandatory configuration items: name, logFormat, logPath, destination
+		 */
+		{
+			/**
+			 * Name of the channel, will be used in the HTML template and messages
+			 *
+			 * @type {String}
+			 */
+			name: '#LameChannel',
+
+			/**
+			 * Which theme to use .. should be a name of one of the folders under "themes/"
+			 * The default is surprisingly "default".
+			 * @type {String}
+			 */
+			theme: 'default',
+
+			/**
+			 * Path to destination files, you should really use a full path here
+			 *
+			 * @type {String}
+			 */
+			destination: '/var/www/html/lamestats',
+
+			/**
+			 * What format are the log files in? .. this should correspond with one of the files in classes/LogReaders/*.js
+			 *
+			 * @type {String}
+			 */
+			logFormat: 'eggdrop',
+
+			/**
+			 * Path to log files, you should really use a full path here
+			 *
+			 * @type {String}
+			 */
+			logPath: '/path/to/lamechannel/logs',
+
+			/**
+			 * Try and find log files recursively? Default: true
+			 *
+			 * @type {Boolean}
+			 */
+			recursive: true,
+
+			/**
+			 * RegExp that will be used to checked every log filename (it will include full path)
+			 * E.g. to only parse files that end with "foo.log", you could use /foo\.log$/
+			 * ... for help with regular expressions, check:
+			 * http://www.visibone.com/regular-expressions/
+			 * http://www.cheatography.com/davechild/cheat-sheets/regular-expressions/
+			 *
+			 * @type {RegExp}
+			 */
+			logFileFilter: /lamechannel\.log/,
+
+			/**
+			 * How many days of logs to parse at most
+			 * Use "Infinity" to signify "everything"
+			 *
+			 * @type {RegExp}
+			 */
+			maxLogFiles: Infinity,
+
+			/**
+			 * HTML text to be inserted at the end of the <head> element, e.g. if you want Google Analytics on your stats
+			 *
+			 * @type {String}
+			 */
+			customHeadHtml: '',
+
+			/**
+			 * How many lines/actions in a row does one need to say before it being considered "going solo"?
+			 * @type {Number}
+			 */
+			soloLength: 5,
+
+			/**
+			 * Space separated list of words to be considered foul
+			 * Setting this will override the whole list of defaults
+			 *
+			 * @type {String}
+			 */
+			// foulWords: 'fuck shit',
+
+			/**
+			 * Space separated list of words to be considered aggressive
+			 * Setting this will override the whole list of defaults
+			 *
+			 * @type {String}
+			 */
+			// aggressiveWords: 'slaps spanks',
+
+			/**
+			 * Space separated list of smileys to consider happy
+			 * Setting this will override the whole list of defaults
+			 *
+			 * @type {String}
+			 */
+			// happySmileys: ':) ;)',
+
+			/**
+			 * Space separated list of smileys to consider unhappy
+			 * Setting this will override the whole list of defaults
+			 *
+			 * @type {String}
+			 */
+			// unhappySmileys: ':( ;( :/ ;/',
+
+			/**
+			 * List of user configurations, from nickname to show, to an user configuration object.
+			 * The user configuration object can contain an array of aliases, these can be space separated strings with wildcards (* and ?), or JavaScript RegExp objects
+			 * It can also contain an ignore boolean, a pictureUrl to be used (make sure it works based on wherever you're storing the pages, absolute URLs are pretty safe), a link to be associated with the user nick & pic, and sex to show (male, female, bot, unknown), all settings are optional
+			 *
+			 * E.g. { foo: {
+			 *    aliases: ['foo* foobar', /fooba[rz]/],
+			 *    ignore: false,
+			 *    pictureUrl: 'http://example.com/foo.jpg',
+			 *    link: 'http://example.com',
+			 *    sex: 'male'
+			 *  } }
+			 * ... default is no aliases, don't ignore, no picture, no link, sex: unknown
+			 *
+			 * @type {Object}
+			 */
+			userAliases: {
+			}
+		}
+	],
+
+	/* Logging settings */
+	log: {
+
+		// What to log and where, each log level (DEBUG, INFO, MESSAGE, WARNING, ERROR, CRITICAL) can have their own array of destinations
+		// Use an empty array to discard immediately
+		// Special keywords 'STDOUT' and 'STDERR' work as one could expect from such special keywords
+
+		// 'DEBUG': ['app.log', 'STDOUT'],
+		// 'INFO': ['app.log', 'STDOUT'],
+		'MESSAGE': ['app.log', 'STDOUT'],
+		'WARNING': ['app.log', 'STDOUT'],
+		'ERROR': ['app.log', 'STDOUT'],
+		'CRITICAL': ['app.log', 'STDOUT']
+
+	}
+};
+
+// Export the config
+module.exports = config;

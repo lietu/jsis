@@ -1,0 +1,45 @@
+<section id="mostActiveNicksByHour">
+	<a name="mostActiveNicksByHour"></a>
+	<div class="bar"><h2>Most active nicks by hour</h2></div>
+
+	<table>
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>0 - 5</th>
+				<th>6 - 11</th>
+				<th>12 - 17</th>
+				<th>18 - 23</th>
+			</tr>
+
+		</thead>
+		<tbody>
+			<% for( var i=0; i < 10; ++i ) { %>
+
+				<tr class="<%= i%2===0?'odd':'even' %>">
+					<td class="pos">
+						<%= i+1 %>
+					</td>
+					<td>
+						<%= groupList.night[i].nick %> (<%= groupList.night[i].lines %>)
+					</td>
+					<td>
+						<%= groupList.morning[i].nick %> (<%= groupList.morning[i].lines %>)
+					</td>
+					<td>
+						<%= groupList.day[i].nick %> (<%= groupList.day[i].lines %>)
+					</td>
+					<td>
+						<%= groupList.evening[i].nick %> (<%= groupList.evening[i].lines %>)
+					</td>
+				</tr>
+
+			<% } %>
+
+		</tbody>
+
+	</table>
+
+	<p>The table should give you an idea of when do the most active people talk the most.</p>
+
+</section>

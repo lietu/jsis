@@ -1,0 +1,85 @@
+<!-- DailyActivity -->
+
+<div class="graphContainer"><canvas id="dailyActivityGraph" width="960" height="250"><span class="error">[A modern browser is required to view the charts.]</span></canvas></div>
+
+<p>This shows the amount of lines spoken during every day, grouped into the different times of day.</p>
+<p>The graph should give you some kind of an idea of the recent activity level, as well as how it's spread over the day.</p>
+
+<script type="text/javascript">
+// Wait until the document has finished loading
+$(document).ready(function() {
+	try {
+
+	// Create a new line graph with 4 lines containing
+	var dataPoints = {
+		night: <%- widget.graphData.night %>,
+		morning: <%- widget.graphData.morning %>,
+		day: <%- widget.graphData.day %>,
+		evening: <%- widget.graphData.evening %>
+	};
+
+	var dataPointCount = dataPoints.night.length + dataPoints.morning.length + dataPoints.day.length + dataPoints.evening.length;
+
+	var graph = new RGraph.Line('dailyActivityGraph', dataPoints.night, dataPoints.morning, dataPoints.day, dataPoints.evening);
+
+	// Set the horizontal labels
+	graph.Set('chart.labels', <%- widget.dateList %>);
+
+	// Set some gitter around the graph
+	graph.Set('chart.gutter.left', 60);
+	graph.Set('chart.gutter.top', 35);
+	graph.Set('chart.gutter.right', 45);
+	graph.Set('chart.gutter.bottom', 20);
+
+	// Line settings
+	graph.Set('chart.colors', ['#0000FF', '#00FF00', '#FFFF00', '#FF0000']);
+	graph.Set('chart.linewidth', 3);
+
+	// Add a bit of margin to the edges of the chart (inside the axises)
+	graph.Set('chart.hmargin', 5);
+
+	// Set font properties
+	graph.Set('chart.text.color', '#333');
+	graph.Set('chart.text.font', 'Trebuchet MS');
+
+	// Grid settings
+	graph.Set('chart.background.grid.autofit', true);
+	graph.Set('chart.background.grid.autofit.numvlines', 30);
+
+	// Extra effects
+	graph.Set('chart.shadow', true);
+	graph.Set('chart.shadow.blur', 5);
+	graph.Set('chart.shadow.offsetx', 0);
+	graph.Set('chart.shadow.offsety', 0);
+
+	// If we've got an old user-agent, do a plain draw
+	if (RGraph.isOld()) {
+		graph.Draw();
+	} else {
+
+		// For more recent onces, add goodies
+		graph.Set('chart.key', ['Night time', 'Morning', 'Day time', 'Evening']);
+		graph.Set('chart.key.position', 'gutter');
+		graph.Set('chart.key.position.y', 15);
+		graph.Set('chart.key.position.gutter.boxed', false);
+
+		// Setup the tooltips
+		// I found 1500 data points to still be pretty responsive, but at some point it can just be way too much
+		if( dataPointCount<=1500 ) {
+			graph.Set('chart.tooltips.effect', 'fade');
+			graph.Set('chart.tooltips', <%- widget.tooltipData %>);
+		} else if( typeof console!=='undefined' && console.log ) {
+			console.log('Skipping tooltips, we have ' + dataPointCount + ' data points');
+		}
+
+		// Trace the lines in
+		RGraph.Effects.Line.jQuery.Trace(graph);
+
+	}
+
+	} catch( e ) {}
+});
+
+</script>
+
+<!-- /DailyActivity -->

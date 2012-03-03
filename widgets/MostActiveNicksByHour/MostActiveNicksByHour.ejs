@@ -1,0 +1,43 @@
+<!-- MostActiveNicksByHour -->
+
+<table>
+	<thead>
+		<tr>
+			<th>#</th>
+			<th>0 - 5</th>
+			<th>6 - 11</th>
+			<th>12 - 17</th>
+			<th>18 - 23</th>
+		</tr>
+
+	</thead>
+	<tbody>
+		<% for( var i=0; i < 10; ++i ) { %>
+
+			<tr class="<%= i%2===0?'odd':'even' %>">
+				<td class="pos">
+					<%= i+1 %>
+				</td>
+				<td>
+					<%= widget.groupList.night[i] %>
+				</td>
+				<td>
+					<%= widget.groupList.morning[i] %>
+				</td>
+				<td>
+					<%= widget.groupList.day[i] %>
+				</td>
+				<td>
+					<%= widget.groupList.evening[i] %>
+				</td>
+			</tr>
+
+		<% } %>
+
+	</tbody>
+
+</table>
+
+<p>The table should give you an idea of when do the most active people talk the most.</p>
+
+<!-- /MostActiveNicksByHour -->

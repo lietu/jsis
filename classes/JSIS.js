@@ -5,6 +5,9 @@ Logger.initialize();
 // We will need the log data class
 var LogData = require('../classes/LogData.js');
 
+// And a stats analyzer
+var StatsAnalyzer = require('../classes/StatsAnalyzer.js');
+
 // And our utilities
 var Utils = require('../classes/Utils.js');
 
@@ -79,6 +82,11 @@ var JSIS = function() {
 
 		// Default settings
 		var defaultChannelConfig = {
+			name: null,
+			destination: null,
+			logFormat: null,
+			logPath: null,
+
 			theme: 'default',
 			recursive: true,
 			logFileFilter: '',
@@ -89,6 +97,8 @@ var JSIS = function() {
 
 			maxLogFiles: null,
 
+			widgets: require('../widgets/config.js'),
+
 			foulWords: 'assface clit cocksucker shitty shity slutty ahole anus arschloch ass asshole assholes asswipe ' +
 				'bastard bastards bitch bitches blowjob butthole buttwipe clit cock crap cum cunt cunts dick ' +
 				'dildo dyke enema fag faggot fags fuck fucker fuckin fucking fucks gay gays hell helvete jackoff ' +
@@ -98,15 +108,27 @@ var JSIS = function() {
 
 			// TODO: Need more comprehensive lists
 			aggressiveWords: 'slaps spanks',
-			happySmileys: ':) ;)',
+			happySmileys: ':) :P ;) :D :o) :p :oD ;o) ;p',
 			unhappySmileys: ':( ;( ' +
 							':/ ;/',
 
 			userAliases: {}
 		};
 
-		// Merge the channel config with the default channel config and return
-		var config = Utils.mergeObjects(channelConfig, defaultChannelConfig);
+		// Create the config
+		var config = {};
+		for( var key in defaultChannelConfig ) {
+
+			if( defaultChannelConfig.hasOwnProperty(key)===true ) {
+
+				if( typeof channelConfig[ key ]!=='undefined') {
+					config[ key ] = channelConfig[ key ];
+				} else {
+					config[ key ] = defaultChannelConfig[ key ];
+				}
+
+			}
+		}
 
 		// What config settings to split into arrays
 		var splitStrings = ['foulWords', 'attackWords', 'happySmileys', 'unhappySmileys'];
@@ -195,15 +217,14 @@ var JSIS = function() {
 	 */
 	this.processChannelResults = function(channelConfig, channelLog, logReader) {
 
-		// Get the stats (probably calculate the extra data as well
-		var startTime = new Date().getTime();
+		// Get the stats
 		var stats = channelLog.getStats();
-		var endTime = new Date().getTime();
 
-		Logger.log('DEBUG', 'Extra statistical data for ' + channelConfig.name + ' calculated in ' + (endTime - startTime) + ' msec');
+		// And wrap it in an analyzer
+		var statsAnalyzer = new StatsAnalyzer(stats);
 
 		// Create a new statistics generator
-		var statsGenerator = new StatsToHTML(stats, channelLog, channelConfig, this.startTime, this.version);
+		var statsGenerator = new StatsToHTML(statsAnalyzer, channelConfig, this.startTime, this.version);
 
 		// And tell it to generate the stats
 		statsGenerator.generate( function() {

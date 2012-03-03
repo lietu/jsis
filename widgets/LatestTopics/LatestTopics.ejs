@@ -1,0 +1,35 @@
+<!-- LatestTopics -->
+
+<table>
+	<thead>
+		<tr>
+			<th>Topic</th>
+			<th>When was it set</th>
+			<th>Who set it</th>
+		</tr>
+
+	</thead>
+	<tbody>
+		<% for( var i=0, count=widget.topics.length; i < count; ++i ) { %>
+
+			<tr class="<%= i%2===0?'odd':'even' %>">
+				<td>
+					<%= widget.topics[i].topic %>
+				</td>
+				<td>
+					<%= widget.topics[i].when %>
+				</td>
+				<td>
+					<%= widget.topics[i].who %>
+				</td>
+			</tr>
+
+		<% } %>
+
+	</tbody>
+
+</table>
+
+<p>The table lists the latest topics on the channel.</p>
+
+<!-- /LatestTopics -->

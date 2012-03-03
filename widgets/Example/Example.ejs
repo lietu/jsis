@@ -1,0 +1,34 @@
+<!--
+Try not to create very specific styles .. try and use generic CSS classes defined in the default template's main.css
+
+Would be best to stick to simple HTML, maybe a little JavaScript, and outputting your variables with tags like:
+<%= widget.property %>
+
+... if you need unformatted output, try:
+<%- widget.property %>
+
+... further information on how to use the EJS templates can be found at http://embeddedjs.com/ ...
+... however, the documentation isn't great, and it doesn't seem to be all implemented in the node module ...
+ -->
+
+<!-- Example -->
+<div>
+	<%= widget.someData.foo %>
+</div>
+
+<p>This text is supposed to explain the contents of this widget.</p>
+
+
+<script type="text/javascript">
+
+// Wait until the document has finished loading
+$(document).ready(function() {
+
+	// You can enter your own JavaScript code, just try to make sure it can't break other code, e.g. don't create global variables etc.
+	// JSLint is your friend ... http://www.jslint.com/
+
+});
+
+</script>
+
+<!-- /Example -->

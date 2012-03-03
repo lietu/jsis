@@ -444,6 +444,16 @@ var Utils = function() {
 	this.timeSince = function(timestamp) {
 		return this.durationToString( new Date().getTime() - new XDate(timestamp).getTime() );
 	};
+
+	/**
+	 * Get a function to sort an array of objects by a key
+	 * @param sortKey
+	 */
+	this.getArraySort = function(sortKey) {
+		return function(first, second) {
+			return (second[sortKey] - first[sortKey])
+		}
+	};
 };
 
 // Instancify the Utils to exports

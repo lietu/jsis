@@ -1,0 +1,65 @@
+<!-- MostActiveNicks -->
+
+<table>
+	<thead>
+		<tr>
+			<th>#</th>
+			<th>Nick</th>
+			<th>Lines</th>
+			<!--
+			Not yet done
+			<th>When</th>
+			-->
+			<th>Words</th>
+			<th>Words per line</th>
+			<th>Chars per line</th>
+			<th>Last seen</th>
+			<th>Random quote</th>
+		</tr>
+
+	</thead>
+	<tbody>
+		<% for( var i=0, count=widget.nickList.length; i < count; ++i ) { %>
+
+			<tr class="<%= i%2===0?'odd':'even' %>">
+				<td class="pos">
+					<%= i+1 %>
+				</td>
+				<td class="nick">
+					<%= widget.nickList[i].nick %>
+				</td>
+				<td>
+					<%= widget.nickList[i].lines %>
+				</td>
+				<!--
+				Not yet done
+				<td>
+					<%= widget.nickList[i].when %>
+				</td>
+				-->
+				<td>
+					<%= widget.nickList[i].words %>
+				</td>
+				<td>
+					<%= widget.nickList[i].wordsPerLine %>
+				</td>
+				<td>
+					<%= widget.nickList[i].charsPerLine %>
+				</td>
+				<td class="lastSeen">
+					<%= widget.nickList[i].lastSeen %>
+				</td>
+				<td class="quote">
+					<%= widget.nickList[i].randomQuote %>
+				</td>
+			</tr>
+
+		<% } %>
+
+	</tbody>
+
+</table>
+
+<p>The table should give you an idea of who are the active people, and maybe a bit of insight into their personalities via the random quote.</p>
+
+<!-- /MostActiveNicks -->

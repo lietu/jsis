@@ -10,13 +10,12 @@ var Utils = require('../classes/Utils.js');
 var Logger = require('../classes/Logger.js');
 
 /**
- * Utility functions used in multiple classes
+ * Statistics data to HTML generator
  */
-var StatsToHTML = function(stats, logData, channelConfig, startTime, version) {
+var StatsToHTML = function(statsAnalyzer, channelConfig, startTime, version) {
 
 	// Save given parameters
-	this.stats = stats;
-	this.logData = logData;
+	this.statsAnalyzer = statsAnalyzer;
 	this.channelConfig = channelConfig;
 	this.startTime = startTime;
 	this.version = version;
@@ -89,77 +88,18 @@ var StatsToHTML = function(stats, logData, channelConfig, startTime, version) {
 
 	/**
 	 * Generate the statistics HTML
-	 * @param path
 	 * @param onReadyCallback
 	 */
 	this.generate = function(onReadyCallback) {
 
 		// Let's start building our template datas
-		var maxDateTimestamp = new XDate(this.stats.statsTo).getTime();
-		var templateData;
-		templateData = {
-			customHeadHtml: this.channelConfig.customHeadHtml,
-			JSISversion: this.version,
-			channelName: this.channelConfig.name,
-			stats: this.stats
-		};
+		var maxDateTimestamp = new XDate(this.statsAnalyzer.statsTo).getTime();
 
-		// All our stats fragments
-		var fragments = [
-			'dailyActivity', 'mostActiveTimes', 'mostActiveNicks', 'mostActiveNicksByHour',
-			'bigNumbers', 'usersWithMostNicknames', 'mostUsedWords', 'mostReferencedNicks',
-			'smileys', 'mostReferencedURLs', 'otherInterestingNumbers', 'latestTopics'
-		];
-
-		var renderFragment;
-		renderFragment = function() {
-
-			// Pick the next fragment to render
-			var fragment = fragments.shift();
-
-			// If we've got a fragment to render
-			if( fragment!==undefined ) {
-
-				var startTime = new Date().getTime();
-
-				var HTML = function(html) {
-					return HTML;
-				};
-
-				// Get fragment-specific data
-				var fragmentData = (this.logData[ fragment + 'Data' ]?this.logData[ fragment + 'Data' ]():{});
-
-				// And merge it with the template data
-				fragmentData = Utils.mergeObjects( fragmentData, templateData );
-
-				// Render our main template with our data
-				EJS.renderFile( 'themes/' + this.channelConfig.theme + '/' + fragment + '.ejs', fragmentData, function(err, html) {
-
-					// Throw any errors we might be given
-					if( err ) throw err;
-
-					var endTime = new Date().getTime();
-
-					Logger.log('DEBUG', 'Fragment ' + fragment + ' generated in ' + (endTime - startTime) + ' msec');
-
-					// Assign the fragment HTML to the template data
-					templateData[ fragment ] = html;
-
-					// Render next fragment
-					renderFragment();
-
-				}.bind(this));
-
-
-			// If we've got no more fragments, run onFragmentsComplete
-			} else {
-				onFragmentsComplete();
-			}
-
-		}.bind(this);
-
-		// What to do once the fragments are all rendered?
-		var onFragmentsComplete = function() {
+		/**
+		 * Callback for when widgets have finished rendering
+		 * @param widgetHTML Receives the full HTML for the widgets
+		 */
+		var onWidgetsComplete = function(widgetHTML) {
 
 			// Callback for once the index.html has been generated
 			var onIndexGenerated = function(err, html) {
@@ -184,21 +124,131 @@ var StatsToHTML = function(stats, logData, channelConfig, startTime, version) {
 
 			}.bind(this);
 
-			// Add our own little statistic
-			templateData.stats.timeElapsed = (new Date().getTime() - this.startTime) / 1000;
-			Logger.log('MESSAGE', 'Stats generated for ' + this.channelConfig.name + ' in ' + templateData.stats.timeElapsed + ' seconds, writing...');
+			// Template data for the index.html file
+			var templateData = {
+				customHeadHtml: this.channelConfig.customHeadHtml,
+				JSISversion: this.version,
+				channelName: this.channelConfig.name,
+				statsAnalyzer: this.statsAnalyzer,
+				widgetHTML: widgetHTML
+			};
 
-			// Render our main template with our data
+			// Add our own little statistic to the stats analyzer
+			templateData.statsAnalyzer.timeElapsed = (new Date().getTime() - this.startTime) / 1000;
+
+			Logger.log('MESSAGE', 'Stats generated for ' + this.channelConfig.name + ' in ' + templateData.statsAnalyzer.timeElapsed + ' seconds, writing...');
+
+			// Render our main template with the data
 			EJS.renderFile( 'themes/' + this.channelConfig.theme + '/index.ejs', templateData, onIndexGenerated);
 
 		}.bind(this);
 
-		// Render the first fragment
-		renderFragment();
+		// Start rendering widgets
+		this.renderWidgets( this.channelConfig.widgets, onWidgetsComplete );
+	};
+
+	/**
+	 * Render all widgets in the given list
+	 * @param widgets List of widget classes to render
+	 * @param onReadyCallback What to do when we're done, will be given the HTML
+	 */
+	this.renderWidgets = function(widgets, onReadyCallback) {
+
+		Logger.log('DEBUG', 'Rendering ' + widgets.length + ' widgets');
+
+		var startTime = new Date().getTime();
+
+		// HTML for all the widgets
+		var widgetHTML = '';
+
+		/**
+		 * Render the next widget in the queue
+		 * @param html
+		 */
+		var nextWidget;
+		nextWidget = function(html) {
+
+			// Append widget's HTML to our main HTML container
+			widgetHTML += html;
+
+			// Do we have any more widgets to process?
+			if( widgets.length>0 ) {
+
+				// Pick the next widget
+				var widgetClass = widgets.shift();
+
+				// Render it
+				this.renderWidget(widgetClass, nextWidget);
+
+			// No? ... phew
+			} else {
+
+				var endTime = new Date().getTime();
+
+				Logger.log('DEBUG', 'Widgets rendered in ' + (endTime - startTime) + ' msec');
+
+				// Call our onready callback
+				onReadyCallback(widgetHTML);
+
+			}
+
+		}.bind(this);
+
+		// Render the first widget
+		nextWidget('');
+	};
+
+	/**
+	 * Render a single widget
+	 * @param widgetClass Name of the widget class
+	 * @param onReadyCallback What to do when that's done, will be given the HTML
+	 */
+	this.renderWidget = function(widgetClass, onReadyCallback) {
+
+		// Null widgets get no output
+		if( widgetClass===null ) {
+			Logger.log('DEBUG', 'Rendering null widget as an empty string');
+			onReadyCallback('');
+
+			// And stop executing this function
+			return;
+		}
+
+		var startTime = new Date().getTime();
+
+		// Require the widget class
+		var widgetConstructor = require('../widgets/' + widgetClass + '/' + widgetClass + '.js');
+
+		Logger.log('DEBUG', 'Creating a new ' + widgetClass + ' widget');
+
+		// Create one
+		var widget = new widgetConstructor( this.statsAnalyzer );
+
+		// Render it's view
+		EJS.renderFile( 'widgets/' + widgetClass + '/' + widgetClass + '.ejs', {widget: widget, channelConfig: this.channelConfig}, function(err, html) {
+			if( err ) throw err;
+
+			// Give the widget it's HTML
+			widget.setContent(html);
+
+			// Render it in a container
+			EJS.renderFile( 'themes/' + this.channelConfig.theme + '/widgetContainer.ejs', {widget: widget}, function(err, html) {
+				if( err ) throw err;
+
+				var endTime = new Date().getTime();
+
+				Logger.log('DEBUG', 'Widget ' + widgetClass + ' rendered in ' + (endTime - startTime) + ' msec');
+
+				// Call the onReadyCallback with the result HTML
+				onReadyCallback(html);
+
+			}.bind(this));
+
+		}.bind(this));
 
 	};
 
 };
 
-// Instancify the Utils to exports
+// Export the class
 module.exports = StatsToHTML;

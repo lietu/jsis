@@ -13,9 +13,11 @@ Generates statistics of IRC logs. If you don't know what IRC is, you probably do
 ## Why is this?
 
 I grew bored of looking at the old pisg etc. stats. Thought I'd make my own stats, with a more
-modern look. The code should also be somewhat easy to manage. Need to think a bit more of how
-to make creating new fragments easier, but it should be pretty easy.
+modern look.
 
+The code in JSIS should also be somewhat easy to manage, and themeing should be pretty easy,
+if you get sick of the default theme. There's a widget system for adding content areas, 
+e.g. "Most referenced words" in a somewhat simple way.
 
 
 ## Where is it?
@@ -39,7 +41,7 @@ Some such features are:
  - A few of the fragments, some might need some of the above features to finish.
  - Maybe copy a few more ideas off pisg/fisg/mIRCStats/others
 
-Also there's still some cleaning up needed for the code, after thinking of the existing and coming features a bit more.
+Also there's always some cleaning up needed for the code.
 
 
 ## Requirements

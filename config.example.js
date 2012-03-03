@@ -71,6 +71,14 @@ var config = {
 			maxLogFiles: Infinity,
 
 			/**
+			 * Widgets to include, and in what order, comment out for default configuration (widgets/config.js)
+			 * These are names of folders in widgets/*
+			 *
+			 * @type {Array}
+			 */
+			// widgets: [],
+
+			/**
 			 * HTML text to be inserted at the end of the <head> element, e.g. if you want Google Analytics on your stats
 			 *
 			 * @type {String}

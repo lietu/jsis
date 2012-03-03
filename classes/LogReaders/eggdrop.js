@@ -169,16 +169,16 @@ var EggdropReader = function(logData) {
 
 
 				// Give our data to the LogData object
-				logData.addLine( lineTimeStamp(data[1]), /* user */ data[2], /* and the text */ data[3], false);
+				logData.addLine( lineTimeStamp(data[1]), /* nick */ data[2], /* and the text */ data[3], false);
 
 			} else if( data = line.match(actionRegExp) ) {
 
-				logData.addLine( lineTimeStamp(data[1]), /* user */ data[2], /* and the text */ data[3], true);
+				logData.addLine( lineTimeStamp(data[1]), /* nick */ data[2], /* and the text */ data[3], true);
 
 			} else if( data = line.match(modeRegExp) ) {
 
-				// This is one of those lines that reveal the users' full hostmask, let's make sure we save that data
-				logData.registerUserHostmask(data[3], data[4]);
+				// This is one of those lines that reveal the nicks' full hostmask, let's make sure we save that data
+				logData.registerNickHostmask(data[3], data[4]);
 
 				// Logger.log('INFO', 'Line ' + lineNumber + ' seems to be a mode change: ' + JSON.stringify(data));
 
@@ -186,8 +186,8 @@ var EggdropReader = function(logData) {
 
 			} else if( data = line.match(joinPartRegExp) ) {
 
-				// This is one of those lines that reveal the users' full hostmask, let's make sure we save that data
-				logData.registerUserHostmask(data[2], data[3]);
+				// This is one of those lines that reveal the nicks' full hostmask, let's make sure we save that data
+				logData.registerNickHostmask(data[2], data[3]);
 
 				// Register a join or part depending on which this is
 				if( data[4]==='joined' ) {
@@ -203,8 +203,8 @@ var EggdropReader = function(logData) {
 
 			} else if( data = line.match(topicRegExp) ) {
 
-				// This is one of those lines that reveal the users' full hostmask, let's make sure we save that data
-				logData.registerUserHostmask(data[2], data[3]);
+				// This is one of those lines that reveal the nicks' full hostmask, let's make sure we save that data
+				logData.registerNickHostmask(data[2], data[3]);
 
 				logData.addTopic( lineTimeStamp(data[1]), data[2], data[4]);
 

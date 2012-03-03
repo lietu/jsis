@@ -1,0 +1,22 @@
+<!-- BigNumbers -->
+
+<table>
+	<tbody>
+		<% for( var i=0, count=widget.itemList.length; i < count; ++i ) { %>
+
+			<tr class="<%= i%2===0?'odd':'even' %>">
+				<td>
+					<%= widget.itemList[i].big %><br />
+					<span class="small"><%= widget.itemList[i].small %></span>
+				</td>
+			</tr>
+
+		<% } %>
+
+	</tbody>
+
+</table>
+
+<p>The list contains other interesting numbers, that might or might not give you more insight into the channel and it's active users.</p>
+
+<!-- /BigNumbers -->

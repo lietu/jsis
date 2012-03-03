@@ -1,0 +1,39 @@
+<!-- MostUsedWords -->
+
+<table>
+	<thead>
+		<tr>
+			<th>#</th>
+			<th>Word</th>
+			<th>Uses</th>
+			<th>Last used by</th>
+		</tr>
+
+	</thead>
+	<tbody>
+		<% for( var i=0, count=widget.lines.length; i < count; ++i ) { %>
+
+			<tr class="<%= i%2===0?'odd':'even' %>">
+				<td class="pos">
+					<%= i+1 %>
+				</td>
+				<td>
+					<%= widget.lines[i].word %>
+				</td>
+				<td>
+					<%= widget.lines[i].uses %>
+				</td>
+				<td>
+					<%= widget.lines[i].by %>
+				</td>
+			</tr>
+
+		<% } %>
+
+	</tbody>
+
+</table>
+
+<p>The table simply shows some commonly used words in the channel.</p>
+
+<!-- /MostUsedWords -->

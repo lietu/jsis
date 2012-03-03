@@ -1,0 +1,39 @@
+<!-- MostReferencedURLs -->
+
+<table>
+	<thead>
+		<tr>
+			<th>#</th>
+			<th>URL</th>
+			<th>Uses</th>
+			<th>Last used by</th>
+		</tr>
+
+	</thead>
+	<tbody>
+		<% for( var i=0, count=widget.lines.length; i < count; ++i ) { %>
+
+			<tr class="<%= i%2===0?'odd':'even' %>">
+				<td class="pos">
+					<%= i+1 %>
+				</td>
+				<td class="url">
+					<a href="<%= widget.lines[i].url %>"><%= widget.lines[i].url %></a>
+				</td>
+				<td>
+					<%= widget.lines[i].uses %>
+				</td>
+				<td>
+					<%= widget.lines[i].by %>
+				</td>
+			</tr>
+
+		<% } %>
+
+	</tbody>
+
+</table>
+
+<p>The table lists the most commonly spammed URLs in the channel.</p>
+
+<!-- /MostReferencedURLs -->

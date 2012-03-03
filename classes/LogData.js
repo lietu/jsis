@@ -163,10 +163,9 @@ var LogData = function(channelConfig) {
 
 	/**
 	 * A RegExp to select all URLs in a line
-	 *
+	 * Source: http://daringfireball.net/2010/07/improved_regex_for_matching_urls
  	 */
-	var urlRegex = /([-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?)/gi;
-	// TODO: This sucks, find a better one
+	var urlRegex = /\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))/gi;
 
 	// Solo stats following data, how long has a single nick been talking alone
 	var solo = {

@@ -211,12 +211,13 @@ var EggdropReader = function(logData) {
 				// This is one of those lines that reveal the nicks' full hostmask, let's make sure we save that data
 				logData.registerNickHostmask(data[3], data[4]);
 
-				logData.addTopic( lineTimeStamp(data[1], data[2]), data[3], data[4]);
+				logData.addTopic( lineTimeStamp(data[1], data[2]), data[3], data[5]);
 
 			} else {
 
 				// Unrecognized line, e.g. netsplit, return from netsplit, etc.
 
+				// Logger.log('WARNING', 'Line ' + lineNumber + ' was not recognized: "' + line + '"')
 			}
 		}
 	}

@@ -38,6 +38,16 @@ var config = {
 			logFormat: 'eggdrop',
 
 			/**
+			 * What file encoding are the log files in?
+			 *
+			 * If you comment out this, or enter UTF-8, nothing will be done to them, otherwise we'll ask Iconv to
+			 * convert from this to UTF-8. List of supported encodings http://www.gnu.org/software/libiconv/
+			 *
+			 * @type {String}
+			 */
+			logEncoding: 'ASCII',
+
+			/**
 			 * Path to log files, you should really use a full path here
 			 *
 			 * @type {String}

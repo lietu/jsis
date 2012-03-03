@@ -35,9 +35,22 @@ var JSIS = function() {
 	 * @param pos
 	 * @param onReadyCallback
 	 */
-	this.getFileReader = function(filename, logReader, pos, onReadyCallback) {
+	this.getFileReader = function(filename, encoding, logReader, pos, onReadyCallback) {
 		return function(err, data) {
 			if( err ) throw err;
+
+			// If the files are not encoded in UTF-8, we'll change that
+			if( encoding!=='UTF-8' ) {
+
+				// Require Iconv text encoding
+				var Iconv = require('iconv').Iconv;
+
+				// Create a new converter
+				var iconv = new Iconv(encoding, 'UTF-8//TRANSLIT//IGNORE');
+
+				// And convert the buffer
+				data = iconv.convert(data);
+			}
 
 			var startTime = new Date().getTime();
 			logReader.parse(data);
@@ -86,6 +99,7 @@ var JSIS = function() {
 			destination: null,
 			logFormat: null,
 			logPath: null,
+			logEncoding: 'UTF-8',
 
 			theme: 'default',
 			recursive: true,
@@ -245,7 +259,7 @@ var JSIS = function() {
 	this.processChannel = function(channelConfig, channelLog, logReader) {
 
 		var startTime = new Date().getTime();
-		Logger.log('DEBUG', 'Starting JSIS v' + this.version);
+		Logger.log('DEBUG', 'Starting to process channel ' + channelConfig.name);
 
 		// Get a list of log files to parse
 		var logFiles = this.getLogFileList(channelConfig, function(files) {
@@ -273,7 +287,7 @@ var JSIS = function() {
 					var pos = (Utils.leftPad(String(fileIndex), '0', String(count).length)) + ' / ' + count;
 
 					// Read the file, and give it to a file reader, which should call "next" again after it's done
-					fs.readFile( filename, 'utf-8', this.getFileReader(filename, logReader, pos, next.bind(this)) );
+					fs.readFile( filename, 'utf-8', this.getFileReader(filename, channelConfig.logEncoding, logReader, pos, next.bind(this)) );
 
 				// No files remaining, call function to process the results
 				} else {
@@ -304,6 +318,8 @@ var JSIS = function() {
 
 		// Log this awesome event
 		this.startTime = new Date().getTime();
+
+		Logger.log('DEBUG', 'Starting JSIS v' + this.version);
 
 		try {
 

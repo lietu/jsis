@@ -47,7 +47,7 @@ Also there's always some cleaning up needed for the code.
 ## Requirements
 
  - Node.js (v0.6.7 has been tested)
- - ejs module for Node.js
+ - ejs and iconv modules for Node.js
 
 
 
@@ -57,7 +57,7 @@ Also there's always some cleaning up needed for the code.
 
 2. You'll need a place for the application .. think of one, download the files from [https://github.com/lietu/jsis](https://github.com/lietu/jsis) and put them there.
 
-3. Install the node module "ejs", assuming you've got NPM open a terminal/whatever to the place you put the files in and run "npm install ejs" and wait a few secs.
+3. Install the node modules "ejs" and "iconv", assuming you've got NPM open a terminal/whatever to the place you put the files in and run "npm install modulename" and wait a few secs (well iconv might take a while).
 
 4. Configure JSIS, copy config.example.js to config.js and edit it.
 

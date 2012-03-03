@@ -19,6 +19,7 @@ var StatsAnalyzer = function(stats) {
 	this.statsFrom = 0;
 	this.statsTo = 0;
 	this.numNicks = 0;
+	this.numDays = 0;
 
 	/**
 	 * Get a random quote by the given nick
@@ -70,6 +71,7 @@ var StatsAnalyzer = function(stats) {
 	 * @param lineCount
 	 */
 	this.getLinePct = function(nick, lineCount) {
+
 		if( lineCount===0 ) {
 			return 0;
 		}
@@ -120,32 +122,31 @@ var StatsAnalyzer = function(stats) {
 			}
 		}
 
-		// Calculate reporting period
-		stats.numDays = Math.round( (maxDate.timestamp - minDate.timestamp) / 1000 / 60 / 60 / 24 );
-
-
 		// Calculate number of nicks that have spoken
 		for( var i in stats.linesByNick ) { numNicks++; }
 
 		// Make sure our dayly data has no gaps
 		timestamp = minDate.timestamp;
-		while( timestamp <= maxDate.timestamp ) {
+		if( timestamp ) {
+			while( timestamp <= maxDate.timestamp ) {
 
-			date = new XDate(timestamp).toString('yyyy-MM-dd');
+				date = new XDate(timestamp).toString('yyyy-MM-dd');
 
-			if( typeof stats.linesByDay[ date ]==='undefined' ) {
-				stats.linesByDay[ date ] = 0;
+				if( typeof stats.linesByDay[ date ]==='undefined' ) {
+					stats.linesByDay[ date ] = 0;
+				}
+
+				// Add one day to the timestamp
+				timestamp += 1000 * 60 * 60 * 24;
 			}
-
-			// Add one day to the timestamp
-			timestamp += 1000 * 60 * 60 * 24;
 		}
 
 		// Save all the extra data
 		this.generated = new XDate();
-		this.statsFrom = minDate.date;
-		this.statsTo = maxDate.date;
+		this.statsFrom = minDate.date || new XDate().toString('yyyy-MM-dd');
+		this.statsTo = maxDate.date || new XDate().toString('yyyy-MM-dd');
 		this.numNicks = numNicks;
+		this.numDays = Math.ceil( (maxDate.timestamp - minDate.timestamp) / 1000 / 60 / 60 / 24 ) + 1;
 
 		var endTime = new Date().getTime();
 

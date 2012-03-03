@@ -108,12 +108,12 @@ var StatsToHTML = function(statsAnalyzer, channelConfig, startTime, version) {
 				if( err ) throw err;
 
 				// Make sure our destination path exists
-				Utils.mkdir(channelConfig.destination, 0770, function() {
+				Utils.mkdir(this.channelConfig.destination, 0770, function() {
 
-					Logger.log('INFO', 'Writing ' + channelConfig.destination + '/index.html');
+					Logger.log('INFO', 'Writing ' + this.channelConfig.destination + '/index.html');
 
 					// Write the rendered HTML in the index.html file there
-					fs.writeFile( channelConfig.destination + '/index.html', html, 'utf8', function() {
+					fs.writeFile( this.channelConfig.destination + '/index.html', html, 'utf8', function() {
 
 						// Once that's done, copy the rest of the template files
 						this.copyTemplateFiles.bind(this)(onReadyCallback);
@@ -166,16 +166,17 @@ var StatsToHTML = function(statsAnalyzer, channelConfig, startTime, version) {
 		 * @param html
 		 */
 		var nextWidget;
+		var widgetIndex = 0;
 		nextWidget = function(html) {
 
 			// Append widget's HTML to our main HTML container
 			widgetHTML += html;
 
 			// Do we have any more widgets to process?
-			if( widgets.length>0 ) {
+			if( widgetIndex<widgets.length ) {
 
 				// Pick the next widget
-				var widgetClass = widgets.shift();
+				var widgetClass = widgets[ widgetIndex++ ];
 
 				// Render it
 				this.renderWidget(widgetClass, nextWidget);

@@ -54,7 +54,7 @@ var EggdropReader = function(logData) {
 	};
 
 	// Regular expression string to match (and select) the timestamp on the line
-	var timeRegExpString = '\\[([0-9]{2}:[0-9]{2})\\]';
+	var timeRegExpString = '\\[([0-9]{2}:[0-9]{2})(:[0-9]{2})?\\]';
 
 	// .. and the nickname
 	var nicknameRegExpString = '\<([^>]+)\>';
@@ -138,8 +138,13 @@ var EggdropReader = function(logData) {
 		/**
 		 * Build the timestamp for a line from the time string, e.g. "14:56"
 		 */
-		var lineTimeStamp = function(timestring) {
-			var date = new XDate(this.currentDate + ' ' +timestring + ':00 ' + this.tzData);
+		var lineTimeStamp = function(hourMinutes, seconds) {
+
+			if( !seconds ) {
+				seconds = ':00';
+			}
+
+			var date = new XDate(this.currentDate + ' ' + hourMinutes + seconds + ' ' + this.tzData);
 			if( unknownDate===true ) {
 				timeStampsWithUnknownDate.push(date)
 			}
@@ -160,7 +165,7 @@ var EggdropReader = function(logData) {
 
 
 				// Update the current date with the first selection's result
-				this.setDate( data[2].replace(' +', ' ') );
+				this.setDate( data[3].replace(' +', ' ') );
 
 			// Is this a line?
 			} else if( data = line.match( lineRegExp ) ) {
@@ -169,44 +174,44 @@ var EggdropReader = function(logData) {
 
 
 				// Give our data to the LogData object
-				logData.addLine( lineTimeStamp(data[1]), /* nick */ data[2], /* and the text */ data[3], false);
+				logData.addLine( lineTimeStamp(data[1], data[2]), /* nick */ data[3], /* and the text */ data[4], false);
 
 			} else if( data = line.match(actionRegExp) ) {
 
-				logData.addLine( lineTimeStamp(data[1]), /* nick */ data[2], /* and the text */ data[3], true);
+				logData.addLine( lineTimeStamp(data[1], data[2]), /* nick */ data[3], /* and the text */ data[4], true);
 
 			} else if( data = line.match(modeRegExp) ) {
 
 				// This is one of those lines that reveal the nicks' full hostmask, let's make sure we save that data
-				logData.registerNickHostmask(data[3], data[4]);
+				logData.registerNickHostmask(data[4], data[5]);
 
 				// Logger.log('INFO', 'Line ' + lineNumber + ' seems to be a mode change: ' + JSON.stringify(data));
 
-				logData.addMode( lineTimeStamp(data[1]), data[2], data[3] );
+				logData.addMode( lineTimeStamp(data[1], data[2]), data[3], data[4] );
 
 			} else if( data = line.match(joinPartRegExp) ) {
 
 				// This is one of those lines that reveal the nicks' full hostmask, let's make sure we save that data
-				logData.registerNickHostmask(data[2], data[3]);
+				logData.registerNickHostmask(data[3], data[4]);
 
 				// Register a join or part depending on which this is
 				if( data[4]==='joined' ) {
-					logData.addJoin( data[2] );
+					logData.addJoin( data[3] );
 				} else {
-					logData.addPart( data[2] );
+					logData.addPart( data[3] );
 				}
 
 				// Logger.log('WARNING', 'Line ' + lineNumber + ' was not recognized: "' + line + '"')
 			} else if( data = line.match(kickRegExp) ) {
 
-				logData.addKick( data[2], data[3], data[4] );
+				logData.addKick( data[3], data[4], data[5] );
 
 			} else if( data = line.match(topicRegExp) ) {
 
 				// This is one of those lines that reveal the nicks' full hostmask, let's make sure we save that data
-				logData.registerNickHostmask(data[2], data[3]);
+				logData.registerNickHostmask(data[3], data[4]);
 
-				logData.addTopic( lineTimeStamp(data[1]), data[2], data[4]);
+				logData.addTopic( lineTimeStamp(data[1], data[2]), data[3], data[4]);
 
 			} else {
 

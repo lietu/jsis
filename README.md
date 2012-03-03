@@ -25,10 +25,9 @@ e.g. "Most referenced words" in a somewhat simple way.
 Everything you need should be at [https://github.com/lietu/jsis](https://github.com/lietu/jsis)
 
 
-
 ## Is it ready?
 
-No. It's ready for use, to generate stats from eggdrop logs, but still missing several features. You're welcome to help.
+No. It's ready for use, to generate stats from a couple of log formats, but still missing several features. You're welcome to help.
 
 Some such features are:
 
@@ -44,10 +43,18 @@ Some such features are:
 Also there's always some cleaning up needed for the code.
 
 
+## What log formats are supported?
+
+JSIS supports the default log formats (with optional seconds in timestamps) of:
+
+ - eggdrop
+ - irssi
+
+
 ## Requirements
 
- - Node.js (v0.6.7 has been tested)
- - ejs and iconv modules for Node.js
+ - Node.js (v0.6.7 and v0.6.10 have been tested)
+ - ejs and iconv modules for Node.js (iconv is not strictly necessary)
 
 
 

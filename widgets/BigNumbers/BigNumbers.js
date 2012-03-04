@@ -70,7 +70,7 @@ var BigNumbers = function(statsAnalyzer, channelConfig) {
 		var topSmiles = statsAnalyzer.nickObjectToArray( stats.happySmileysByNick ).sort( Utils.getArraySort('value') );
 		if( topSmiles.length>=2 && topSmiles[0].value>0 ) {
 			this.itemList.push({
-				big: topSmiles[0].nick + ' brings happiness to the world. ' + statsAnalyzer.getLinePct(topSmiles[1].nick, topSmiles[1].value) + '% of the lines contained smiling faces. :)',
+				big: topSmiles[0].nick + ' brings happiness to the world. ' + statsAnalyzer.getLinePct(topSmiles[0].nick, topSmiles[0].value) + '% of the lines contained smiling faces. :)',
 				small: topSmiles[1].nick + ' isn\'t a sad person either, smiling ' + statsAnalyzer.getLinePct(topSmiles[1].nick, topSmiles[1].value) + '% of the time.'
 			});
 		}
@@ -79,7 +79,7 @@ var BigNumbers = function(statsAnalyzer, channelConfig) {
 		var topSad = statsAnalyzer.nickObjectToArray( stats.unhappySmileysByNick ).sort( Utils.getArraySort('value') );
 		if( topSad.length>=2 && topSad[0].value>0 ) {
 			this.itemList.push({
-				big: topSad[0].nick + ' seems to be sad at the moment: ' + statsAnalyzer.getLinePct(topSad[1].nick, topSad[1].value) + '% of the lines contained sad faces. :(',
+				big: topSad[0].nick + ' seems to be sad at the moment: ' + statsAnalyzer.getLinePct(topSad[0].nick, topSad[0].value) + '% of the lines contained sad faces. :(',
 				small: topSad[1].nick + ' is also a sad person, crying ' + statsAnalyzer.getLinePct(topSad[1].nick, topSad[1].value) + '% of the time.'
 			});
 		}

@@ -79,6 +79,9 @@ var IrssiReader = function(logData) {
 	// RegExp to match topic changes
 	var topicRegExp = new RegExp('^' + timeRegExpString + ' -!- ([^ ]+) changed the topic of [^ ]+ to: (.*)$');
 
+	// RegExp to match nick changes
+	var nickChangeRegExp = new RegExp('^' + timeRegExpString + ' -!- ([^ ]+) ([^ ]+) is now known as (.+)');
+
 	// RegExp to extract necessary data off a line
 	var date = new XDate();
 
@@ -181,6 +184,11 @@ var IrssiReader = function(logData) {
 				// Logger.log('DEBUG', 'Line ' + lineNumber + ' seems to be a topic change: ' + JSON.stringify(data));
 
 				logData.addTopic( lineTimeStamp(data[1], data[2]), data[3], data[4]);
+
+			} else if( data = line.match(nickChangeRegExp) ) {
+
+				// Register the nick change event
+				logData.registerNickChange(data[3], data[4]);
 
 			} else {
 

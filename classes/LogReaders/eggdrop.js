@@ -79,6 +79,9 @@ var EggdropReader = function(logData) {
 	// RegExp to match topic changes
 	var topicRegExp = new RegExp('^' + timeRegExpString + ' Topic changed on [^ ]+ by ([^!]+)!([^:]+): (.*)$');
 
+	// RegExp to match nick changes
+	var nickChangeRegExp = new RegExp('^' + timeRegExpString + ' Nick change: ([^ ]+) -> (.+)');
+
 	// RegExp to extract necessary data off a line
 	var date = new XDate();
 
@@ -112,6 +115,12 @@ var EggdropReader = function(logData) {
 				timeStampsWithUnknownDate[i].setDate(day);
 				timeStampsWithUnknownDate[i].setMonth(month);
 				timeStampsWithUnknownDate[i].setFullYear(year);
+
+				/*
+				if( timeStampsWithUnknownDate[i].getTime() > new Date().getTime() ) {
+					throw new Error('Something is wrong with log timestamp parsing, got a future time. ' + timeStampsWithUnknownDate[i].toString('yyyy-MM-dd HH:mm:ss') );
+				}
+				*/
 
 			}
 
@@ -148,6 +157,7 @@ var EggdropReader = function(logData) {
 			if( unknownDate===true ) {
 				timeStampsWithUnknownDate.push(date)
 			}
+
 			return date;
 		}.bind(this);
 
@@ -212,6 +222,11 @@ var EggdropReader = function(logData) {
 				logData.registerNickHostmask(data[3], data[4]);
 
 				logData.addTopic( lineTimeStamp(data[1], data[2]), data[3], data[5]);
+
+			} else if( data = line.match(nickChangeRegExp) ) {
+
+				// Register the nick change event
+				logData.registerNickChange(data[3], data[4]);
 
 			} else {
 

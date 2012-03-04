@@ -126,7 +126,7 @@ var JSIS = function() {
 			unhappySmileys: ':( ;( ' +
 							':/ ;/',
 
-			userAliases: {}
+			userConfig: {}
 		};
 
 		// Create the config
@@ -230,6 +230,15 @@ var JSIS = function() {
 	 * @param logReader
 	 */
 	this.processChannelResults = function(channelConfig, channelLog, logReader) {
+
+		// Get the alias data from the log
+		var aliasData = channelLog.getAliasData();
+
+		// And output it in a human readable format
+		Logger.log('INFO', 'Used the following aliases for nicks:');
+		for( var nick in aliasData.nickStats ) {
+			Logger.log('INFO', nick + ': ' + aliasData.nickStats[ nick ].join(', ') );
+		}
 
 		// Get the stats
 		var stats = channelLog.getStats();

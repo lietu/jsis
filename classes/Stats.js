@@ -20,46 +20,108 @@ var Stats = function() {
 		return hourStats;
 	};
 
+	// List of initialized users
+	var usersInitialized = {};
+
 	/**
 	 * Initialize a user's stats, if not yet done
 	 * @param {String} nick The nick
 	 */
-	this.initNick = (function() {
-		// List of initialized users
-		var usersInitialized = {};
+	this.initNick = function(nick) {
 
-		return function(nick) {
+		// If this user hasn't been initialized
+		if( !usersInitialized[nick] ) {
 
-			// If this user hasn't been initialized
-			if( !usersInitialized[nick] ) {
+			// We clear all the *ByNick attributes
 
-				// We clear all the *ByNick attributes
+			// Loop through all stats
+			for( var key in this ) {
 
-				// Loop through all stats
-				for( var key in this ) {
+				if( this.hasOwnProperty(key) && typeof this[key]!=='function' ) {
 
-					if( this.hasOwnProperty(key) && typeof this[key]!=='function' ) {
+					// Special case, this.lastSeenByNick
+					if( key==='lastSeenByNick' ) {
 
-						// If item ends with "ByNick", create an item under there by the user and assign 0
-						if( key.substr(-6)==='ByNick' ) {
-							this[ key ][ nick ] = 0;
-						}
+						// We'll create a really old timestamp
+						this[ key ][ nick ] = new Date(0);
 
+					// If item ends with "ByNick", create an item under there by the user and assign 0
+					} else if( key.substr(-6)==='ByNick' ) {
+						this[ key ][ nick ] = 0;
 					}
 
 				}
 
-				// There's one per-hour object needed also, create it now
-				this.linesByNickByHour[ nick ] = zeroHourStats();
-
-				// Initialize line list
-				this.nickLines[ nick ] = [];
-
-				// It has now been initialized
-				usersInitialized[ nick ] = true;
 			}
-		}.bind(this);
-	}).bind(this)();
+
+			// There's one per-hour object needed also, create it now
+			this.linesByNickByHour[ nick ] = zeroHourStats();
+
+			// Initialize line list
+			this.nickLines[ nick ] = [];
+
+			// It has now been initialized
+			usersInitialized[ nick ] = true;
+		}
+
+	};
+
+	/**
+	 * Combine data from fromNick to toNick, clearing out fromNick afterwards
+	 * @param fromNick
+	 * @param toNick
+	 */
+	this.combineNicks = function(fromNick, toNick) {
+
+		// Make sure both nicks are initialized
+		this.initNick(fromNick);
+		this.initNick(toNick);
+
+		// Merge the linesByNickByHour data
+		for( var hour=0; hour<24; ++hour ) {
+
+			// Increment toNick stats by fromNick's stats
+			this.linesByNickByHour[ toNick ][ hour ] += this.linesByNickByHour[ fromNick ][ hour ];
+
+		}
+
+		// Merge nick lines history
+		this.nickLines[ toNick ] = this.nickLines[ toNick ].concat(this.nickLines[ fromNick ]);
+
+		// Update all by-nick calculations
+		for( var key in this ) {
+			if( this.hasOwnProperty(key) && typeof this[key]!=='function' ) {
+
+				// Special case, this.lastSeenByNick
+				if( key==='lastSeenByNick' ) {
+
+					// We'll use whatever timestamp is larger
+					if( this[ key ][ toNick ].getTime() < this[ key ][ fromNick ].getTime() ) {
+						this[ key ][ toNick ] = this[ key ][ fromNick ];
+					}
+
+				// If item ends with "ByNick"
+				} else if( key.substr(-6)==='ByNick' ) {
+
+					// Increment toNick stats by fromNick's stats
+					this[ key ][ toNick ] += this[ key ][ fromNick ];
+
+					// Then delete the fromNick data
+					delete this[ key ][ fromNick ];
+
+				}
+
+			}
+
+		}
+
+		// Delete The old variables
+		delete this.linesByNickByHour[ fromNick ];
+		delete this.nickLines[ fromNick ];
+
+		// Make sure we don't think it's initialized anymore
+		delete usersInitialized[ fromNick ];
+	};
 
 	/**
 	 * Initialize a day's data containers

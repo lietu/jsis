@@ -4,6 +4,9 @@ var Utils = require('../classes/Utils.js');
 // Stats container
 var Stats = require('../classes/Stats.js');
 
+// Logger
+var Logger = require('../classes/Logger.js');
+
 /**
  * Create a new LogData instance
  */
@@ -17,44 +20,259 @@ var LogData = function(channelConfig) {
 
 	/*
 
-	---------- Nick following logic ----------
-
-	... very broken
+	---------- Nick aliases ----------
 
 	*/
 
-	// Some other internal variables
-	var nickChanges = {}; // List of from -> to nickname changes
-	var hostNick = {}; // List of hostmask => nick
-	var nickHost = {}; // List of nick => hostmask
+	// Enum-like list of different alias types
+	var ALIAS_TYPE = {
+		SELF: 0, // This is a key in the config
+		CONFIG: 1, // Configuration set this static alias
+		DYNAMIC_RULES: 2, // Dynamically created based on config's wildcard/regex rules
 
-	this.getNickAlias = function(nick) {
-		// TODO: Missing a few lines of code right about here, also remove the extra horrible code
+		DYNAMIC: 254, // Dynamically created based on monitoring nick changes etc.
+		SKIP: 255
+	};
 
-		return nick;
+	// Static of nick -> alias
+	var aliasList = {};
+
+	// List of dynamic rules that can be parsed if no static match is found
+	var aliasRules = [];
+
+	/**
+	 * Parse user alias configuration into a more useful format
+	 */
+	this.parseAliasConfig = function() {
+
+		// Loop through the defined nicknames
+		for( var nick in this.channelConfig.userConfig ) {
+
+			// Mark this nick as having itself as an alias
+			aliasList[ nick.toLowerCase() ] = {
+				nick: nick,
+				type: ALIAS_TYPE.SELF
+			};
+
+			// Loop through the defined aliases for this nick
+			for( var i=0, count=this.channelConfig.userConfig[ nick ].aliases.length; i < count; ++i ) {
+
+				// Current item
+				var alias = this.channelConfig.userConfig[ nick ].aliases[ i ];
+
+				// Check if this is a static mapping
+				if( typeof alias==='string' ) {
+
+					if( alias.indexOf('*')===-1 && alias.indexOf('?')===-1 ) {
+
+						// This looks like a static mapping, create the entry
+						aliasList[ alias.toLowerCase() ] = {
+							nick: nick,
+							type: ALIAS_TYPE.CONFIG
+						};
+
+					} else {
+
+						// Ah, looks like we've got wildcards here, convert to regex and put to rules
+						aliasRules.push({
+							regex: new RegExp( '^' + alias.replace('*', '.*?').replace('?', '.?').toLowerCase() + '$', ""),
+							nick: nick
+						});
+
+					}
+
+				} else {
+
+					// Looks like a regex, push to rules
+					aliasRules.push({
+						regex: alias,
+						nick: nick
+					});
+
+				}
+			}
+
+		}
+
+	};
+
+	/**
+	 * Try and find any aliases for this nick
+	 * @param nick
+	 */
+	this.getNickAliasData = function(nick) {
+
+		// Convert to lowercase for checks
+		var nickLower = nick.toLowerCase();
+
+		// If this nick has no static mapping
+		if( aliasList[ nickLower ]===undefined ) {
+
+			var match = false;
+
+			// No static mapping, try dynamic rules
+			for( var i=0, count=aliasRules.length; i < count; ++i ) {
+
+				// If current rule matches the nick
+				if( aliasRules[i].regex.test(nickLower) ) {
+
+					// Get the new nick
+					var newNick = aliasRules[i].nick;
+
+					// Create a static mapping entry, so this will be faster the next time
+					aliasList[ nickLower ] = {
+						nick: newNick,
+						type: ALIAS_TYPE.DYNAMIC_RULES
+					};
+
+					match = true;
+				}
+
+			}
+
+			if( match===false ) {
+				// No aliases found, create a static mapping from the lowercase nick to whatever the nick is now ...
+				// ... we don't need to do this again for this nick
+				aliasList[ nickLower ] = {
+					nick: nick,
+					type: ALIAS_TYPE.SKIP
+				};
+			}
+
+		}
+
+		/*
+		var aliasData = aliasList[ nickLower ];
+		if( nick!==aliasData.nick ) {
+			var nextAliasData = this.getNickAliasData( aliasData.nick );
+
+			if( nextAliasData.nick!==aliasData.nick ) {
+				Logger.log('CRITICAL', 'Found a second alias');
+				aliasData.nick = nextAliasData.nick;
+			}
+		}
+		*/
+
+		return aliasList[ nickLower ];
+	};
+
+	/**
+	 * Register an alias for a nick
+	 * @param fromNick
+	 * @param toNick
+	 */
+	this.registerAlias = function(fromNick, toNick) {
+
+		// Skip stupid entries, easier to put this here than all the callers
+		if( fromNick===toNick ) {
+			return;
+		}
+
+		// Logger.log('DEBUG', 'Registering alias ' + fromNick + ' -> ' + toNick);
+
+		// Convert fromNick to lowercase
+		var fromNickLower = fromNick.toLowerCase();
+
+		// Check if there is an existing entry with higher priority
+		if( aliasList[ fromNickLower ] ) {
+
+			// Is this actually already doing what we want it to do?
+			if( aliasList[ fromNickLower ].nick===toNick ) {
+				return; // Nothing to see here, go away
+			}
+
+			if( aliasList[ fromNickLower ].type < ALIAS_TYPE.DYNAMIC ) {
+				throw new Error('Trying to create alias ' + fromNick + ' -> ' + toNick + ', but ' + fromNick + ' already had higher priority (' +aliasList[ fromNickLower ].type+ ') alias to ' + aliasList[ fromNickLower ].nick);
+			}
+		}
+
+		// Register the alias to alias list
+		aliasList[ fromNickLower ] = {
+			nick: toNick,
+			type: ALIAS_TYPE.DYNAMIC
+		};
+
+		// And check for any other aliases using the fromNick as a destination
+		for( var sourceNick in aliasList ) {
+			var destinationAliasData = aliasList[ sourceNick ];
+			if( destinationAliasData.nick.toLowerCase() === fromNickLower ) {
+
+				// Update alias
+				aliasList[ sourceNick ] = {
+					nick: toNick,
+					type: ALIAS_TYPE.DYNAMIC
+				};
+
+			}
+		}
+
 	};
 
 	/**
 	 * Register a nick change
-	 * @param from
-	 * @param to
+	 * @param fromNick
+	 * @param toNick
 	 */
-	this.registerNickChange = function(from, to) {
+	this.registerNickChange = function(fromNick, toNick) {
 
-		if( typeof nickChanges[to]!=='undefined' ) {
+		// Check if they have aliases
+		var fromAliasData = this.getNickAliasData(fromNick);
+		var toAliasData = this.getNickAliasData(toNick);
 
-			var fromData = nickChanges[from] || [];
-			fromData.push(to);
+		// Logger.log('DEBUG', 'Nick change ' + fromNick + ' (' + fromAliasData.nick + ') -> ' + toNick + ' (' + toAliasData.nick + ')');
 
-			// Update nick & host linkings
-			if( nickHost[ from ] ) {
-				nickHost[ to ] = nickHost[ from ];
-				hostNick[ nickHost[ from ] ] = to;
+		// If they both have aliases
+		if( toAliasData.type!==ALIAS_TYPE.SKIP && fromAliasData.type!==ALIAS_TYPE.SKIP ) {
 
-				// Delete the old nick's from mapping
-				delete nickHost[ from ];
+			// If toAlias has higher or equal priority, use it
+			if( toAliasData.type <= fromAliasData.type ) {
+
+				// console.log( 'to (' + toAliasData.type + ') < from (' + fromAliasData.type + ')');
+
+				this.registerAlias( fromNick, toAliasData.nick );
+				this.registerAlias( fromAliasData.nick, toAliasData.nick );
+
+			// The other way around
+			} else {
+
+				// console.log( 'from (' + fromAliasData.type + ') < to (' + toAliasData.type + ')');
+
+				this.registerAlias( toNick, fromAliasData.nick );
+				this.registerAlias( toAliasData.nick, fromAliasData.nick );
+
 			}
 
+		// If there was an alias for toNick, use that for fromNick as well
+		} else if( toAliasData.type!==ALIAS_TYPE.SKIP ) {
+
+			// console.log( 'to(' + toAliasData.type + ') !== skip');
+			this.registerAlias(fromNick, toAliasData.nick);
+
+		// If there was an alias for fromNick, copy that for toNick
+		} else if( fromAliasData.type!==ALIAS_TYPE.SKIP ) {
+
+			// console.log( 'from(' + fromAliasData.type + ') !== skip');
+			this.registerAlias(toNick, fromAliasData.nick);
+
+		// No old aliases
+		} else {
+
+			// console.log( 'to === from === skip');
+
+			// Register a to -> from alias
+			this.registerAlias(toNick, fromAliasData.nick);
+			if( toNick.toLowerCase() !== toAliasData.nick.toLowerCase() ) {
+				this.registerAlias(toAliasData.nick, fromAliasData.nick);
+			}
+
+		}
+
+		// Reload the to alias
+		toAliasData = this.getNickAliasData(toNick);
+
+		// Tell stats to combine the data, unless these are identical
+		if( fromNick!==toAliasData.nick ) {
+			stats.combineNicks(fromNick, toAliasData.nick);
 		}
 	};
 
@@ -73,18 +291,11 @@ var LogData = function(channelConfig) {
 	 */
 	this.registerNickHostmask = function(nick, hostmask) {
 
-		hostmask = this.cleanHostmask( hostmask );
-
-		if( !hostNick[ hostmask ] ) {
-			hostNick[ hostmask ] = nick;
-		}
-		if( !nickHost[ nick ] ) {
-			nickHost[ nick ] = hostmask;
-		}
 
 	};
 
 	/*
+
 
 
 	---------- Helper functions and data for the logic ----------
@@ -241,7 +452,7 @@ var LogData = function(channelConfig) {
 		\***************************/
 
 		// Get the alias of this nick
-		nick = this.getNickAlias(nick);
+		nick = this.getNickAliasData(nick).nick;
 
 		// Make sure the nick's stats are initialized
 		stats.initNick(nick);
@@ -273,11 +484,11 @@ var LogData = function(channelConfig) {
 
 		// And recalculate average line length and words per line
 		stats.lineLengthByNick[ nick ] = Utils.average(stats.lineLengthByNick[ nick ], text.length, stats.linesByNick[ nick ]);
-		stats.wordsPerLineByNick[ nick ] = Utils.average(stats.wordsPerLineByNick[ nick ], wordCount, stats.linesByNick[ nick ]);
+		stats.wordsPerLineByNick[ nick ] = Utils.average(stats.wordsPerLineByNick[ nick ], wordCount, stats.wordsByNick[ nick ]);
 
 		// Last seen
-		if( stats.lastSeenByNick[ nick ] < currentTime ) {
-			stats.lastSeenByNick[ nick ] = currentTime;
+		if( stats.lastSeenByNick[ nick ].getTime() < timestamp.getTime() ) {
+			stats.lastSeenByNick[ nick ] = timestamp;
 		}
 
 		// If this is an action, increment that count as well
@@ -360,7 +571,7 @@ var LogData = function(channelConfig) {
 		stats.modes++;
 
 		// Get the alias of this nick
-		nick = this.getNickAlias(nick);
+		nick = this.getNickAliasData(nick).nick;
 
 		// Make sure the nick's stats are initialized
 		stats.initNick(nick);
@@ -385,7 +596,7 @@ var LogData = function(channelConfig) {
 				stats.voicesGivenByNick[ nick ]++;
 
 				// Get the alias of this target
-				target = this.getNickAlias(target);
+				target = this.getNickAliasData(target).nick;
 
 				// Make sure the target nick's stats are initialized
 				stats.initNick(target);
@@ -402,7 +613,7 @@ var LogData = function(channelConfig) {
 	this.addJoin = function(nick) {
 
 		// Process aliases
-		nick = this.getNickAlias(nick);
+		nick = this.getNickAliasData(nick).nick;
 
 		// Make sure the target nick's stats are initialized
 		stats.initNick(nick);
@@ -417,7 +628,7 @@ var LogData = function(channelConfig) {
 	this.addPart = function(nick) {
 
 		// Process aliases
-		nick = this.getNickAlias(nick);
+		nick = this.getNickAliasData(nick).nick;
 
 		// Make sure the target nick's stats are initialized
 		stats.initNick(nick);
@@ -436,8 +647,8 @@ var LogData = function(channelConfig) {
 	this.addKick = function(target, nick, reason) {
 
 		// Process aliases
-		nick = this.getNickAlias(nick);
-		target = this.getNickAlias(target);
+		nick = this.getNickAliasData(nick).nick;
+		target = this.getNickAliasData(target).nick;
 
 		// Make sure the nicks' stats are initialized
 		stats.initNick(target);
@@ -458,7 +669,7 @@ var LogData = function(channelConfig) {
 	 */
 	this.addTopic = function(timestamp, nick, topic) {
 
-		nick = this.getNickAlias(nick);
+		nick = this.getNickAliasData(nick).nick;
 
 		stats.topics.push({
 			topic: topic,
@@ -475,6 +686,50 @@ var LogData = function(channelConfig) {
 	this.getStats = function() {
 		return stats;
 	};
+
+	var nickAliasStats = null;
+	this.getNickAliasStats = function() {
+
+		// If not yet done so, figure out the stats
+		if( nickAliasStats===null ) {
+			// Start by creating an object
+			nickAliasStats = {};
+
+			// Loop through our source -> destination alias list
+			for( var sourceNick in aliasList ) {
+				var destinationNick = aliasList[ sourceNick ].nick;
+
+				// Initialize destinationNick array if necessary
+				nickAliasStats[ destinationNick ] = nickAliasStats[ destinationNick ] || [];
+
+				// And push this source nick in it
+				nickAliasStats[ destinationNick ].push( sourceNick );
+			}
+		}
+
+		return nickAliasStats;
+	};
+
+	this.getAliasData = function() {
+		return {
+			list: aliasList,
+			rules: aliasRules,
+			nickStats: this.getNickAliasStats()
+		};
+	};
+
+	/**
+	 * Initialize this instance
+ 	 */
+	this.initialize = function() {
+
+		// Parse the alias config
+		this.parseAliasConfig();
+
+
+	};
+
+	this.initialize();
 
 };
 

@@ -135,7 +135,7 @@ var config = {
 
 			/**
 			 * List of user configurations, from nickname to show, to an user configuration object.
-			 * The user configuration object can contain an array of aliases, these can be space separated strings with wildcards (* and ?), or JavaScript RegExp objects
+			 * The user configuration object can contain an array of aliases, these can be space separated strings with wildcards (* and ?), or JavaScript RegExp objects (these will be tested against the lowercase nickname)
 			 * It can also contain an ignore boolean, a pictureUrl to be used (make sure it works based on wherever you're storing the pages, absolute URLs are pretty safe), a link to be associated with the user nick & pic, and sex to show (male, female, bot, unknown), all settings are optional
 			 *
 			 * E.g. { foo: {
@@ -149,7 +149,7 @@ var config = {
 			 *
 			 * @type {Object}
 			 */
-			userAliases: {
+			userConfig: {
 			}
 		}
 	],

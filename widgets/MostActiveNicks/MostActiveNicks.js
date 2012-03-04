@@ -57,7 +57,7 @@ var MostActiveNicks = function(statsAnalyzer, channelConfig) {
 			nickData.words = stats.wordsByNick[ nickData.nick ];
 			nickData.wordsPerLine = stats.wordsPerLineByNick[ nickData.nick ].toFixed(2);
 			nickData.charsPerLine = stats.lineLengthByNick[ nickData.nick ].toFixed(2);
-			nickData.lastSeen = Utils.timeSince( stats.lastSeenByNick[ nickData.nick ] );
+			nickData.lastSeen = Utils.timeSince( stats.lastSeenByNick[ nickData.nick ].getTime() );
 			nickData.randomQuote = statsAnalyzer.getRandomQuote( nickData.nick );
 
 			// Replace nick list item

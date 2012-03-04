@@ -278,7 +278,23 @@ var Utils = function() {
 				fs.stat(file, (function(file) {
 
 					return function(err, stats) {
-						if( err ) throw err;
+						if( err ) {
+
+							if( err.code==='ENOENT' ) {
+
+								// Would log this odd error, but can't load logger
+								// Logger.log('WARNING', 'Caught a "No such file or directory" error when trying to stat() ' + file);
+
+								// This async item is complete
+								asyncComplete();
+
+								return;
+							} else {
+
+								throw err;
+
+							}
+						}
 
 						// For directories, we might want to do recursion
 						if( recursive && stats.isDirectory() ) {
@@ -429,7 +445,7 @@ var Utils = function() {
 		}
 
 		if( stringComponents.length===0 ) {
-			stringComponents.push( duration + ' msec');
+			return false;
 		}
 
 
@@ -442,7 +458,13 @@ var Utils = function() {
 	 * @param timestamp
 	 */
 	this.timeSince = function(timestamp) {
-		return this.durationToString( new Date().getTime() - new XDate(timestamp).getTime() );
+		var text = this.durationToString( new Date().getTime() - new XDate(timestamp).getTime() );
+
+		if( text===false ) {
+			text = new XDate(timestamp).toString('yyyy-MM-dd HH:mm:ss');
+		}
+
+		return text;
 	};
 
 	/**

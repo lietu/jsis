@@ -115,8 +115,8 @@ var BigNumbers = function(statsAnalyzer, channelConfig) {
 		var topWordsPerLine = statsAnalyzer.nickObjectToArray( stats.wordsPerLineByNick ).sort( Utils.getArraySort('value') );
 		if( topWordsPerLine.length>=2 && topWordsPerLine[0].value>0 ) {
 			this.itemList.push({
-				big: topWords[0].nick + ' wrote an average of ' + topWords[0].value + ' words per line.',
-				small: 'The channel average was ' + stats.wordsPerLine + ' words per line.'
+				big: topWords[0].nick + ' wrote an average of ' + topWordsPerLine[0].value.toFixed(1) + ' words per line.',
+				small: 'The channel average was ' + stats.averageWordsPerLine.toFixed(1) + ' words per line.'
 			});
 		}
 	};

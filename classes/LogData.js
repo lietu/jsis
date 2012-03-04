@@ -182,7 +182,7 @@ var LogData = function(channelConfig) {
 			}
 
 			if( aliasList[ fromNickLower ].type < ALIAS_TYPE.DYNAMIC ) {
-				throw new Error('Trying to create alias ' + fromNick + ' -> ' + toNick + ', but ' + fromNick + ' already had higher priority (' +aliasList[ fromNickLower ].type+ ') alias to ' + aliasList[ fromNickLower ].nick);
+				Logger.log('WARNING', 'Trying to create alias ' + fromNick + ' -> ' + toNick + ', but ' + fromNick + ' already had higher priority (' +aliasList[ fromNickLower ].type+ ') alias to ' + aliasList[ fromNickLower ].nick + ' ... skipping');
 			}
 		}
 

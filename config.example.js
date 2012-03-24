@@ -161,12 +161,12 @@ var config = {
 		// Use an empty array to discard immediately
 		// Special keywords 'STDOUT' and 'STDERR' work as one could expect from such special keywords
 
-		// 'DEBUG': ['app.log', 'STDOUT'],
-		// 'INFO': ['app.log', 'STDOUT'],
-		'MESSAGE': ['app.log', 'STDOUT'],
-		'WARNING': ['app.log', 'STDOUT'],
-		'ERROR': ['app.log', 'STDOUT'],
-		'CRITICAL': ['app.log', 'STDOUT']
+		// 'DEBUG': ['STDOUT'],
+		// 'INFO': ['STDOUT'],
+		'MESSAGE': ['STDOUT'],
+		'WARNING': ['errors.log', 'STDERR'],
+		'ERROR': ['errors.log', 'STDERR'],
+		'CRITICAL': ['errors.log', 'STDERR']
 
 	}
 };

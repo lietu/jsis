@@ -6,6 +6,7 @@ html, body {
 	font-size: 14px;
 	margin: 0;
 	background: url('../images/dark_circles.png');
+	line-height: 1.4;
 }
 
 /* Content areas */
@@ -33,6 +34,8 @@ div.content {
 /* Headings */
 h1, h2 {
 	font-weight: bold;
+	text-shadow: 2px 3px 5px rgba(0, 0, 0, 0.7);
+	filter: dropshadow(color=#303030, offx=2, offy=3);
 }
 
 h1 {

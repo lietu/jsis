@@ -428,21 +428,24 @@ var LogData = function(channelConfig) {
 	 * @param {Number} currentTime
 	 * @param {String} nick
 	 * @param {Array} words Words to process
+	 * @return {Number} Number of words found
 	 */
 	this.checkWordList = function(currentTime, nick, words) {
 
-		var wordCount = words.length;
+		var wordCount = 0;
 
 		// Update all word stats
-		for( var i=0; i<wordCount; ++i ) {
+		for( var i=0, count=words.length; i<count; ++i ) {
 
 			if( wordRegex.test(words[i])===true ) {
 
 				this.registerWord(currentTime, nick, words[i]);
+				++wordCount;
 
 			}
 		}
 
+		return wordCount;
 	};
 
 	/**
@@ -454,14 +457,21 @@ var LogData = function(channelConfig) {
 	 */
 	this.registerWord = function(currentTime, nick, word) {
 
-		stats.wordUses[ word ] = stats.wordUses[ word ] || { count: 0, lastUsedBy: null, lastUsedAt: 0};
+		++stats.wordsByNick[ nick ];
 
-		stats.wordUses[ word ].count++;
+		// Check that this word is of the minimum required length, and not found in the ignore words
+		if( word.length >= this.channelConfig.wordMinLength && this.channelConfig.ignoreWords.indexOf( word.toLowerCase() )===-1 ) {
 
-		// If this use is newer than the previous one, update the last used
-		if( currentTime > stats.wordUses[ word ].lastUsedAt ) {
-			stats.wordUses[ word ].lastUsedBy = nick;
-			stats.wordUses[ word ].lastUsedAt = currentTime;
+			stats.wordUses[ word ] = stats.wordUses[ word ] || { count: 0, lastUsedBy: null, lastUsedAt: 0};
+
+			stats.wordUses[ word ].count++;
+
+			// If this use is newer than the previous one, update the last used
+			if( currentTime > stats.wordUses[ word ].lastUsedAt ) {
+				stats.wordUses[ word ].lastUsedBy = nick;
+				stats.wordUses[ word ].lastUsedAt = currentTime;
+			}
+
 		}
 
 	};
@@ -767,11 +777,12 @@ var LogData = function(channelConfig) {
 		// ... and lines by day by hour stats
 		stats.linesByDayByHour[ date ][ hour ]++;
 
+		// Check the word list for real words, process them, and get the count
+		var wordCount = this.checkWordList(currentTime, nick, words);
+
 		// Update average words per line and chars per line
 		stats.averageWordsPerLine = Utils.average(stats.averageWordsPerLine, wordCount, stats.lines);
 		stats.lineLength = Utils.average(stats.lineLength, text.length, stats.lines);
-
-		this.checkWordList(currentTime, nick, words);
 
 		this.checkUrlsFromLine(currentTime, nick, text);
 
@@ -806,7 +817,6 @@ var LogData = function(channelConfig) {
 
 		// Increment per-nick counts
 		stats.linesByNick[ nick ]++;
-		stats.wordsByNick[ nick ] += wordCount;
 		stats.linesByNickByHour[ nick ][ hour ]++;
 
 		// And recalculate average line length and words per line

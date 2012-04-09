@@ -116,6 +116,8 @@ var JSIS = function() {
 			statsTimezoneText: null,
 
 			soloLength: 5,
+			wordMinLength: 3,
+			ignoreWords: 'I a an it to in of and is for on you but the be me not if at so are my it\'s',
 
 			maxLogFiles: null,
 
@@ -152,6 +154,9 @@ var JSIS = function() {
 			}
 		}
 
+		// Convert ignoreWords to all-lowercase
+		config.ignoreWords = config.ignoreWords.toLowerCase();
+
 		var tzItems = ['logTimezone', 'statsTimezone'];
 		var reset = true;
 		var tzRegex = /[+-][0-9]{2}:[0-9]{2}/;
@@ -179,7 +184,7 @@ var JSIS = function() {
 		}
 
 		// What config settings to split into arrays
-		var splitStrings = ['foulWords', 'attackWords', 'happySmileys', 'unhappySmileys'];
+		var splitStrings = ['foulWords', 'attackWords', 'happySmileys', 'unhappySmileys', 'ignoreWords'];
 
 		// Loop through them
 		for( i=0, count=splitStrings.length; i<count; ++i ) {

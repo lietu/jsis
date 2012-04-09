@@ -18,6 +18,7 @@ var MostUsedWords = function(statsAnalyzer, channelConfig) {
 	var contentHTML = null;
 
 	// Our variables
+	this.wordMinLength = channelConfig.wordMinLength;
 	this.lines = [];
 
 	/**

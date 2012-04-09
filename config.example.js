@@ -131,6 +131,26 @@ var config = {
 			soloLength: 5,
 
 			/**
+			 * Minimum length of a word, before it is considered a word for the stats displaying per-word stats.
+			 * This will not affect the users' "words", "words per line", etc. stats.
+			 *
+			 * Just set to 1 to disable .. however you'll end up with a lot of "I", "a", "to", "in", etc.
+			 *
+			 * @type {Number}
+			 */
+			wordMinLength: 3,
+
+			/**
+			 * Ignore these words for the stats displaying per-word stats.
+			 * This will not affect the users' "words", "words per line", etc. stats.
+			 *
+			 * Just set to null to disable, otherwise give a space separated list of words to ignore.
+			 *
+			 * @type {String}
+			 */
+			//ignoreWords: 'I a it to in of an',
+
+			/**
 			 * Space separated list of words to be considered foul
 			 * Setting this will override the whole list of defaults
 			 *

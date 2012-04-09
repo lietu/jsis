@@ -7,6 +7,8 @@ var Stats = require('../classes/Stats.js');
 // Logger
 var Logger = require('../classes/Logger.js');
 
+var XDate = require('../lib/xdate.dev.js');
+
 /**
  * Create a new LogData instance
  */
@@ -378,10 +380,350 @@ var LogData = function(channelConfig) {
  	 */
 	var urlRegex = /\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))/gi;
 
+	// Regular expression to check for words
+	var wordRegex = /[a-z]+/;
+
 	// Solo stats following data, how long has a single nick been talking alone
 	var solo = {
 		nick: null,
 		count: 0
+	};
+
+	/**
+	 * Do timezone adjustment to the timestamp, if necessary
+	 * @param {XDate} timestamp
+	 */
+	this.adjustTimestamp = function(timestamp) {
+
+		// If the log and stats timezones do not match, we'll want to do a bit of adjustment
+		if( this.channelConfig.logTimezone!==this.channelConfig.statsTimezone ) {
+
+			// Get the date as a string
+			var dateString = timestamp.toString('u');
+
+			// Get the timezone in the string
+			var sourceTimezone = timestamp.toString('zzz');
+
+			// Convert the string to one in both the log timezone and stats timezone
+			var logDateString = dateString.replace(sourceTimezone, this.channelConfig.logTimezone);
+			var statsDateString = dateString.replace(sourceTimezone, this.channelConfig.statsTimezone);
+
+			// Then convert them to timestamps
+			var logTimestamp = new XDate(logDateString);
+			var statsTimestamp = new XDate(statsDateString);
+
+			// Calculate needed adjustment
+			var adjustment = statsTimestamp.getTime() - logTimestamp.getTime();
+
+			// Create the new, adjusted timestamp
+			timestamp = new XDate( logTimestamp + adjustment );
+		}
+
+		return timestamp;
+	};
+
+	/**
+	 * Update word statistics from the list of words in a line
+	 *
+	 * @param {Number} currentTime
+	 * @param {String} nick
+	 * @param {Array} words Words to process
+	 */
+	this.checkWordList = function(currentTime, nick, words) {
+
+		var wordCount = words.length;
+
+		// Update all word stats
+		for( var i=0; i<wordCount; ++i ) {
+
+			if( wordRegex.test(words[i])===true ) {
+
+				this.registerWord(currentTime, nick, words[i]);
+
+			}
+		}
+
+	};
+
+	/**
+	 * Register a word being said
+	 *
+	 * @param {Number} currentTime
+	 * @param {String} nick
+	 * @param {String} word
+	 */
+	this.registerWord = function(currentTime, nick, word) {
+
+		stats.wordUses[ word ] = stats.wordUses[ word ] || { count: 0, lastUsedBy: null, lastUsedAt: 0};
+
+		stats.wordUses[ word ].count++;
+
+		// If this use is newer than the previous one, update the last used
+		if( currentTime > stats.wordUses[ word ].lastUsedAt ) {
+			stats.wordUses[ word ].lastUsedBy = nick;
+			stats.wordUses[ word ].lastUsedAt = currentTime;
+		}
+
+	};
+
+	/**
+	 * Find and register any URLs from the line
+	 *
+	 * @param {Number} currentTime
+	 * @param {String} nick
+	 * @param {String} text
+	 */
+	this.checkUrlsFromLine = function(currentTime, nick, text) {
+
+
+		// Get the URLs on this line
+		var lineUrls = text.match(urlRegex);
+
+		// If some were found
+		if( lineUrls!==null ) {
+
+			// Update the url stats for all of them
+			for( var i=0, count=lineUrls.length; i<count; ++i ) {
+				this.registerUrl(currentTime, nick, lineUrls[i]);
+			}
+		}
+
+	};
+
+	/**
+	 * Register an URL being mentioned
+	 *
+	 * @param {Number} currentTime
+	 * @param {String} nick
+	 * @param {String} url
+	 */
+	this.registerUrl = function(currentTime, nick, url) {
+
+		stats.urls[ url ] = stats.urls[ url ] || { count: 0, lastUsedBy: null, lastUsedAt: 0};
+
+		stats.urls[ url ].count++;
+
+		// If this is a newer use, update last used by
+		if( currentTime > stats.urls[ url ].lastUsedAt ) {
+			stats.urls[ url ].lastUsedBy = nick;
+			stats.urls[ url ].lastUsedAt = currentTime;
+		}
+	};
+
+	/**
+	 * Register an action being done
+	 *
+	 * @param {Number} currentTime
+	 * @param {String} nick
+	 * @param {String} line
+	 */
+	this.registerAction = function(currentTime, nick, line) {
+			stats.actionsByNick[ nick ]++;
+	};
+
+	/**
+	 * Register a question being asked
+	 *
+	 * @param {Number} currentTime
+	 * @param {String} nick
+	 * @param {String} line
+	 */
+	this.registerQuestion = function(currentTime, nick, line) {
+		stats.questionsByNick[ nick ]++;
+	};
+
+	/**
+	 * Register someone shouting
+	 *
+	 * @param {Number} currentTime
+	 * @param {String} nick
+	 * @param {String} line
+	 */
+	this.registerShout = function(currentTime, nick, line) {
+		stats.shoutsByNick[ nick ]++;
+	};
+
+	/**
+	 * Check for all-caps words in a line
+	 *
+	 * @param {Number} currentTime
+	 * @param {String} nick
+	 * @param {String} words
+	 */
+	this.checkAllCapsWords = function(currentTime, nick, words) {
+
+		// Are any of the words all CAPS?
+		for( var i=0, count=words.length; i<count; ++i ) {
+
+			if( wordRegex.test(words[i])===true && words[i]===words[i].toUpperCase() ) {
+				this.registerAllCapsWord(currentTime, nick, words[i]);
+			}
+
+		}
+
+	};
+
+	/**
+	 * Register an all-caps word being said
+	 *
+	 * @param {Number} currentTime
+	 * @param {String} nick
+	 * @param {String} word
+	 */
+	this.registerAllCapsWord = function(currentTime, nick, word) {
+
+		stats.allCapsWordsByNick[ nick ]++;
+
+	};
+
+	/**
+	 * Check for aggressive words in the word list
+	 *
+	 * @param {Number} currentTime
+	 * @param {String} nick
+	 * @param {String} words
+	 */
+	this.checkAggressiveWords = function(currentTime, nick, words) {
+
+		// Are any of the words aggressive?
+		for( var i=0, count=this.channelConfig.aggressiveWords.length; i<count; ++i ) {
+
+			Utils.arrayCount(this.channelConfig.aggressiveWords[i], words, function() {
+				this.registerAggressiveWord(currentTime, nick, this.channelConfig.aggressiveWords[i]);
+			}.bind(this));
+
+		}
+
+	};
+
+	/**
+	 * Register an aggressive word being said
+	 *
+	 * @param {Number} currentTime
+	 * @param {String} nick
+	 * @param {String} word
+	 */
+	this.registerAggressiveWord = function(currentTime, nick, word) {
+
+		stats.attacksByNick[ nick ]++;
+
+	};
+
+	/**
+	 * Check for foul words in the word list
+	 *
+	 * @param {Number} currentTime
+	 * @param {String} nick
+	 * @param {String} words
+	 */
+	this.checkFoulWords = function(currentTime, nick, words) {
+
+		// Are any of the words foul words?
+		for( var i=0, count=this.channelConfig.foulWords.length; i<count; ++i ) {
+
+			Utils.arrayCount(this.channelConfig.foulWords[i], words, function() {
+				this.registerFoulWord(currentTime, nick, this.channelConfig.foulWords[i]);
+			}.bind(this));
+
+		}
+	};
+
+	/**
+	 * Register a foul word being said
+	 *
+	 * @param {Number} currentTime
+	 * @param {String} nick
+	 * @param {String} word
+	 */
+	this.registerFoulWord = function(currentTime, nick, word) {
+
+		stats.foulLanguageByNick[ nick ]++;
+
+	};
+
+	/**
+	 * Check for happy smileys in the list of words
+	 *
+	 * @param {Number} currentTime
+	 * @param {String} nick
+	 * @param {String} words
+	 */
+	this.checkHappySmileys = function(currentTime, nick, words) {
+
+		// Are any of the words happy smileys?
+		for( var i=0, count=this.channelConfig.happySmileys.length; i<count; ++i ) {
+
+			Utils.arrayCount(this.channelConfig.happySmileys[i], words, function() {
+				this.registerHappySmiley(currentTime, nick, this.channelConfig.happySmileys[i]);
+			}.bind(this));
+
+		}
+	};
+
+	/**
+	 * Register a happy smiley being said
+	 *
+	 * @param {Number} currentTime
+	 * @param {String} nick
+	 * @param {String} smiley
+	 */
+	this.registerHappySmiley = function(currentTime, nick, smiley) {
+
+		stats.happySmileysByNick[ nick ]++;
+
+		this.registerSmiley(currentTime, nick, smiley);
+	};
+
+	/**
+	 * Check for unhappy smileys in the list of words
+	 * @param {Number} currentTime
+	 * @param {String} nick
+	 * @param {String} words
+	 */
+	this.checkUnhappySmileys = function(currentTime, nick, words) {
+
+		// Are any of the words unhappy smileys?
+		for( var i=0, count=this.channelConfig.unhappySmileys.length; i<count; ++i ) {
+
+			Utils.arrayCount(this.channelConfig.unhappySmileys[i], words, function() {
+				this.registerUnhappySmiley(currentTime, nick, this.channelConfig.unhappySmileys[i]);
+			}.bind(this));
+
+		}
+
+	};
+
+	/**
+	 * Register an unhappy smiley being said
+	 *
+	 * @param {Number} currentTime
+	 * @param {String} nick
+	 * @param {String} smiley
+	 */
+	this.registerUnhappySmiley = function(currentTime, nick, smiley) {
+		stats.unhappySmileysByNick[ nick ]++;
+
+		this.registerSmiley(currentTime, nick, smiley);
+	};
+
+	/**
+	 * Register a smiley being said
+	 *
+	 * @param {Number} currentTime
+	 * @param {String} nick
+	 * @param {String} smiley
+	 */
+	this.registerSmiley = function(currentTime, nick, smiley) {
+
+		stats.smileyStats[ smiley ] = stats.smileyStats[ smiley ] || {count: 0, lastUsedBy: null, lastUsedAt: 0};
+
+		stats.smileyStats[ smiley ].count++;
+
+		if( currentTime > stats.smileyStats[ smiley ].lastUsedAt ) {
+			stats.smileyStats[ smiley ].lastUsedBy = nick;
+			stats.smileyStats[ smiley ].lastUsedAt = currentTime;
+		}
+
 	};
 
 	/**
@@ -396,6 +738,9 @@ var LogData = function(channelConfig) {
 		// Initialize the most commonly reused variables here
 		var i, count;
 
+		// Do any necessary timestamp adjustment
+		timestamp = this.adjustTimestamp(timestamp);
+
 		// Calculate some useful data
 		var currentTime = timestamp.getTime();
 		var words = Utils.trim(text).replace( /[ \r\n\t]+/g, ' ' ).split(' ');
@@ -403,6 +748,8 @@ var LogData = function(channelConfig) {
 		var hour = Number( timestamp.toString('HH') );
 		var date = timestamp.toString('yyyy-MM-dd');
 
+		// Before doing any statistics, get the alias of this nick
+		nick = this.getNickAliasData(nick).nick;
 
 		/*******************************\
 		* Update the channel-wide stats *
@@ -424,35 +771,15 @@ var LogData = function(channelConfig) {
 		stats.averageWordsPerLine = Utils.average(stats.averageWordsPerLine, wordCount, stats.lines);
 		stats.lineLength = Utils.average(stats.lineLength, text.length, stats.lines);
 
-		// Update all word stats
-		for( i=0; i<wordCount; ++i ) {
-			stats.wordUses[ words[i] ] = stats.wordUses[ words[i] ] || { count: 0, lastUsedBy: null};
+		this.checkWordList(currentTime, nick, words);
 
-			stats.wordUses[ words[i] ].count++;
-			stats.wordUses[ words[i] ].lastUsedBy = nick;
-		}
-
-		// Get the URLs on this line
-		var lineUrls = text.match(urlRegex);
-		// If some were found
-		if( lineUrls!==null ) {
-
-			// Update the url stats for all of them
-			for( i=0, count=lineUrls.length; i<count; ++i ) {
-				stats.urls[ lineUrls[i] ] = stats.urls[ lineUrls[i] ] || { count: 0, lastUsedBy: null};
-
-				stats.urls[ lineUrls[i] ].count++;
-				stats.urls[ lineUrls[i] ].lastUsedBy = nick;
-			}
-		}
+		this.checkUrlsFromLine(currentTime, nick, text);
 
 
 		/***************************\
 		* Update the per-nick stats *
 		\***************************/
 
-		// Get the alias of this nick
-		nick = this.getNickAliasData(nick).nick;
 
 		// Make sure the nick's stats are initialized
 		stats.initNick(nick);
@@ -487,75 +814,30 @@ var LogData = function(channelConfig) {
 		stats.wordsPerLineByNick[ nick ] = Utils.average(stats.wordsPerLineByNick[ nick ], wordCount, stats.wordsByNick[ nick ]);
 
 		// Last seen
-		if( stats.lastSeenByNick[ nick ].getTime() < timestamp.getTime() ) {
-			stats.lastSeenByNick[ nick ] = timestamp;
+		if( stats.lastSeenByNick[ nick ] < currentTime ) {
+			stats.lastSeenByNick[ nick ] = currentTime;
 		}
 
 		// If this is an action, increment that count as well
-		if( isAction===true ) {	stats.actionsByNick[ nick ]++; }
+		if( isAction===true ) {	this.registerAction(currentTime, nick, text) }
 
 		// Does it look like a question?
-		if( text.indexOf('?')!==-1 ) { stats.questionsByNick[ nick ]++; }
+		if( text.indexOf('?')!==-1 ) { this.registerQuestion(currentTime, nick, text) }
 
 		// Does it look like shouting?
-		if( text.indexOf('!')!==-1 ) { stats.shoutsByNick[ nick ]++; }
+		if( text.indexOf('!')!==-1 ) { this.registerShout(currentTime, nick, text) }
 
-		// Are any of the words all CAPS?
-		for( i=0; i<wordCount; ++i ) {
+		this.checkAllCapsWords( currentTime, nick, words );
 
-			if( words[i] === words[i].toUpperCase() ) {
-				stats.allCapsWordsByNick[ nick ]++;
-			}
-
-		}
-
-		// Are any of the words aggressive?
-		for( i=0, count=this.channelConfig.aggressiveWords.length; i<count; ++i ) {
-
-			if( words.indexOf( this.channelConfig.aggressiveWords[i] )!==-1 ) {
-				stats.attacksByNick[ nick ]++;
-			}
-
-		}
+		this.checkAggressiveWords( currentTime, nick, words );
 
 		// TODO: stats.attackTargetByNick
 
-		// Are any of the words foul words?
-		for( i=0, count=this.channelConfig.foulWords.length; i<count; ++i ) {
+		this.checkFoulWords( currentTime, nick, words );
 
-			if( words.indexOf( this.channelConfig.foulWords[i] )!==-1 ) {
-				stats.foulLanguageByNick[ nick ]++;
-			}
+		this.checkHappySmileys( currentTime, nick, words );
 
-		}
-
-		// Are any of the words happy smileys?
-		for( i=0, count=this.channelConfig.happySmileys.length; i<count; ++i ) {
-
-			if( words.indexOf( this.channelConfig.happySmileys[i] )!==-1 ) {
-				stats.happySmileysByNick[ nick ]++;
-
-				stats.smileyStats[ this.channelConfig.happySmileys[i] ] = stats.smileyStats[ this.channelConfig.happySmileys[i] ] || {count: 0, lastUsedBy: null};
-
-				stats.smileyStats[ this.channelConfig.happySmileys[i] ].count++;
-				stats.smileyStats[ this.channelConfig.happySmileys[i] ].lastUsedBy = nick;
-			}
-
-		}
-
-		// Are any of the words unhappy smileys?
-		for( i=0, count=this.channelConfig.unhappySmileys.length; i<count; ++i ) {
-
-			if( words.indexOf( this.channelConfig.unhappySmileys[i] )!==-1 ) {
-				stats.unhappySmileysByNick[ nick ]++;
-
-				stats.smileyStats[ this.channelConfig.unhappySmileys[i] ] = stats.smileyStats[ this.channelConfig.unhappySmileys[i] ] || {count: 0, lastUsedBy: null};
-
-				stats.smileyStats[ this.channelConfig.unhappySmileys[i] ].count++;
-				stats.smileyStats[ this.channelConfig.unhappySmileys[i] ].lastUsedBy = nick;
-			}
-
-		}
+		this.checkUnhappySmileys( currentTime, nick, words );
 
 	};
 
@@ -566,9 +848,12 @@ var LogData = function(channelConfig) {
 	 * @param mode The mode string
 	 * @param nick The nickname of the nick who set the mode
 	 */
-	this.addMode = function(timestamp, mode, nick) {
+	this.addMode = function(timestamp, nick, mode) {
 
 		stats.modes++;
+
+		// Do any necessary timestamp adjustment
+		timestamp = this.adjustTimestamp(timestamp);
 
 		// Get the alias of this nick
 		nick = this.getNickAliasData(nick).nick;
@@ -610,7 +895,7 @@ var LogData = function(channelConfig) {
 	 * Log a join by a nick
 	 * @param nick The nickname of the joined nick
 	 */
-	this.addJoin = function(nick) {
+	this.addJoin = function(timestamp, nick) {
 
 		// Process aliases
 		nick = this.getNickAliasData(nick).nick;
@@ -625,7 +910,7 @@ var LogData = function(channelConfig) {
 	 * Log the parting of a nick
 	 * @param nick The nickname of the nick who parted
 	 */
-	this.addPart = function(nick) {
+	this.addPart = function(timestamp, nick) {
 
 		// Process aliases
 		nick = this.getNickAliasData(nick).nick;
@@ -644,7 +929,7 @@ var LogData = function(channelConfig) {
 	 * @param nick By whom
 	 * @param reason For what reason
 	 */
-	this.addKick = function(target, nick, reason) {
+	this.addKick = function(timestamp, target, nick, reason) {
 
 		// Process aliases
 		nick = this.getNickAliasData(nick).nick;
@@ -668,6 +953,9 @@ var LogData = function(channelConfig) {
 	 * @param topic And what did they change it to
 	 */
 	this.addTopic = function(timestamp, nick, topic) {
+
+		// Do any necessary timestamp adjustment
+		timestamp = this.adjustTimestamp(timestamp);
 
 		nick = this.getNickAliasData(nick).nick;
 

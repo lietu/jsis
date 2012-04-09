@@ -129,6 +129,7 @@ var StatsToHTML = function(statsAnalyzer, channelConfig, startTime, version) {
 				customHeadHtml: this.channelConfig.customHeadHtml,
 				JSISversion: this.version,
 				channelName: this.channelConfig.name,
+				timezone: this.channelConfig.statsTimezoneText,
 				statsAnalyzer: this.statsAnalyzer,
 				widgetHTML: widgetHTML
 			};
@@ -223,7 +224,7 @@ var StatsToHTML = function(statsAnalyzer, channelConfig, startTime, version) {
 		Logger.log('DEBUG', 'Creating a new ' + widgetClass + ' widget');
 
 		// Create one
-		var widget = new widgetConstructor( this.statsAnalyzer );
+		var widget = new widgetConstructor( this.statsAnalyzer, this.channelConfig );
 
 		// Render it's view
 		EJS.renderFile( 'widgets/' + widgetClass + '/' + widgetClass + '.ejs', {widget: widget, channelConfig: this.channelConfig}, function(err, html) {

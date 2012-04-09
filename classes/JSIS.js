@@ -5,6 +5,9 @@ Logger.initialize();
 // We will need the log data class
 var LogData = require('../classes/LogData.js');
 
+// We will need the log relayer class
+var LogRelayer = require('../classes/LogRelayer.js');
+
 // And a stats analyzer
 var StatsAnalyzer = require('../classes/StatsAnalyzer.js');
 
@@ -13,6 +16,8 @@ var Utils = require('../classes/Utils.js');
 
 // The Stats 2 HTML code
 var StatsToHTML = require('../classes/StatsToHTML.js');
+
+var XDate = require('../lib/xdate.dev.js');
 
 // And the fs lib
 var fs = require('fs');
@@ -106,6 +111,9 @@ var JSIS = function() {
 			logFileFilter: '',
 
 			customHeadHtml: '',
+			logTimezone: null,
+			statsTimezone: null,
+			statsTimezoneText: null,
 
 			soloLength: 5,
 
@@ -141,6 +149,32 @@ var JSIS = function() {
 					config[ key ] = defaultChannelConfig[ key ];
 				}
 
+			}
+		}
+
+		var tzItems = ['logTimezone', 'statsTimezone'];
+		var reset = true;
+		var tzRegex = /[+-][0-9]{2}:[0-9]{2}/;
+		for( i=0, count=tzItems.length; i<count; ++i ) {
+			reset = false;
+
+			if( config[ tzItems[i] ]===null ) {
+				reset = true;
+			} else if( tzRegex.test( config[ tzItems[i] ] )===false ) {
+				throw new Error('Channel ' + index + ' (' + config.name + ') setting "' + tzItems[i] + '" value "' + config[ tzItems[i] ] + '" does not seem like a valid timezone');
+			}
+
+			if( reset===true ) {
+				config[ tzItems[i] ] = new XDate().toString('zzz');
+			}
+		}
+
+		if( config.statsTimezoneText===null ) {
+			// Start with the text "GMT"
+			config.statsTimezoneText = 'GMT';
+
+			if( config.statsTimezone!=='+00:00' && config.statsTimezone!=='-00:00' ) {
+				config.statsTimezoneText += config.statsTimezone;
 			}
 		}
 
@@ -338,13 +372,17 @@ var JSIS = function() {
 				// Process the configuration to a useful format
 				var channelConfig = this.parseChannelConfig( config.channels[i], i+1 );
 
-				// Initialize a log reader, should crash if not found
-				var logReaderClass = require('../classes/LogReaders/' + channelConfig.logFormat + '.js');
-
 				// Create an object for keeping the logs
 				var channelLog = new LogData(channelConfig);
-				// And instantiate the log reader
-				var logReader = new logReaderClass(channelLog);
+
+				// Initialize a log relayer
+				var logRelayer = new LogRelayer(channelLog);
+
+				// Try and load the log type -specific reader, will crash if not found
+				var logReaderClass = require('../classes/LogReaders/' + channelConfig.logFormat + '.js');
+
+				// And instantiate it
+				var logReader = new logReaderClass(logRelayer, channelConfig);
 
 				// And start processing the channel
 				this.processChannel(channelConfig, channelLog, logReader);

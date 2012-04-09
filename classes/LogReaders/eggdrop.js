@@ -3,15 +3,15 @@ var XDate = require('../../lib/xdate.dev.js');
 var Logger = require('../../classes/Logger.js');
 
 /**
- * Parse eggdrop log string into the LogData object
- * @param {LogData} logData
+ * Parse eggdrop log string into the logRelayer object
+ * @param {LogRelayer} logRelayer
  */
-var EggdropReader = function(logData) {
+var EggdropReader = function(logRelayer, channelConfig) {
 
 	/**
-	 * @type {LogData}
+	 * @type {LogRelayer}
 	 */
-	this.logData = logData;
+	this.logRelayer = logRelayer;
 
 	/**
 	 * Read a single line
@@ -90,7 +90,7 @@ var EggdropReader = function(logData) {
 	var unknownDate = true;
 
 	this.currentDate = date.toString('ddd MMM dd yyyy');
-	this.tzData = 'GMT'+date.toString('zzz');
+	this.tzData = 'GMT' + channelConfig.logTimezone;
 
 	// List of timestamps created without knowing the date
 	var timeStampsWithUnknownDate = [];
@@ -129,6 +129,9 @@ var EggdropReader = function(logData) {
 
 			// We now know the date
 			unknownDate = false;
+
+			// Disable buffering in the relayer
+			this.logRelayer.disableBuffering();
 		}
 	};
 
@@ -147,7 +150,7 @@ var EggdropReader = function(logData) {
 		/**
 		 * Build the timestamp for a line from the time string, e.g. "14:56"
 		 */
-		var lineTimeStamp = function(hourMinutes, seconds) {
+		var lineTimestamp = function(hourMinutes, seconds) {
 
 			if( !seconds ) {
 				seconds = ':00';
@@ -162,8 +165,12 @@ var EggdropReader = function(logData) {
 		}.bind(this);
 
 		// Read all lines, line by line
-		var line, data;
+		var line, data, timestamp;
 		var lineNumber = 0;
+
+		// Enable buffering in the relayer
+		this.logRelayer.enableBuffering();
+		
 		while( line = this.readLine() ) {
 
 			lineNumber++;
@@ -171,68 +178,69 @@ var EggdropReader = function(logData) {
 			// Does this line tell us a new date?
 			if( data = line.match(dateRegExp) ) {
 
-//				Logger.log('DEBUG', 'Line ' + lineNumber + ' seems to contain a new date: ' + data[2]);
-
-
 				// Update the current date with the first selection's result
 				this.setDate( data[3].replace(' +', ' ') );
 
 			// Is this a line?
 			} else if( data = line.match( lineRegExp ) ) {
 
-				// Logger.log('INFO', 'Line ' + lineNumber + ' seems to be someone talking: ' + JSON.stringify(data));
+				// Log this line
+				this.logRelayer.log('line', lineTimestamp(data[1], data[2]), {nick: data[3], text: data[4]} );
 
-
-				// Give our data to the LogData object
-				logData.addLine( lineTimeStamp(data[1], data[2]), /* nick */ data[3], /* and the text */ data[4], false);
-
+			// Is it an action?
 			} else if( data = line.match(actionRegExp) ) {
 
-				logData.addLine( lineTimeStamp(data[1], data[2]), /* nick */ data[3], /* and the text */ data[4], true);
+				// Log this action
+				this.logRelayer.log('action', lineTimestamp(data[1], data[2]), {nick: data[3], text: data[4]} );
 
 			} else if( data = line.match(modeRegExp) ) {
 
+				timestamp = lineTimestamp(data[1], data[2]);
+
 				// This is one of those lines that reveal the nicks' full hostmask, let's make sure we save that data
-				logData.registerNickHostmask(data[4], data[5]);
+				this.logRelayer.log('nickHostmask', timestamp, {nick: data[4], hostmask: data[5]});
 
-				// Logger.log('INFO', 'Line ' + lineNumber + ' seems to be a mode change: ' + JSON.stringify(data));
-
-				logData.addMode( lineTimeStamp(data[1], data[2]), data[3], data[4] );
+				// Log this mode change
+				this.logRelayer.log('mode', timestamp, {nick: data[4], mode: data[3]} );
 
 			} else if( data = line.match(joinPartRegExp) ) {
 
+				timestamp = lineTimestamp(data[1], data[2]);
+
 				// This is one of those lines that reveal the nicks' full hostmask, let's make sure we save that data
-				logData.registerNickHostmask(data[3], data[4]);
+				this.logRelayer.log('nickHostmask', timestamp, {nick: data[3], hostmask: data[4]});
 
 				// Register a join or part depending on which this is
 				if( data[4]==='joined' ) {
-					logData.addJoin( data[3] );
+					this.logRelayer.log('join', timestamp, {nick: data[3]} );
 				} else {
-					logData.addPart( data[3] );
+					this.logRelayer.log('part', timestamp, {nick: data[3]} );
 				}
 
-				// Logger.log('WARNING', 'Line ' + lineNumber + ' was not recognized: "' + line + '"')
 			} else if( data = line.match(kickRegExp) ) {
 
-				logData.addKick( data[3], data[4], data[5] );
+				// Log this kick
+				this.logRelayer.log('kick', lineTimestamp(data[1], data[2]), {target: data[3], nick: data[4], reason: data[5]});
 
 			} else if( data = line.match(topicRegExp) ) {
 
-				// This is one of those lines that reveal the nicks' full hostmask, let's make sure we save that data
-				logData.registerNickHostmask(data[3], data[4]);
+				timestamp = lineTimestamp(data[1], data[2]);
 
-				logData.addTopic( lineTimeStamp(data[1], data[2]), data[3], data[5]);
+				// This is one of those lines that reveal the nicks' full hostmask, let's make sure we save that data
+				this.logRelayer.log('nickHostmask', timestamp, {nick: data[3], hostmask: data[4]});
+
+				// Log this topic change
+				this.logRelayer.log('topic', timestamp, {nick: data[3], topic: data[5]});
 
 			} else if( data = line.match(nickChangeRegExp) ) {
 
-				// Register the nick change event
-				logData.registerNickChange(data[3], data[4]);
+				// Log this topic change
+				this.logRelayer.log('nickChange', lineTimestamp(data[1], data[2]), {fromNick: data[3], toNick: data[4]});
 
 			} else {
 
 				// Unrecognized line, e.g. netsplit, return from netsplit, etc.
 
-				// Logger.log('WARNING', 'Line ' + lineNumber + ' was not recognized: "' + line + '"')
 			}
 		}
 	}

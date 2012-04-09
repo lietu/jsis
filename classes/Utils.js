@@ -476,6 +476,43 @@ var Utils = function() {
 			return (second[sortKey] - first[sortKey])
 		}
 	};
+
+	/**
+	 * Find out how many times an item is in an array, optionally calling a callback for every found item
+	 * @param {Mixed} needle What to search for
+	 * @param {Array} haystack What to search in
+	 * @param {Function} callback Optional callback to be called when a match is found, will be given the needle, haystack, and position found in
+	 */
+	this.arrayCount = function(needle, haystack, callback) {
+
+		// Initialize variables
+		var pos = 0;
+		var count = 0;
+
+		// Loop until we find no more instances of needle
+		while( pos!==-1 ) {
+
+			// Get the next position of needle
+			pos = haystack.indexOf( needle, pos );
+
+			// If we found an instance of the needle
+			if( pos!==-1 ) {
+
+				// Increment count
+				++count;
+
+				// If we had a callback, call it
+				if( callback ) {
+					callback( needle, haystack, pos );
+				}
+
+				// Move up one position so we'll find the next one
+				pos += 1;
+			}
+		}
+
+		return count;
+	};
 };
 
 // Instancify the Utils to exports

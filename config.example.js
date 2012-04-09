@@ -48,18 +48,22 @@ var config = {
 			logEncoding: 'ASCII',
 
 			/**
+			 * If your logs are not from the same timezone as the machine you're generating stats, setting this
+			 * will help you get the expected results. For timezone adjustment, also set statsTimezone.
+			 *
+			 * Format: +HH:MM or -HH:MM as offset from GMT, null to use server timezone (default)
+			 * E.g.: +03:00 or -07:00
+			 *
+			 * @type {String}
+			 */
+			//logTimezone: '+03:00',
+
+			/**
 			 * Path to log files, you should really use a full path here
 			 *
 			 * @type {String}
 			 */
 			logPath: '/path/to/lamechannel/logs',
-
-			/**
-			 * Try and find log files recursively? Default: true
-			 *
-			 * @type {Boolean}
-			 */
-			recursive: true,
 
 			/**
 			 * RegExp that will be used to checked every log filename (it will include full path)
@@ -73,12 +77,37 @@ var config = {
 			logFileFilter: /lamechannel\.log/,
 
 			/**
+			 * Try and find log files recursively? Default: true
+			 *
+			 * @type {Boolean}
+			 */
+			recursive: true,
+
+			/**
 			 * How many days of logs to parse at most
 			 * Use "Infinity" to signify "everything"
 			 *
 			 * @type {RegExp}
 			 */
 			maxLogFiles: Infinity,
+
+			/**
+			 * If you want to render the stats in a different timezone than the server is at, set this to the
+			 * timezone you want to render in. Also you might want to make sure logTimezone is correct.
+			 *
+			 * Format: +HH:MM or -HH:MM as offset from GMT, null to use server timezone (default)
+			 * E.g.: +03:00 or -07:00
+			 *
+			 * @type {String}
+			 */
+			//statsTimezone: '+00:00',
+
+			/**
+			 * What text to show as being the timezone, in case you don't want to show "GTM-07:00"
+			 *
+			 * @type {String}
+			 */
+			//statsTimezoneText: 'GMT',
 
 			/**
 			 * Widgets to include, and in what order, comment out for default configuration (widgets/config.js)

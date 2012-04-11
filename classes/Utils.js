@@ -456,9 +456,19 @@ var Utils = function() {
 	/**
 	 * Get a nice string that says how long it has been since the given timestamp
 	 * @param timestamp
+	 * @param adjustment Optional, adjust the current time with this amount of msec
 	 */
-	this.timeSince = function(timestamp) {
-		var text = this.durationToString( new Date().getTime() - new XDate(timestamp).getTime() );
+	this.timeSince = function(timestamp, adjustment) {
+
+		// Get current time
+		var currentTime = new Date().getTime();
+
+		// If we need adjustment, do that now
+		if( adjustment!==undefined ) {
+			currentTime += adjustment;
+		}
+
+		var text = this.durationToString( currentTime - new XDate(timestamp).getTime() );
 
 		if( text===false ) {
 			text = new XDate(timestamp).toString('yyyy-MM-dd HH:mm:ss');
@@ -466,6 +476,54 @@ var Utils = function() {
 
 		return text;
 	};
+
+	/**
+	 * Get the required adjustment in msec from one timezone to another
+	 * @param fromTimezone
+	 * @param toTimezone
+	 * @return {Number}
+	 */
+	this.getTimezoneAdjustment = (function() {
+		var timezoneCache = {};
+
+		return function(fromTimezone, toTimezone) {
+
+			// Matching timezones require no adjustment
+			if( fromTimezone===toTimezone ) {
+				return 0;
+			}
+
+			var identifier = fromTimezone + ' : ' + toTimezone;
+
+			if( timezoneCache[ identifier ]===undefined ) {
+
+				// Create a timestamp to work with
+				var timestamp = new XDate();
+
+				// Get the date as a string
+				var dateString = timestamp.toString('u');
+
+				// Get the timezone in the string
+				var sourceTimezone = timestamp.toString('zzz');
+
+				// Convert the string to one in both the log timezone and stats timezone
+				var fromDateString = dateString.replace(sourceTimezone, fromTimezone);
+				var toDateString = dateString.replace(sourceTimezone, toTimezone);
+
+				// Then convert them to timestamps
+				var fromTimestamp = new XDate(fromDateString);
+				var toTimestamp = new XDate(toDateString);
+
+				// Calculate needed adjustment
+				timezoneCache[ identifier ] = toTimestamp.getTime() - fromTimestamp.getTime();
+
+			}
+
+			// Return from cache
+			return timezoneCache[ identifier ];
+
+		}.bind(this)
+	}.bind(this))();
 
 	/**
 	 * Get a function to sort an array of objects by a key

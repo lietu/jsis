@@ -1,3 +1,6 @@
+// Utility functions
+var Utils = require('../classes/Utils.js');
+
 var XDate = require('../lib/xdate.dev.js');
 
 /**
@@ -10,31 +13,19 @@ var LogRelayer = function(logData, channelConfig) {
 	/**
 	 * Do timezone adjustment to the timestamp, if necessary
 	 * @param {XDate} timestamp
+	 * @param {String} fromTimezone e.g. +03:00
+	 * @param {String} toTimezone e.g. -07:00
 	 */
-	var adjustTimestamp = function(timestamp) {
+	var adjustTimestamp = function(timestamp, fromTimezone, toTimezone) {
 
-		// If the log and stats timezones do not match, we'll want to do a bit of adjustment
-		if( channelConfig.logTimezone!==channelConfig.statsTimezone ) {
+		// Get the required adjustment for the timezones
+		var adjustment = Utils.getTimezoneAdjustment( fromTimezone, toTimezone );
 
-			// Get the date as a string
-			var dateString = timestamp.toString('u');
-
-			// Get the timezone in the string
-			var sourceTimezone = timestamp.toString('zzz');
-
-			// Convert the string to one in both the log timezone and stats timezone
-			var logDateString = dateString.replace(sourceTimezone, channelConfig.logTimezone);
-			var statsDateString = dateString.replace(sourceTimezone, channelConfig.statsTimezone);
-
-			// Then convert them to timestamps
-			var logTimestamp = new XDate(logDateString);
-			var statsTimestamp = new XDate(statsDateString);
-
-			// Calculate needed adjustment
-			var adjustment = statsTimestamp.getTime() - logTimestamp.getTime();
+		// If adjustment is required
+		if( adjustment > 0 ) {
 
 			// Create the new, adjusted timestamp
-			timestamp = new XDate( logTimestamp + adjustment );
+			timestamp = new XDate( timestamp.getTime() + adjustment );
 		}
 
 		return timestamp;
@@ -50,7 +41,7 @@ var LogRelayer = function(logData, channelConfig) {
 	var writeToLogData = function(type, timestamp, data) {
 
 		// Let's do timestamp adjustment before giving it to LogData
-		timestamp = adjustTimestamp(timestamp);
+		timestamp = adjustTimestamp(timestamp, channelConfig.logTimezone, channelConfig.statsTimezone);
 
 		// Pass data to appropriate functions in the LogData class
 		switch( type ) {

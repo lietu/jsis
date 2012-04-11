@@ -381,7 +381,7 @@ var JSIS = function() {
 				var channelLog = new LogData(channelConfig);
 
 				// Initialize a log relayer
-				var logRelayer = new LogRelayer(channelLog);
+				var logRelayer = new LogRelayer(channelLog, channelConfig);
 
 				// Try and load the log type -specific reader, will crash if not found
 				var logReaderClass = require('../classes/LogReaders/' + channelConfig.logFormat + '.js');

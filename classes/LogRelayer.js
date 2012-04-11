@@ -1,9 +1,44 @@
+var XDate = require('../lib/xdate.dev.js');
 
 /**
  * Helper to relay data from a LogReader to a LogData instance
  * @param logData
+ * @param channelConfig
  */
-var LogRelayer = function(logData) {
+var LogRelayer = function(logData, channelConfig) {
+
+	/**
+	 * Do timezone adjustment to the timestamp, if necessary
+	 * @param {XDate} timestamp
+	 */
+	var adjustTimestamp = function(timestamp) {
+
+		// If the log and stats timezones do not match, we'll want to do a bit of adjustment
+		if( channelConfig.logTimezone!==channelConfig.statsTimezone ) {
+
+			// Get the date as a string
+			var dateString = timestamp.toString('u');
+
+			// Get the timezone in the string
+			var sourceTimezone = timestamp.toString('zzz');
+
+			// Convert the string to one in both the log timezone and stats timezone
+			var logDateString = dateString.replace(sourceTimezone, channelConfig.logTimezone);
+			var statsDateString = dateString.replace(sourceTimezone, channelConfig.statsTimezone);
+
+			// Then convert them to timestamps
+			var logTimestamp = new XDate(logDateString);
+			var statsTimestamp = new XDate(statsDateString);
+
+			// Calculate needed adjustment
+			var adjustment = statsTimestamp.getTime() - logTimestamp.getTime();
+
+			// Create the new, adjusted timestamp
+			timestamp = new XDate( logTimestamp + adjustment );
+		}
+
+		return timestamp;
+	};
 
 	/**
 	 * Write a new entry to log data
@@ -13,6 +48,9 @@ var LogRelayer = function(logData) {
 	 * @param data
 	 */
 	var writeToLogData = function(type, timestamp, data) {
+
+		// Let's do timestamp adjustment before giving it to LogData
+		timestamp = adjustTimestamp(timestamp);
 
 		// Pass data to appropriate functions in the LogData class
 		switch( type ) {
@@ -39,6 +77,10 @@ var LogRelayer = function(logData) {
 
 			case 'topic':
 				logData.addTopic(timestamp, data.nick, data.topic);
+				break;
+
+			case 'nickChange':
+				logData.registerNickChange(data.fromNick, data.toNick);
 				break;
 
 			case 'nickHostmask':

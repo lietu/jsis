@@ -7,8 +7,6 @@ var Stats = require('../classes/Stats.js');
 // Logger
 var Logger = require('../classes/Logger.js');
 
-var XDate = require('../lib/xdate.dev.js');
-
 /**
  * Create a new LogData instance
  */
@@ -390,39 +388,6 @@ var LogData = function(channelConfig) {
 	};
 
 	/**
-	 * Do timezone adjustment to the timestamp, if necessary
-	 * @param {XDate} timestamp
-	 */
-	this.adjustTimestamp = function(timestamp) {
-
-		// If the log and stats timezones do not match, we'll want to do a bit of adjustment
-		if( this.channelConfig.logTimezone!==this.channelConfig.statsTimezone ) {
-
-			// Get the date as a string
-			var dateString = timestamp.toString('u');
-
-			// Get the timezone in the string
-			var sourceTimezone = timestamp.toString('zzz');
-
-			// Convert the string to one in both the log timezone and stats timezone
-			var logDateString = dateString.replace(sourceTimezone, this.channelConfig.logTimezone);
-			var statsDateString = dateString.replace(sourceTimezone, this.channelConfig.statsTimezone);
-
-			// Then convert them to timestamps
-			var logTimestamp = new XDate(logDateString);
-			var statsTimestamp = new XDate(statsDateString);
-
-			// Calculate needed adjustment
-			var adjustment = statsTimestamp.getTime() - logTimestamp.getTime();
-
-			// Create the new, adjusted timestamp
-			timestamp = new XDate( logTimestamp + adjustment );
-		}
-
-		return timestamp;
-	};
-
-	/**
 	 * Update word statistics from the list of words in a line
 	 *
 	 * @param {Number} currentTime
@@ -748,13 +713,9 @@ var LogData = function(channelConfig) {
 		// Initialize the most commonly reused variables here
 		var i, count;
 
-		// Do any necessary timestamp adjustment
-		timestamp = this.adjustTimestamp(timestamp);
-
 		// Calculate some useful data
 		var currentTime = timestamp.getTime();
 		var words = Utils.trim(text).replace( /[ \r\n\t]+/g, ' ' ).split(' ');
-		var wordCount = words.length;
 		var hour = Number( timestamp.toString('HH') );
 		var date = timestamp.toString('yyyy-MM-dd');
 
@@ -821,7 +782,7 @@ var LogData = function(channelConfig) {
 
 		// And recalculate average line length and words per line
 		stats.lineLengthByNick[ nick ] = Utils.average(stats.lineLengthByNick[ nick ], text.length, stats.linesByNick[ nick ]);
-		stats.wordsPerLineByNick[ nick ] = Utils.average(stats.wordsPerLineByNick[ nick ], wordCount, stats.wordsByNick[ nick ]);
+		stats.wordsPerLineByNick[ nick ] = (stats.wordsByNick[ nick ] > 0 ? stats.wordsByNick[ nick ] / stats.linesByNick[ nick ] : 0);
 
 		// Last seen
 		if( stats.lastSeenByNick[ nick ] < currentTime ) {
@@ -861,9 +822,6 @@ var LogData = function(channelConfig) {
 	this.addMode = function(timestamp, nick, mode) {
 
 		stats.modes++;
-
-		// Do any necessary timestamp adjustment
-		timestamp = this.adjustTimestamp(timestamp);
 
 		// Get the alias of this nick
 		nick = this.getNickAliasData(nick).nick;
@@ -963,9 +921,6 @@ var LogData = function(channelConfig) {
 	 * @param topic And what did they change it to
 	 */
 	this.addTopic = function(timestamp, nick, topic) {
-
-		// Do any necessary timestamp adjustment
-		timestamp = this.adjustTimestamp(timestamp);
 
 		nick = this.getNickAliasData(nick).nick;
 

@@ -95,16 +95,8 @@ var Stats = function() {
 				// Special case, this.lastSeenByNick
 				if( key==='lastSeenByNick' ) {
 
-					// If we have no data for toNick, just use data for fromNick
-					if( !this[ key ][ toNick ] ) {
-						this[ key ][ toNick ] = this[ key ][ fromNick ];
-
-					// If we have no data for fromNick, leave toNick data as-is
-					} else if( !this[ key ][ fromNick ] ) {
-						// This was intentionally left blank
-
 					// If we have both, we'll use whatever timestamp is larger
-					} else if( this[ key ][ toNick ].getTime() < this[ key ][ fromNick ].getTime() ) {
+					if( this[ key ][ toNick ] < this[ key ][ fromNick ] ) {
 
 						this[ key ][ toNick ] = this[ key ][ fromNick ];
 					}

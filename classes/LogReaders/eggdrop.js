@@ -144,6 +144,9 @@ var EggdropReader = function(logRelayer, channelConfig) {
 		// We were given a buffer, buffers are dull, and difficult to work with, so let's just take a string representation of it
 		var logString = logBuffer.toString();
 
+		// Log a new file being parsed
+		this.logRelayer.logFile(logString.length);
+
 		// Trim the string, extra linefeeds and such, then save it for use in readLine()
 		this.logString = Utils.trim( logString );
 
@@ -168,8 +171,10 @@ var EggdropReader = function(logRelayer, channelConfig) {
 		var line, data, timestamp;
 		var lineNumber = 0;
 
-		// Enable buffering in the relayer
-		this.logRelayer.enableBuffering();
+		// Enable buffering in the relayer, if we don't know the date yet
+		if( unknownDate===true ) {
+			this.logRelayer.enableBuffering();
+		}
 		
 		while( line = this.readLine() ) {
 

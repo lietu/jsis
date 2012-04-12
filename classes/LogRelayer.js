@@ -94,6 +94,10 @@ var LogRelayer = function(logData, channelConfig) {
 	 */
 	var bufferData = [];
 
+	// Counters for parsed content
+	this.fileCount = 0;
+	this.byteCount = 0;
+
 	/**
 	 * Enable buffering, items will be stored in a temporary buffer instead of passing to LogData until buffer is disabled
 	 */
@@ -142,6 +146,15 @@ var LogRelayer = function(logData, channelConfig) {
 
 		}
 	};
+
+	/**
+	 * Log a new file being parsed
+	 * @param bytes Number of bytes in the file
+	 */
+	this.logFile = function(bytes) {
+		++this.fileCount;
+		this.byteCount += bytes;
+	}
 
 };
 

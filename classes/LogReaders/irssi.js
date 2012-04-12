@@ -101,6 +101,9 @@ var IrssiReader = function(logRelayer, channelConfig) {
 		// We were given a buffer, buffers are dull, and difficult to work with, so let's just take a string representation of it
 		var logString = logBuffer.toString();
 
+		// Log a new file being parsed
+		this.logRelayer.logFile(logString.length);
+
 		// Trim the string, extra linefeeds and such, then save it for use in readLine()
 		this.logString = Utils.trim( logString );
 

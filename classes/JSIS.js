@@ -267,8 +267,12 @@ var JSIS = function() {
 	 * @param channelConfig
 	 * @param channelLog
 	 * @param logReader
+	 * @param logRelayer
 	 */
-	this.processChannelResults = function(channelConfig, channelLog, logReader) {
+	this.processChannelResults = function(channelConfig, channelLog, logReader, logRelayer) {
+
+		// Make sure any buffered content is un-buffered, in case of a bug
+		logReader.disableBuffering();
 
 		// Get the alias data from the log
 		var aliasData = channelLog.getAliasData();
@@ -291,7 +295,7 @@ var JSIS = function() {
 		// And tell it to generate the stats
 		statsGenerator.generate( function() {
 
-			Logger.log('MESSAGE', 'Statistics for ' + channelConfig.name + ' written to ' + channelConfig.destination);
+			Logger.log('MESSAGE', 'Statistics for ' + channelConfig.name + ' written to ' + channelConfig.destination + ' .. The stats were based on ' + logRelayer.fileCount + ' files, that contained ' + logRelayer.byteCount + ' bytes of data');
 
 		});
 
@@ -303,8 +307,9 @@ var JSIS = function() {
 	 * @param channelConfig
 	 * @param channelLog
 	 * @param logReader
+	 * @param logRelayer
 	 */
-	this.processChannel = function(channelConfig, channelLog, logReader) {
+	this.processChannel = function(channelConfig, channelLog, logReader, logRelayer) {
 
 		var startTime = new Date().getTime();
 		Logger.log('DEBUG', 'Starting to process channel ' + channelConfig.name);
@@ -348,7 +353,7 @@ var JSIS = function() {
 
 					Logger.log('INFO', 'Processed channel ' + channelConfig.name + ' in ' + (endTime - startTime) + ' msec');
 
-					this.processChannelResults(channelConfig, channelLog, logReader);
+					this.processChannelResults(channelConfig, channelLog, logReader, logRelayer);
 
 				}
 			}.bind(this);
@@ -390,7 +395,7 @@ var JSIS = function() {
 				var logReader = new logReaderClass(logRelayer, channelConfig);
 
 				// And start processing the channel
-				this.processChannel(channelConfig, channelLog, logReader);
+				this.processChannel(channelConfig, channelLog, logReader, logRelayer);
 			}
 
 		} catch( e ) {

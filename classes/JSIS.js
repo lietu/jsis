@@ -272,7 +272,7 @@ var JSIS = function() {
 	this.processChannelResults = function(channelConfig, channelLog, logReader, logRelayer) {
 
 		// Make sure any buffered content is un-buffered, in case of a bug
-		logReader.disableBuffering();
+		logRelayer.disableBuffering();
 
 		// Get the alias data from the log
 		var aliasData = channelLog.getAliasData();

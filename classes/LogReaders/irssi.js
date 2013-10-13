@@ -57,7 +57,7 @@ var IrssiReader = function(logRelayer, channelConfig) {
 	var timeRegExpString = '([0-9]{2}:[0-9]{2})(:[0-9]{2})?';
 
 	// .. and the nickname
-	var nicknameRegExpString = '\<[@+%+~+& ]?([^>]+)\>';
+	var nicknameRegExpString = '\<[+%@&~ ]?([^>]+)\>';
 
 	// RegExp to match a line that reports a new date and select the date
 	var dateRegExpString = '([a-z]{3} +[a-z]{3} +[0-9]{1,2}) +([0-9]{2}:[0-9]{2}:[0-9]{2}) +([0-9]{4})';

@@ -214,9 +214,10 @@ var Utils = function() {
 		var readStream = fs.createReadStream(source);
 		var writeStream = fs.createWriteStream(destination, {mode: 0660});
 
+		// Pump is depreciated, using readable.pipe() instead,
 		// Pump read file contents to the write stream, then run the onready callback
-		util.pump(readStream, writeStream, onReady);
-
+		//util.pump(readStream, writeStream, onReady);
+		readStream.pipe(writeStream, onRead);
 	};
 
 	/**

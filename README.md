@@ -47,3 +47,6 @@ You can try your luck at finding help through [https://github.com/lietu/jsis](ht
 Short answer: new BSD, and MIT. Long answer: Read the LICENSE -file
 
 
+## Thanks to
+
+[https://github.com/Hibby/](Dave Hibbert (Hibby)) for his contributions to the project

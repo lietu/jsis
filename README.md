@@ -49,4 +49,4 @@ Short answer: new BSD, and MIT. Long answer: Read the LICENSE -file
 
 ## Thanks to
 
-[Dave Hibbert (Hibby)](https://github.com/Hibby/) for his contributions to the project
+[Dave Hibberd (Hibby)](https://github.com/Hibby/) for his contributions to the project

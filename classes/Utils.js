@@ -215,7 +215,9 @@ var Utils = function() {
 		var writeStream = fs.createWriteStream(destination, {mode: 0660});
 
 		// Read file contents to the write stream, then run the onready callback
-		readStream.pipe(writeStream, onReady);
+		readStream.pipe(writeStream);
+
+		readStream.on('end', onReady);
 	};
 
 	/**

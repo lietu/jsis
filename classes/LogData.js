@@ -972,6 +972,57 @@ var LogData = function(channelConfig) {
 		};
 	};
 
+	this.postProcess = function() {
+		// Loop through the defined nicknames
+		if (this.channelConfig.userConfig) {
+			for( var nick in this.channelConfig.userConfig ) {
+
+				// We're only interested in ignored ones
+				if ( this.channelConfig.userConfig[nick].ignore ) {
+					this.removeNickFromStats(nick);
+				}
+
+			}
+		}
+	};
+
+	this.removeNickFromStats = function(nick) {
+
+		// Get all this user's aliases
+		var aliasStats = this.getNickAliasStats();
+
+		// Figure out all the nicks that we need to clear
+		var aliases = [nick];
+		if (aliasStats[nick]) {
+			aliases = aliasStats[nick]
+		}
+
+		// Stats items which are by nick
+		var statsItems = [
+			'wordsByNick', 'lineLengthByNick', 'wordsPerLineByNick', 'lastSeenByNick',
+			'questionsByNick', 'shoutsByNick', 'allCapsWordsByNick', 'attacksByNick',
+			'attackTargetByNick', 'unhappySmileysByNick', 'happySmileysByNick',
+			'actionsByNick', 'soloByNick', 'joinsByNick', 'foulLanguageByNick',
+			'kicksReceivedByNick', 'kicksGivenByNick', 'opsGivenByNick',
+			'opsTakenByNick', 'voicesReceivedByNick', 'voicesGivenByNick',
+			'topicsSetByNick', 'nickLines', 'linesByNick', 'linesByNickByHour'
+		];
+
+		// Now loop and delete matches
+		for ( var i = 0, count = aliases.length; i < count; ++i ) {
+			var alias = aliases[i];
+			for ( var x = 0, xcount = statsItems.length; x < xcount; ++x ) {
+				var item = statsItems[x];
+
+				if ( stats[item][alias] ) {
+					delete stats[item][alias];
+				}
+			}
+		}
+
+
+	};
+
 	/**
 	 * Initialize this instance
  	 */

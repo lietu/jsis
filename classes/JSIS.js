@@ -283,6 +283,9 @@ var JSIS = function() {
 			Logger.log('INFO', nick + ': ' + aliasData.nickStats[ nick ].join(', ') );
 		}
 
+		// Do post-processing, e.g. hiding results for "ignored" users
+		channelLog.postProcess();
+
 		// Get the stats
 		var stats = channelLog.getStats();
 

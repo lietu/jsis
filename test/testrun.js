@@ -1,6 +1,5 @@
 var fs = require('fs');
 var path = require('path');
-
 var existsSync = fs.existsSync || path.existsSync;
 
 var jsis = require('../classes/JSIS.js');
@@ -10,8 +9,20 @@ module.exports.setUp = function(callback) {
     callback();
 };
 
-module.exports.testSyntax = function(test) {
-    jsis.start();
-    test.ok(existsSync('test_files/destination/index.html'));
-    test.done();
+module.exports.testRun = function(test) {
+    test.expect(2);
+
+    var completed = false;
+    var runComplete = function() {
+        test.ok(existsSync('test_files/destination/index.html'));
+        completed = true;
+    };
+
+    jsis.start(runComplete);
+
+    setTimeout(function() {
+        test.ok(completed, 'Run completed in under 5s');
+        test.done();
+    }, 5000);
+
 };

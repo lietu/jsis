@@ -270,8 +270,9 @@ var JSIS = function() {
 	 * @param channelLog
 	 * @param logReader
 	 * @param logRelayer
+     * @param callback
 	 */
-	this.processChannelResults = function(channelConfig, channelLog, logReader, logRelayer) {
+	this.processChannelResults = function(channelConfig, channelLog, logReader, logRelayer, callback) {
 
 		// Make sure any buffered content is un-buffered, in case of a bug
 		logRelayer.disableBuffering();
@@ -301,6 +302,7 @@ var JSIS = function() {
 		statsGenerator.generate( function() {
 
 			Logger.log('MESSAGE', 'Statistics for ' + channelConfig.name + ' written to ' + channelConfig.destination + ' .. The stats were based on ' + logRelayer.fileCount + ' files, that contained ' + logRelayer.byteCount + ' bytes of data');
+            callback();
 
 		});
 
@@ -313,8 +315,9 @@ var JSIS = function() {
 	 * @param channelLog
 	 * @param logReader
 	 * @param logRelayer
+     * @param callback
 	 */
-	this.processChannel = function(channelConfig, channelLog, logReader, logRelayer) {
+	this.processChannel = function(channelConfig, channelLog, logReader, logRelayer, callback) {
 
 		var startTime = new Date().getTime();
 		Logger.log('DEBUG', 'Starting to process channel ' + channelConfig.name);
@@ -358,7 +361,7 @@ var JSIS = function() {
 
 					Logger.log('INFO', 'Processed channel ' + channelConfig.name + ' in ' + (endTime - startTime) + ' msec');
 
-					this.processChannelResults(channelConfig, channelLog, logReader, logRelayer);
+					this.processChannelResults(channelConfig, channelLog, logReader, logRelayer, callback);
 
 				}
 			}.bind(this);
@@ -372,7 +375,9 @@ var JSIS = function() {
 	/**
 	 * Start the application
 	 */
-	this.start = function() {
+	this.start = function(callback) {
+
+        callback = callback || function() {};
 
 		// Log this awesome event
 		this.startTime = new Date().getTime();
@@ -380,6 +385,16 @@ var JSIS = function() {
 		Logger.log('DEBUG', 'Starting JSIS v' + this.version);
 
 		try {
+
+            // Handler to be called when a channel is done processing,
+            // will call the given callback once they are.
+            var doneChannels = 0;
+            var done = function() {
+                if (++doneChannels == config.channels.length) {
+                    console.log("Done");
+                    callback();
+                }
+            };
 
 			// Loop through all defined channels
 			for( var i=0, numChannels=config.channels.length; i<numChannels; ++i ) {
@@ -400,11 +415,10 @@ var JSIS = function() {
 				var logReader = new logReaderClass(logRelayer, channelConfig);
 
 				// And start processing the channel
-				this.processChannel(channelConfig, channelLog, logReader, logRelayer);
+				this.processChannel(channelConfig, channelLog, logReader, logRelayer, done);
 			}
 
 		} catch( e ) {
-
 			Logger.log('CRITICAL', e.toString() );
 			throw( e );
 

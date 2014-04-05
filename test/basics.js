@@ -12,6 +12,8 @@ module.exports.testSyntax = function(test) {
     files = files.concat(glob.sync('lib/**/*.js'));
     files = files.concat(glob.sync('widgets/**/*.js'));
 
+    test.expect(files.length);
+
     for (var i= 0, count=files.length; i<count; ++i) {
         var result = require('../' + files[i]);
         test.ok(typeof result !== "undefined", files[i] + " has no syntax errors");

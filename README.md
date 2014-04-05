@@ -21,7 +21,7 @@ e.g. "Most referenced words" in a somewhat simple way.
 ## Where is it?
 
 The homepage (with links to all important places) is at [http://jsis.name/](http://jsis.name/).
-The downloads, code, issue tracker, Wiki, etc. is are available at the [https://github.com/lietu/jsis](GitHub project page)
+The downloads, code, issue tracker, Wiki, etc. is are available at the [GitHub project page](https://github.com/lietu/jsis)
 
 
 ## What log formats are supported?
@@ -34,12 +34,12 @@ JSIS supports the default log formats (with optional seconds in timestamps) of:
 
 ## What are the requirements, how to use it?
 
-Read the [http://jsis.name/documentation/installation](installation guide)
+Read the [installation guide](http://jsis.name/installation)
 
 
 ## It is still unclear to me how to use it, can you tell me more?
 
-You can try your luck at finding help through [https://github.com/lietu/jsis](https://github.com/lietu/jsis) .. no promises though
+You can try your luck at finding help through the [GitHub project page](https://github.com/lietu/jsis) .. no promises though
 
 
 ## How about licensing?

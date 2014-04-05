@@ -1,0 +1,5 @@
+node_modules/
+config.js
+.idea/
+test_files/destination/
+*.log

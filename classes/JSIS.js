@@ -240,7 +240,9 @@ var JSIS = function() {
 						// If matched, push to filtered list
 						filteredList.push( files[i] );
 
-					}
+					} else {
+                        Logger.log('DEBUG', files[i] + " did not match " + channelConfig.logFileFilter);
+                    }
 				}
 
 				Logger.log('DEBUG', 'Filtered out ' + (files.length - filteredList.length) + ' files.');

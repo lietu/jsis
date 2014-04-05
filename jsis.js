@@ -1,1 +1,2 @@
-require('./classes/JSIS.js').start();
+var jsis = require('./classes/JSIS.js');
+jsis.start();

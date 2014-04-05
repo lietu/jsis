@@ -1,18 +1,15 @@
 var config = {
 	channels: [
 		{
-			name: '#LameChannel',
+			name: '#example',
 			theme: 'default',
-			destination: '/tmp/jivy/destination',
+			destination: 'test_files/destination',
 			logFormat: 'eggdrop',
 			logEncoding: 'ASCII',
-			logPath: '/tmp/jivy/source',
-			logFileFilter: /lamechannel\.log/,
+			logPath: 'test_files/eggdrop',
+			logFileFilter: /test\.log\.[0-9]{4}-[0-9]{2}-[0-9]{2}/,
 			recursive: true,
 			maxLogFiles: Infinity,
-			customHeadHtml: '',
-			soloLength: 5,
-			wordMinLength: 3,
 
 			userConfig: {
 			}

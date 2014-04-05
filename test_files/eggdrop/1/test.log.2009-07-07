@@ -1,0 +1,13 @@
+[00:04] User1 (User1@example.com) joined #example.
+[00:06] User2 (User2@example.com) left irc: "http://webchat.xs4all.nl  (Ping timeout)"
+[00:07] <User3> :/
+[00:07] <User4> some text
+[00:14] Action: User3 does an action
+[00:14] <User3> :D
+[00:16] User2 (User2@example.com) joined #example.
+[00:17] <User3> haha
+[01:46] Nick change: User4 -> User4A
+[00:07] <User4A> I used to be User4
+[01:48] User3 (User3@example.com) left irc: ""
+[02:54] #example: mode change '+o User1' by User4A!User4@example.com
+[00:00] --- Wed Jul  8 2009

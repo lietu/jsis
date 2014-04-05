@@ -1,4 +1,8 @@
 var fs = require('fs');
+var path = require('path');
+
+var existsSync = fs.existsSync || path.existsSync;
+
 var jsis = require('../classes/JSIS.js');
 
 module.exports.setUp = function(callback) {
@@ -8,6 +12,6 @@ module.exports.setUp = function(callback) {
 
 module.exports.testSyntax = function(test) {
     jsis.start();
-    test.ok(fs.existsSync('test_files/destination/index.html'));
+    test.ok(existsSync('test_files/destination/index.html'));
     test.done();
 };

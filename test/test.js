@@ -1,21 +1,13 @@
-var fs = require('fs');
+var glob = require('glob');
 
 module.exports.testSyntax = function(test) {
-    var files = [
-        '../classes/JSIS.js',
-        '../classes/LogData.js',
-        '../classes/Logger.js',
-        '../classes/LogRelayer.js',
-        '../classes/Stats.js',
-        '../classes/StatsAnalyzer.js',
-        '../classes/StatsToHTML.js',
-        '../classes/Utils.js',
-        '../classes/LogReaders/eggdrop.js',
-        '../classes/LogReaders/irssi.js',
-    ];
+    var files = []
+    files = files.concat(glob.sync('classes/**/*.js'));
+    files = files.concat(glob.sync('lib/**/*.js'));
+    files = files.concat(glob.sync('widgets/**/*.js'));
 
     for (var i= 0, count=files.length; i<count; ++i) {
-        var result = require(files[i]);
+        var result = require('../' + files[i]);
         test.ok(typeof result !== "undefined", files[i] + " has no syntax errors");
         result = null;
     }

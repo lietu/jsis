@@ -1,4 +1,10 @@
 var glob = require('glob');
+var fs = require('fs');
+
+module.exports.setUp = function(callback) {
+    fs.writeFileSync('config.js', fs.readFileSync('test_files/test_config.js'));
+    callback();
+};
 
 module.exports.testSyntax = function(test) {
     var files = []

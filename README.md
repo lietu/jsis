@@ -2,6 +2,10 @@
 
 IRC statistics generator powered by JavaScript
 
+## What's the status currently?
+
+[![Build Status](https://travis-ci.org/lietu/jsis.svg?branch=master)](https://travis-ci.org/lietu/jsis)
+
 
 ## What is this?
 
@@ -33,6 +37,8 @@ JSIS supports the default log formats (with optional seconds in timestamps) of:
 
 
 ## What are the requirements, how to use it?
+
+Seems to work with NodeJS v0.6, v0.8 and v0.10.
 
 Read the [installation guide](http://jsis.name/installation.html), basically just run "npm install".
 

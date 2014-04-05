@@ -34,7 +34,7 @@ JSIS supports the default log formats (with optional seconds in timestamps) of:
 
 ## What are the requirements, how to use it?
 
-Read the [installation guide](http://jsis.name/installation.html)
+Read the [installation guide](http://jsis.name/installation.html), basically just run "npm install".
 
 
 ## It is still unclear to me how to use it, can you tell me more?

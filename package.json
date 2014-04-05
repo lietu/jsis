@@ -1,0 +1,29 @@
+{
+    "name": "jsis",
+    "version": "0.9.0",
+    "description": "JavaScript IRC Stats",
+    "main": "jsis.js",
+    "dependencies": {
+        "iconv": "~2.0.7",
+        "ejs": "~0.8.5",
+        "nodeunit":"~0.8.6"
+    },
+    "devDependencies": {},
+    "scripts": {
+        "test": "node node_modules/nodeunit/bin/nodeunit test"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/lietu/jsis.git"
+    },
+    "keywords": [
+        "irc",
+        "stats"
+    ],
+    "author": "Janne Enberg aka. Lietu",
+    "license": "Short answer: new BSD, and MIT. Long answer: Read the LICENSE -file",
+    "bugs": {
+        "url": "https://github.com/lietu/jsis/issues"
+    },
+    "homepage": "http://jsis.name"
+}

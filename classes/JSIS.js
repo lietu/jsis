@@ -53,12 +53,14 @@ var JSIS = function() {
 
 				// Create a new converter
 				var iconv = new Iconv(encoding, 'UTF-8//TRANSLIT//IGNORE');
+        		Logger.log('DEBUG', 'Converting ' + filename + ' contents to UTF-8');
 
 				// And convert the buffer
 				data = iconv.convert(data);
 			}
 
 			var startTime = new Date().getTime();
+            Logger.log('DEBUG', 'Parsing ' + filename);
 			logReader.parse(data);
 			var endTime = new Date().getTime();
 
@@ -349,6 +351,7 @@ var JSIS = function() {
 					var pos = (Utils.leftPad(String(fileIndex), '0', String(count).length)) + ' / ' + count;
 
 					// Read the file, and give it to a file reader, which should call "next" again after it's done
+        		    Logger.log('DEBUG', 'Reading ' + filename);
 					fs.readFile( filename, 'utf-8', this.getFileReader(filename, channelConfig.logEncoding, logReader, pos, next.bind(this)) );
 
 				// No files remaining, call function to process the results

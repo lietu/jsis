@@ -141,18 +141,6 @@ var LogData = function(channelConfig) {
 
 		}
 
-		/*
-		var aliasData = aliasList[ nickLower ];
-		if( nick!==aliasData.nick ) {
-			var nextAliasData = this.getNickAliasData( aliasData.nick );
-
-			if( nextAliasData.nick!==aliasData.nick ) {
-				Logger.log('CRITICAL', 'Found a second alias');
-				aliasData.nick = nextAliasData.nick;
-			}
-		}
-		*/
-
 		return aliasList[ nickLower ];
 	};
 
@@ -227,17 +215,11 @@ var LogData = function(channelConfig) {
 
 			// If toAlias has higher or equal priority, use it
 			if( toAliasData.type <= fromAliasData.type ) {
-
-				// console.log( 'to (' + toAliasData.type + ') < from (' + fromAliasData.type + ')');
-
 				this.registerAlias( fromNick, toAliasData.nick );
 				this.registerAlias( fromAliasData.nick, toAliasData.nick );
 
 			// The other way around
 			} else {
-
-				// console.log( 'from (' + fromAliasData.type + ') < to (' + toAliasData.type + ')');
-
 				this.registerAlias( toNick, fromAliasData.nick );
 				this.registerAlias( toAliasData.nick, fromAliasData.nick );
 
@@ -245,21 +227,14 @@ var LogData = function(channelConfig) {
 
 		// If there was an alias for toNick, use that for fromNick as well
 		} else if( toAliasData.type!==ALIAS_TYPE.SKIP ) {
-
-			// console.log( 'to(' + toAliasData.type + ') !== skip');
 			this.registerAlias(fromNick, toAliasData.nick);
 
 		// If there was an alias for fromNick, copy that for toNick
 		} else if( fromAliasData.type!==ALIAS_TYPE.SKIP ) {
-
-			// console.log( 'from(' + fromAliasData.type + ') !== skip');
 			this.registerAlias(toNick, fromAliasData.nick);
 
 		// No old aliases
 		} else {
-
-			// console.log( 'to === from === skip');
-
 			// Register a to -> from alias
 			this.registerAlias(toNick, fromAliasData.nick);
 			if( toNick.toLowerCase() !== toAliasData.nick.toLowerCase() ) {
@@ -375,9 +350,9 @@ var LogData = function(channelConfig) {
 
 	/**
 	 * A RegExp to select all URLs in a line
-	 * Source: http://daringfireball.net/2010/07/improved_regex_for_matching_urls
+	 * Source: http://codegolf.stackexchange.com/a/480
  	 */
-	var urlRegex = /\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))/gi;
+	var urlRegex = /(^|\s)((https?:\/\/)?[\w-]+(\.[\w-]+)+\.?(:\d+)?(\/\S*)?)/gi;
 
 	// Regular expression to check for words
 	var wordRegex = /[a-z]+/;
@@ -450,14 +425,11 @@ var LogData = function(channelConfig) {
 	 * @param {String} text
 	 */
 	this.checkUrlsFromLine = function(currentTime, nick, text) {
-
-
 		// Get the URLs on this line
 		var lineUrls = text.match(urlRegex);
 
 		// If some were found
 		if( lineUrls!==null ) {
-
 			// Update the url stats for all of them
 			for( var i=0, count=lineUrls.length; i<count; ++i ) {
 				this.registerUrl(currentTime, nick, lineUrls[i]);

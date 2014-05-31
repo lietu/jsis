@@ -572,6 +572,42 @@ var Utils = function() {
 
 		return count;
 	};
+
+    /**
+     * Convert a number of bytes to human readable kiB, MiB, etc.
+     * @param {Number} bytes
+     */
+    this.byteText = function(bytes) {
+        var units = ['B', 'kiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+
+        var unit = 0;
+        while (bytes > 1024) {
+            bytes = bytes / 1024;
+            unit++;
+        }
+
+        if (unit > 0) {
+            bytes = this.round(bytes);
+        }
+
+        return bytes + " " + units[unit];
+    };
+
+    /**
+     * Round a number to given number of decimals. Does not guarantee that it will have
+     * that many decimals.
+     *
+     * @param {Number} number
+     * @param {Number} decimals Defaults to 2
+     * @return {String}
+     */
+    this.round = function(number, decimals) {
+        decimals = decimals || 2;
+
+        var multiplier = Math.pow(10, decimals);
+
+        return String(Math.round(number * multiplier) / multiplier);
+    };
 };
 
 // Instancify the Utils to exports

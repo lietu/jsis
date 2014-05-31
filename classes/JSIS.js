@@ -301,7 +301,7 @@ var JSIS = function() {
 		// And tell it to generate the stats
 		statsGenerator.generate( function() {
 
-			Logger.log('MESSAGE', 'Statistics for ' + channelConfig.name + ' written to ' + channelConfig.destination + ' .. The stats were based on ' + logRelayer.fileCount + ' files, that contained ' + logRelayer.byteCount + ' bytes of data');
+			Logger.log('MESSAGE', 'Statistics for ' + channelConfig.name + ' written to ' + channelConfig.destination + ' .. The stats were based on ' + logRelayer.fileCount + ' files, that contained ' + Utils.byteText(logRelayer.byteCount) + ' bytes of data');
             callback();
 
 		});

@@ -1,0 +1,87 @@
+[
+    {
+        "type": "nickHostmask",
+        "timestamp": "2014-05-31T00:04:00Z",
+        "data": { "nick": "User1", "hostmask": "User1@example.com" }
+    },
+    {
+        "type": "part",
+        "timestamp": "2014-05-31T00:04:00Z",
+        "data": { "nick": "User1" }
+    },
+    {
+        "type": "nickHostmask",
+        "timestamp": "2014-05-31T00:06:00Z",
+        "data": { "nick": "User2", "hostmask": "User2@example.com" }
+    },
+    {
+        "type": "part",
+        "timestamp": "2014-05-31T00:06:00Z",
+        "data": { "nick": "User2" }
+    },
+    {
+        "type": "line",
+        "timestamp": "2014-05-31T00:07:00Z",
+        "data": { "nick": "User3", "text": ":/" }
+    },
+    {
+        "type": "line",
+        "timestamp": "2014-05-31T00:07:00Z",
+        "data": { "nick": "User4", "text": "some text" }
+    },
+    {
+        "type": "action",
+        "timestamp": "2014-05-31T00:14:00Z",
+        "data": { "nick": "User3", "text": "does an action" }
+    },
+    {
+        "type": "line",
+        "timestamp": "2014-05-31T00:14:00Z",
+        "data": { "nick": "User3", "text": ":D" }
+    },
+    {
+        "type": "nickHostmask",
+        "timestamp": "2014-05-31T00:16:00Z",
+        "data": { "nick": "User2", "hostmask": "User2@example.com" }
+    },
+    {
+        "type": "part",
+        "timestamp": "2014-05-31T00:16:00Z",
+        "data": { "nick": "User2" }
+    },
+    {
+        "type": "line",
+        "timestamp": "2014-05-31T00:17:00Z",
+        "data": { "nick": "User3", "text": "haha" }
+    },
+    {
+        "type": "nickChange",
+        "timestamp": "2014-05-31T01:46:00Z",
+        "data": { "fromNick": "User4", "toNick": "User4A" }
+    },
+    {
+        "type": "line",
+        "timestamp": "2014-05-31T00:07:00Z",
+        "data": { "nick": "User4A", "text": "I used to be User4" }
+    },
+    {
+        "type": "nickHostmask",
+        "timestamp": "2014-05-31T01:48:00Z",
+        "data": { "nick": "User3", "hostmask": "User3@example.com" }
+    },
+    {
+        "type": "part",
+        "timestamp": "2014-05-31T01:48:00Z",
+        "data": { "nick": "User3" }
+    },
+    {
+        "type": "nickHostmask",
+        "timestamp": "2014-05-31T02:54:00Z",
+        "data": { "nick": "User4A", "hostmask": "User4@example.com" }
+    },
+    {
+        "type": "mode",
+        "timestamp": "2014-05-31T02:54:00Z",
+        "data": { "nick": "User4A", "mode": "+o User1" }
+    }
+]

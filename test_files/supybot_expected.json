@@ -1,0 +1,71 @@
+[
+    {
+        "type": "mode",
+        "timestamp": "2000-01-01T09:08:30Z",
+        "data": {
+            "nick": "jack",
+            "mode": "+o bob"
+        }
+    },
+    {
+        "type": "line",
+        "timestamp": "2000-01-01T09:09:00Z",
+        "data": {
+            "nick": "bob",
+            "text": "OK."
+        }
+    },
+    {
+        "type": "nickHostmask",
+        "timestamp": "2000-01-01T09:10:22Z",
+        "data": {
+            "nick": "alice",
+            "hostmask": "alice@example.com"
+        }
+    },
+    {
+        "type": "join",
+        "timestamp": "2000-01-01T09:10:22Z",
+        "data": {
+            "nick": "alice"
+        }
+    },
+    {
+        "type": "nickChange",
+        "timestamp": "2000-01-01T09:10:50Z",
+        "data": {
+            "fromNick": "alice",
+            "toNick": "alice2"
+        }
+    },
+    {
+        "type": "nickHostmask",
+        "timestamp": "2000-01-01T09:11:54Z",
+        "data": {
+            "nick": "alice2",
+            "hostmask": "alice@example.com"
+        }
+    },
+    {
+        "type": "part",
+        "timestamp": "2000-01-01T09:11:54Z",
+        "data": {
+            "nick": "alice2"
+        }
+    },
+    {
+        "type": "nickHostmask",
+        "timestamp": "2000-01-01T09:12:08Z",
+        "data": {
+            "nick": "alice",
+            "hostmask": "alice@example.com"
+        }
+    },
+    {
+        "type": "join",
+        "timestamp": "2000-01-01T09:12:08Z",
+        "data": {
+            "nick": "alice"
+        }
+    }
+]

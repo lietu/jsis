@@ -57,28 +57,14 @@ var SupybotReader = function (logRelayer, channelConfig) {
     // .. and the nickname
     var nicknameRegExpString = '<([^>]+)>';
 
-    // RegExp to match a normal line and an action
     var lineRegExp = new RegExp('^' + timeRegExpString + '  ' + nicknameRegExpString + ' (.*)$');
-
-    // RegExp to match a mode change
     var modeRegExp = new RegExp('^' + timeRegExpString + '  .{3} ([^ ]+) sets mode: (.+)$');
-
-    // RegExp to match a join or part
     var joinPartRegExp = new RegExp('^' + timeRegExpString + '  .{3} ([^ ]+) <.*!([^)]+)> has (joined|left) ');
-
-    // RegExp to match nick changes
     var nickChangeRegExp = new RegExp('^' + timeRegExpString + '  \\*{3} ([^ ]+) is now known as (.+)$');
-
-    // RegExp to match quits
-    var quitRegExp = new RegExp('^' + timeRegExpString + '  .{3} ([^ ]+) <.*!([^)]+)> has quit IRC ');
-
-    /*
-     TODO: Missing support for at least:
-     - actions
-     - kicks
-     - topics
-     */
-
+    var quitRegExp = new RegExp('^' + timeRegExpString + '  \\*{3} ([^ ]+) <.*!([^)]+)> has quit IRC ');
+    var actionRegExp = new RegExp('^' + timeRegExpString + '  \\* ([^ ]+) (.*)$');
+    var kickRegExp = new RegExp('^' + timeRegExpString + '  \\*{3} ([^ ]+) was kicked by ([^ ]+) \\((.*)\\)$')
+    var topicRegExp = new RegExp('^' + timeRegExpString + '  \\*{3} ([^ ]+) changes topic to "(.*)"$')
 
     this.tzData = channelConfig.logTimezone;
 
@@ -124,6 +110,23 @@ var SupybotReader = function (logRelayer, channelConfig) {
                 // Log this mode change
                 this.logRelayer.log('mode', lineTimestamp(data[1]), {nick: data[2], mode: data[3]});
 
+            } else if (data = line.match(actionRegExp)) {
+
+                // Log this mode change
+                this.logRelayer.log('action', lineTimestamp(data[1]), {nick: data[2], text: data[3]});
+
+            } else if (data = line.match(kickRegExp)) {
+
+                // Log this mode change
+				this.logRelayer.log('kick', lineTimestamp(data[1]), {target: data[2], nick: data[3], reason: data[4]});
+
+
+            } else if (data = line.match(topicRegExp)) {
+
+				// Log this topic change
+				this.logRelayer.log('topic', lineTimestamp(data[1]), {nick: data[2], topic: data[3]});
+
+
             } else if (data = line.match(joinPartRegExp)) {
 
                 timestamp = lineTimestamp(data[1]);
@@ -162,6 +165,8 @@ var SupybotReader = function (logRelayer, channelConfig) {
 
             }
         }
+
+        console.log("Exiting")
     }
 
 };

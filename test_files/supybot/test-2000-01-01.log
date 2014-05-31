@@ -5,3 +5,6 @@
 2000-01-01T09:10:50  *** alice is now known as alice2
 2000-01-01T09:11:54  *** alice2 <alice!alice@example.com> has quit IRC (Quit: example quit message)
 2000-01-01T09:12:08  *** alice <alice!alice@example.com> has joined #example
+2000-01-01T14:34:29  * alice does an action
+2000-01-01T14:34:51  *** alice was kicked by bob (reason)
+2000-01-01T14:35:09  *** bob changes topic to "New topic"

@@ -67,5 +67,30 @@
         "data": {
             "nick": "alice"
         }
+    },
+    {
+        "type": "action",
+        "timestamp": "2000-01-01T14:34:29Z",
+        "data": {
+            "nick": "alice",
+            "text": "does an action"
+        }
+    },
+    {
+        "type": "kick",
+        "timestamp": "2000-01-01T14:34:51Z",
+        "data": {
+            "target": "alice",
+            "nick": "bob",
+            "reason": "reason"
+        }
+    },
+    {
+        "type": "topic",
+        "timestamp": "2000-01-01T14:35:09Z",
+        "data": {
+            "nick": "bob",
+            "topic": "New topic"
+        }
     }
 ]

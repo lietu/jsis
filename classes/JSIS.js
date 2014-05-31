@@ -19,8 +19,9 @@ var StatsToHTML = require('../classes/StatsToHTML.js');
 
 var XDate = require('../lib/xdate.dev.js');
 
-// And the fs lib
+// And the fs and async libs
 var fs = require('fs');
+var async = require('async');
 
 // And we should read our config
 var config = require('../config.js');
@@ -302,7 +303,7 @@ var JSIS = function() {
 		statsGenerator.generate( function() {
 
 			Logger.log('MESSAGE', 'Statistics for ' + channelConfig.name + ' written to ' + channelConfig.destination + ' .. The stats were based on ' + logRelayer.fileCount + ' files, that contained ' + Utils.byteText(logRelayer.byteCount) + ' bytes of data');
-            callback();
+            callback(null);
 
 		});
 
@@ -385,39 +386,32 @@ var JSIS = function() {
 		Logger.log('DEBUG', 'Starting JSIS v' + this.version);
 
 		try {
-
-            // Handler to be called when a channel is done processing,
-            // will call the given callback once they are.
-            var doneChannels = 0;
-            var done = function() {
-                if (++doneChannels == config.channels.length) {
-                    console.log("Done");
-                    callback();
-                }
-            };
-
+			var i = 1;
 			// Loop through all defined channels
-			for( var i=0, numChannels=config.channels.length; i<numChannels; ++i ) {
+			async.eachSeries(
+				config.channels, function(channel, doneCallback) {
+	
+					// Process the configuration to a useful format
+					var channelConfig = this.parseChannelConfig( channel, i++ );
 
-				// Process the configuration to a useful format
-				var channelConfig = this.parseChannelConfig( config.channels[i], i+1 );
+					// Create an object for keeping the logs
+					var channelLog = new LogData(channelConfig);
 
-				// Create an object for keeping the logs
-				var channelLog = new LogData(channelConfig);
+					// Initialize a log relayer
+					var logRelayer = new LogRelayer(channelLog, channelConfig);
 
-				// Initialize a log relayer
-				var logRelayer = new LogRelayer(channelLog, channelConfig);
+					// Try and load the log type -specific reader, will crash if not found
+					var logReaderClass = require('../classes/LogReaders/' + channelConfig.logFormat + '.js');
 
-				// Try and load the log type -specific reader, will crash if not found
-				var logReaderClass = require('../classes/LogReaders/' + channelConfig.logFormat + '.js');
+					// And instantiate it
+					var logReader = new logReaderClass(logRelayer, channelConfig);
 
-				// And instantiate it
-				var logReader = new logReaderClass(logRelayer, channelConfig);
+					// And start processing the channel
+					this.processChannel(channelConfig, channelLog, logReader, logRelayer, doneCallback);
 
-				// And start processing the channel
-				this.processChannel(channelConfig, channelLog, logReader, logRelayer, done);
-			}
-
+				}.bind(this),
+				callback
+			);
 		} catch( e ) {
 			Logger.log('CRITICAL', e.toString() );
 			throw( e );

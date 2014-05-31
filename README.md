@@ -52,6 +52,10 @@ You can try your luck at finding help through the [GitHub project page](https://
 
 Short answer: new BSD, and MIT. Long answer: Read the LICENSE -file
 
+## Do you have an IRC channel?
+
+Yes! While it is small, it exists. [#jsis](https://webchat.freenode.net/?channels=jsis) @ [Freenode](https://freenode.net/)
+
 
 ## Thanks to
 

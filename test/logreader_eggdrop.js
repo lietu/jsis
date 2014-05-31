@@ -7,7 +7,7 @@ var config = {
 };
 
 module.exports.testEggdropReader = function (test) {
-    test.expect(1);
+    test.expect(2);
 
     var expected = require('../test_files/eggdrop_expected.json');
 
@@ -15,7 +15,8 @@ module.exports.testEggdropReader = function (test) {
     var reader = new EggdropLogReader(relay, config);
     reader.parse(fs.readFileSync('test_files/eggdrop/1/test.log.2009-07-07'));
 
-    test.deepEqual(relay.entries, expected);
+    test.deepEqual(relay.getEntries(), expected);
+    test.equal(relay.buffering, false);
 
     test.done();
 };

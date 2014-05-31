@@ -6,12 +6,7 @@ var LogRelayerMock = function() {
 	/**
 	 * @type {Boolean} Are we buffering or not?
 	 */
-	var buffering = false;
-
-	/**
-	 * @type {Array} Buffered data
-	 */
-	var bufferData = [];
+	this.buffering = false;
 
 	// Counters for parsed content
 	this.fileCount = 0;
@@ -21,13 +16,13 @@ var LogRelayerMock = function() {
      * List of log entries provided by log reader
      * @type {Array}
      */
-    this.entries = [];
+    var entries = [];
 
 	/**
 	 * Enable buffering, items will be stored in a temporary buffer instead of passing to LogData until buffer is disabled
 	 */
 	this.enableBuffering = function() {
-		buffering = true;
+		this.buffering = true;
 	};
 
 	/**
@@ -36,7 +31,7 @@ var LogRelayerMock = function() {
 	this.disableBuffering = function() {
 
 		// No more buffering, thanks
-		buffering = false;
+		this.buffering = false;
 	};
 
 	/**
@@ -47,9 +42,9 @@ var LogRelayerMock = function() {
 	 * @param data
 	 */
 	this.log = function(type, timestamp, data) {
-        this.entries.push({
+        entries.push({
             type: type,
-            timestamp: timestamp.toISOString(),
+            timestamp: timestamp,
             data: data
         })
 	};
@@ -62,6 +57,22 @@ var LogRelayerMock = function() {
 		++this.fileCount;
 		this.byteCount += bytes;
 	}
+
+    /**
+     * Extract the entries in a format suitable for tests.
+     */
+    this.getEntries = function() {
+        var result = [];
+        for (var i = 0, count = entries.length; i < count; ++i) {
+            result.push({
+                type: entries[i].type,
+                timestamp: entries[i].timestamp.toISOString(),
+                data: entries[i].data
+            });
+        }
+
+        return result;
+    };
 
 };
 

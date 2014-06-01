@@ -61,8 +61,7 @@ var SupybotReader = function (logRelayer, channelConfig) {
     var quitRegExp = new RegExp('^' + timeRegExpString + ' +<-- +([^ ]+) \\(([^)]+)\\) has quit ');
     var actionRegExp = new RegExp('^' + timeRegExpString + ' +\\* +([^ ]+) (.*)$');
     var topicRegExp = new RegExp('^' + timeRegExpString + ' +-- +([^ ]+) has changed topic for ([^ ]+) from \"(.*)\" to "(.*)"$')
-
-    // TODO: Missing kick support
+    var kickRegExp = new RegExp('^' + timeRegExpString + ' +<-- +([^ ]+) has kicked ([^ ]+) \\(([^)]+)\\)$')
 
     this.tzData = channelConfig.logTimezone;
 
@@ -112,6 +111,12 @@ var SupybotReader = function (logRelayer, channelConfig) {
 
 				// Log this topic change
 				this.logRelayer.log('topic', lineTimestamp(data[1]), {nick: data[2], topic: data[5]});
+
+
+            } else if (data = line.match(kickRegExp)) {
+
+                // Log this mode change
+                this.logRelayer.log('kick', lineTimestamp(data[1]), {target: data[3], nick: data[2], reason: data[4]});
 
 
             } else if (data = line.match(joinPartRegExp)) {

@@ -113,5 +113,14 @@
             "nick": "alice",
             "topic": "new topic"
         }
+    },
+    {
+        "type": "kick",
+        "timestamp": "2000-01-01T23:59:59Z",
+        "data": {
+            "target": "alice",
+            "nick": "bob",
+            "reason": "reason"
+        }
     }
 ]

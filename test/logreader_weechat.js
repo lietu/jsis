@@ -18,7 +18,5 @@ module.exports.testWeechatReader = function (test) {
     test.deepEqual(relay.getEntries(), expected);
     test.equal(relay.buffering, false);
 
-    console.log(JSON.stringify(relay.getEntries()));
-
     test.done();
 };

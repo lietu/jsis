@@ -143,8 +143,8 @@ var StatsAnalyzer = function(stats) {
 
 		// Save all the extra data
 		this.generated = new XDate();
-		this.statsFrom = minDate.date || new XDate().toString('yyyy-MM-dd');
-		this.statsTo = maxDate.date || new XDate().toString('yyyy-MM-dd');
+		this.statsFrom = minDate.date.toString('yyyy-MM-dd') || new XDate().toString('yyyy-MM-dd');
+		this.statsTo = maxDate.date.toString('yyyy-MM-dd') || new XDate().toString('yyyy-MM-dd');
 		this.numNicks = numNicks;
 		this.numDays = Math.ceil( (maxDate.timestamp - minDate.timestamp) / 1000 / 60 / 60 / 24 ) + 1;
 

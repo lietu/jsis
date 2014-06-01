@@ -30,7 +30,7 @@ var LatestTopics = function(statsAnalyzer, channelConfig) {
 
 		// Loop through them, and generate a pretty "when" timestamp
 		for( var i=0, count=this.topics.length; i<count; ++i ) {
-			this.topics[i].when = this.topics[i].when.toString('yyyy-MM-dd HH:mm');
+			this.topics[i].when = this.topics[i].when.toString('yyyy-MM-dd HH:mm:ss');
 		}
 
 

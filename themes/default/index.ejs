@@ -36,7 +36,7 @@
 			<span class="timerange"><%= statsAnalyzer.statsFrom %> - <%= statsAnalyzer.statsTo %></span>
 		</div>
 		<p>
-			Statistics generated on <%= statsAnalyzer.generated.toString("MMMM d, yyyy") %> at <%= statsAnalyzer.generated.toString("HH:mm:ss") %>.
+			Statistics generated on <%= statsAnalyzer.generated.toString("yyyy-MM-dd") %> at <%= statsAnalyzer.generated.toString("HH:mm:ss") %>.
 		</p>
 		<p>
 			During this <%= statsAnalyzer.numDays %>-day reporting period, a total of <strong><%= statsAnalyzer.numNicks %></strong> have spoken on <%= channelName %>.

@@ -122,7 +122,7 @@ var JSIS = function() {
 			wordMinLength: 3,
 			ignoreWords: 'I a an it to in of and is for on you but the be me not if at so are my it\'s',
 
-			maxLogFiles: null,
+			maxLogFiles: Infinity,
 
 			widgets: require('../widgets/config.js'),
 
@@ -130,7 +130,7 @@ var JSIS = function() {
 				'bastard bastards bitch bitches blowjob butthole buttwipe clit cock crap cum cunt cunts dick ' +
 				'dildo dyke enema fag faggot fags fuck fucker fuckin fucking fucks gay gays hell helvete jackoff ' +
 				'kraut kurwa lesbo mofo motherfucker nazi nazis nigga nigger nigger; nutsack paska pecker penis ' +
-				'perse pussy queer queers scank schlong screw screwing shit shits shitter skank slut sluts spic ' +
+				'perse pussy queer queers skank schlong screw screwing shit shits shitter skank slut sluts spic ' +
 				'twat vagina vittu wank whore ',
 
 			// TODO: Need more comprehensive lists

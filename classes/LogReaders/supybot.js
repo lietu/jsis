@@ -165,8 +165,6 @@ var SupybotReader = function (logRelayer, channelConfig) {
 
             }
         }
-
-        console.log("Exiting")
     }
 
 };

@@ -1,0 +1,117 @@
+[
+    {
+        "type": "nickHostmask",
+        "timestamp": "2000-01-01T11:57:57Z",
+        "data": {
+            "nick": "bob",
+            "hostmask": "bob@example.com"
+        }
+    },
+    {
+        "type": "join",
+        "timestamp": "2000-01-01T11:57:57Z",
+        "data": {
+            "nick": "bob"
+        }
+    },
+    {
+        "type": "nickHostmask",
+        "timestamp": "2000-01-01T12:00:12Z",
+        "data": {
+            "nick": "alice",
+            "hostmask": "alice@example.com"
+        }
+    },
+    {
+        "type": "part",
+        "timestamp": "2000-01-01T12:00:12Z",
+        "data": {
+            "nick": "alice"
+        }
+    },
+    {
+        "type": "line",
+        "timestamp": "2000-01-01T12:00:36Z",
+        "data": {
+            "nick": "@bob",
+            "text": "some text here"
+        }
+    },
+    {
+        "type": "action",
+        "timestamp": "2000-01-01T12:00:56Z",
+        "data": {
+            "nick": "@bob",
+            "text": "does /me"
+        }
+    },
+    {
+        "type": "nickHostmask",
+        "timestamp": "2000-01-01T12:02:04Z",
+        "data": {
+            "nick": "alice2",
+            "hostmask": "alice@example.com"
+        }
+    },
+    {
+        "type": "join",
+        "timestamp": "2000-01-01T12:02:04Z",
+        "data": {
+            "nick": "alice2"
+        }
+    },
+    {
+        "type": "nickChange",
+        "timestamp": "2000-01-01T12:03:05Z",
+        "data": {
+            "fromNick": "alice2",
+            "toNick": "alice"
+        }
+    },
+    {
+        "type": "nickHostmask",
+        "timestamp": "2000-01-01T12:03:59Z",
+        "data": {
+            "nick": "alice",
+            "hostmask": "alice@example.com"
+        }
+    },
+    {
+        "type": "part",
+        "timestamp": "2000-01-01T12:03:59Z",
+        "data": {
+            "nick": "alice"
+        }
+    },
+    {
+        "type": "nickHostmask",
+        "timestamp": "2000-01-01T12:03:59Z",
+        "data": {
+            "nick": "alice",
+            "hostmask": "alice@example.com"
+        }
+    },
+    {
+        "type": "join",
+        "timestamp": "2000-01-01T12:03:59Z",
+        "data": {
+            "nick": "alice"
+        }
+    },
+    {
+        "type": "mode",
+        "timestamp": "2000-01-01T12:04:21Z",
+        "data": {
+            "nick": "bob",
+            "mode": "+o alice"
+        }
+    },
+    {
+        "type": "topic",
+        "timestamp": "2000-01-01T23:36:17Z",
+        "data": {
+            "nick": "alice",
+            "topic": "new topic"
+        }
+    }
+]

@@ -6,7 +6,7 @@ var Logger = require('../../classes/Logger.js');
  * Parse weechat log string into the logRelayer object
  * @param {LogRelayer} logRelayer
  */
-var SupybotReader = function (logRelayer, channelConfig) {
+var WeechatReader = function (logRelayer, channelConfig) {
 
     /**
      * @type {LogRelayer}
@@ -156,8 +156,7 @@ var SupybotReader = function (logRelayer, channelConfig) {
             } else {
 
                 // Unrecognized line, e.g. netsplit, return from netsplit, etc.
-                // We're missing quite a lot of line types from our example for now
-                Logger.log('WARN', 'Unrecognized line: ' + line);
+                Logger.log('WARNING', 'Unrecognized line: ' + line);
 
 
             }
@@ -167,4 +166,4 @@ var SupybotReader = function (logRelayer, channelConfig) {
 };
 
 // All we want to export is our little class
-module.exports = SupybotReader;
+module.exports = WeechatReader;

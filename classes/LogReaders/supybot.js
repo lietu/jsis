@@ -159,8 +159,7 @@ var SupybotReader = function (logRelayer, channelConfig) {
             } else {
 
                 // Unrecognized line, e.g. netsplit, return from netsplit, etc.
-                // We're missing quite a lot of line types from our example for now
-                Logger.log('WARN', 'Unrecognized line: ' + line);
+                Logger.log('WARNING', 'Unrecognized line: ' + line);
 
 
             }

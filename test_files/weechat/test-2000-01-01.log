@@ -1,11 +1,11 @@
-2000-01-01 11:57:57     -->     bob (bob@example.com) has joined ##jsis-log-test
-2000-01-01 12:00:12     <--     alice (alice@example.com) has quit (Client Quit)
-2000-01-01 12:00:36     @bob        some text here
-2000-01-01 12:00:56      *      @bob does /me
-2000-01-01 12:02:04     -->     alice2 (alice@example.com) has joined ##jsis-log-test
-2000-01-01 12:03:05     --      alice2 is now known as alice
-2000-01-01 12:03:59     <--     alice (alice@example.com) has left ##jsis-log-test
-2000-01-01 12:03:59     -->     alice (alice@example.com) has joined ##jsis-log-test
-2000-01-01 12:04:21     --      Mode ##jsis-log-test [+o alice] by bob
-2000-01-01 23:36:17     --      alice has changed topic for ##jsis-log-test from "old topic" to "new topic"
-2000-01-01 23:59:59     <--     bob has kicked alice (reason)
+2000-01-01 11:57:57	-->	bob (bob@example.com) has joined ##jsis-log-test
+2000-01-01 12:00:12	<--	alice (alice@example.com) has quit (Client Quit)
+2000-01-01 12:00:36	@bob	some text here
+2000-01-01 12:00:56	 *	@bob does /me
+2000-01-01 12:02:04	-->	alice2 (alice@example.com) has joined ##jsis-log-test
+2000-01-01 12:03:05	--	alice2 is now known as alice
+2000-01-01 12:03:59	<--	alice (alice@example.com) has left ##jsis-log-test
+2000-01-01 12:03:59	-->	alice (alice@example.com) has joined ##jsis-log-test
+2000-01-01 12:04:21	--	Mode ##jsis-log-test [+o alice] by bob
+2000-01-01 23:36:17	--	alice has changed topic for ##jsis-log-test from "old topic" to "new topic"
+2000-01-01 23:59:59	<--	bob has kicked alice (reason)

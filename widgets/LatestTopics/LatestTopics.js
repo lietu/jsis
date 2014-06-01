@@ -25,8 +25,13 @@ var LatestTopics = function(statsAnalyzer, channelConfig) {
 		// Get the "raw" stats
 		var stats = statsAnalyzer.getStats();
 
+        // Sort topics by time
+        var sorted = stats.topics.sort(function(first, second) {
+			return (second.when.getTime() - first.when.getTime())
+		});
+
 		// Get the latest topics
-		this.topics = stats.topics.slice(0,3);
+		this.topics = sorted.slice(0,3);
 
 		// Loop through them, and generate a pretty "when" timestamp
 		for( var i=0, count=this.topics.length; i<count; ++i ) {

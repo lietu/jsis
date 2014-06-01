@@ -178,8 +178,8 @@ var JSIS = function() {
 		}
 
 		if( config.statsTimezoneText===null ) {
-			// Start with the text "GMT"
-			config.statsTimezoneText = 'GMT';
+			// Start with the text "UTC"
+			config.statsTimezoneText = 'UTC';
 
 			if( config.statsTimezone!=='+00:00' && config.statsTimezone!=='-00:00' ) {
 				config.statsTimezoneText += config.statsTimezone;

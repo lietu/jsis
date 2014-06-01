@@ -86,7 +86,7 @@ var IrssiReader = function(logRelayer, channelConfig) {
 	var date = new XDate();
 
 	this.currentDate = null;
-	this.tzData = 'GMT' + channelConfig.logTimezone;
+	this.tzData = 'UTC' + channelConfig.logTimezone;
 
 	this.setDate = function(date) {
 		this.currentDate = date;

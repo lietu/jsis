@@ -19,19 +19,24 @@ module.exports.tearDown = function(callback) {
 };
 
 module.exports.testRun = function(test) {
-    test.expect(2);
+    test.expect(1);
 
     var completed = false;
+    var to = null;
     var runComplete = function() {
+        if (to) {
+            clearTimeout(to);
+        }
+
         test.ok(existsSync('test_files/destination/index.html'));
         completed = true;
+        test.done();
     };
 
     jsis.start(runComplete);
 
-    setTimeout(function() {
-        test.ok(completed, 'Run completed in under 5s');
-        test.done();
-    }, 5000);
+    to = setTimeout(function() {
+        throw new Error("Test failed to complete within a reasonable amount of time");
+    }, 10000);
 
 };

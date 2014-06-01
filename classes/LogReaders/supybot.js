@@ -59,9 +59,9 @@ var SupybotReader = function (logRelayer, channelConfig) {
 
     var lineRegExp = new RegExp('^' + timeRegExpString + '  ' + nicknameRegExpString + ' (.*)$');
     var modeRegExp = new RegExp('^' + timeRegExpString + '  .{3} ([^ ]+) sets mode: (.+)$');
-    var joinPartRegExp = new RegExp('^' + timeRegExpString + '  .{3} ([^ ]+) <.*!([^)]+)> has (joined|left) ');
+    var joinPartRegExp = new RegExp('^' + timeRegExpString + '  .{3} ([^ ]+) <.*!([^>]+)> has (joined|left) ');
     var nickChangeRegExp = new RegExp('^' + timeRegExpString + '  \\*{3} ([^ ]+) is now known as (.+)$');
-    var quitRegExp = new RegExp('^' + timeRegExpString + '  \\*{3} ([^ ]+) <.*!([^)]+)> has quit IRC ');
+    var quitRegExp = new RegExp('^' + timeRegExpString + '  \\*{3} ([^ ]+) <.*!([^>]+)> has quit IRC ');
     var actionRegExp = new RegExp('^' + timeRegExpString + '  \\* ([^ ]+) (.*)$');
     var kickRegExp = new RegExp('^' + timeRegExpString + '  \\*{3} ([^ ]+) was kicked by ([^ ]+) \\((.*)\\)$')
     var topicRegExp = new RegExp('^' + timeRegExpString + '  \\*{3} ([^ ]+) changes topic to "(.*)"$')

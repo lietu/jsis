@@ -51,7 +51,7 @@ var config = {
 			 * If your logs are not from the same timezone as the machine you're generating stats, setting this
 			 * will help you get the expected results. For timezone adjustment, also set statsTimezone.
 			 *
-			 * Format: +HH:MM or -HH:MM as offset from GMT, null to use server timezone (default)
+			 * Format: +HH:MM or -HH:MM as offset from UTC, null to use server timezone (default)
 			 * E.g.: +03:00 or -07:00
 			 *
 			 * @type {String}
@@ -95,7 +95,7 @@ var config = {
 			 * If you want to render the stats in a different timezone than the server is at, set this to the
 			 * timezone you want to render in. Also you might want to make sure logTimezone is correct.
 			 *
-			 * Format: +HH:MM or -HH:MM as offset from GMT, null to use server timezone (default)
+			 * Format: +HH:MM or -HH:MM as offset from UTC, null to use server timezone (default)
 			 * E.g.: +03:00 or -07:00
 			 *
 			 * @type {String}
@@ -103,11 +103,11 @@ var config = {
 			//statsTimezone: '+00:00',
 
 			/**
-			 * What text to show as being the timezone, in case you don't want to show "GMT-07:00"
+			 * What text to show as being the timezone, in case you don't want to show "UTC-07:00"
 			 *
 			 * @type {String}
 			 */
-			//statsTimezoneText: 'GMT',
+			//statsTimezoneText: 'UTC',
 
 			/**
 			 * Widgets to include, and in what order, comment out for default configuration (widgets/config.js)

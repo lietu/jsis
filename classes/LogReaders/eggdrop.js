@@ -90,7 +90,7 @@ var EggdropReader = function(logRelayer, channelConfig) {
 	var unknownDate = true;
 
 	this.currentDate = date.toString('ddd MMM dd yyyy');
-	this.tzData = 'GMT' + channelConfig.logTimezone;
+	this.tzData = 'UTC' + channelConfig.logTimezone;
 
 	// List of timestamps created without knowing the date
 	var timeStampsWithUnknownDate = [];

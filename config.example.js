@@ -103,7 +103,7 @@ var config = {
 			//statsTimezone: '+00:00',
 
 			/**
-			 * What text to show as being the timezone, in case you don't want to show "GTM-07:00"
+			 * What text to show as being the timezone, in case you don't want to show "GMT-07:00"
 			 *
 			 * @type {String}
 			 */

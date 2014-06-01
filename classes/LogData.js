@@ -102,7 +102,7 @@ var LogData = function(channelConfig) {
      * @return {String}
      */
     this.cleanNick = function(nick) {
-        return nick.replace(/^[@+%]/, '');
+        return nick.replace(/^[~!&@%+]/, '');
     };
 
 	/**

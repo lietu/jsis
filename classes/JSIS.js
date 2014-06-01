@@ -31,7 +31,7 @@ var JSIS = function() {
 	/**
 	 * Everyone needs a version number, even JSIS
 	 */
-	this.version = '0.1';
+	this.version = '0.9';
 
 	/**
 	 * Get a function to parse the contents of a single log file

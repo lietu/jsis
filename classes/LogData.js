@@ -96,11 +96,22 @@ var LogData = function(channelConfig) {
 
 	};
 
+    /**
+     * Try and clean off operator, voice, etc. signs from the nicks
+     * @param {String} nick
+     * @return {String}
+     */
+    this.cleanNick = function(nick) {
+        return nick.replace(/^[@+%]/, '');
+    };
+
 	/**
 	 * Try and find any aliases for this nick
 	 * @param nick
 	 */
 	this.getNickAliasData = function(nick) {
+
+        var nick = this.cleanNick(nick);
 
 		// Convert to lowercase for checks
 		var nickLower = nick.toLowerCase();

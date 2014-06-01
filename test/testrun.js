@@ -1,11 +1,20 @@
 var fs = require('fs');
 var path = require('path');
+var Logger = require('../classes/Logger.js');
 var existsSync = fs.existsSync || path.existsSync;
 
 var jsis = require('../classes/JSIS.js');
 
+var oldLog = Logger.log;
+
 module.exports.setUp = function(callback) {
     fs.writeFileSync('config.js', fs.readFileSync('test_files/test_config.js'));
+    Logger.log = function() {};
+    callback();
+};
+
+module.exports.tearDown = function(callback) {
+    Logger.log = oldLog;
     callback();
 };
 

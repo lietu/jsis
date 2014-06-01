@@ -54,14 +54,14 @@ var SupybotReader = function (logRelayer, channelConfig) {
     // Regular expression string to match (and select) the timestamp on the line
     var timeRegExpString = '([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})';
 
-    var lineRegExp = new RegExp('^' + timeRegExpString + ' +([^ ]+) +(.*)$');
-    var modeRegExp = new RegExp('^' + timeRegExpString + ' +-- +Mode ([^ ]+) \\[([^\\]]+)\\] by (.+)$');
-    var joinPartRegExp = new RegExp('^' + timeRegExpString + ' +(<--|-->) +([^ ]+) \\(([^)]+)\\) has (joined|left) ');
-    var nickChangeRegExp = new RegExp('^' + timeRegExpString + ' +-- +([^ ]+) is now known as (.+)$');
-    var quitRegExp = new RegExp('^' + timeRegExpString + ' +<-- +([^ ]+) \\(([^)]+)\\) has quit ');
-    var actionRegExp = new RegExp('^' + timeRegExpString + ' +\\* +([^ ]+) (.*)$');
-    var topicRegExp = new RegExp('^' + timeRegExpString + ' +-- +([^ ]+) has changed topic for ([^ ]+) from \"(.*)\" to "(.*)"$')
-    var kickRegExp = new RegExp('^' + timeRegExpString + ' +<-- +([^ ]+) has kicked ([^ ]+) \\(([^)]+)\\)$')
+    var lineRegExp = new RegExp('^' + timeRegExpString + '\\s+([^\\s]+)\\s+(.*)$');
+    var modeRegExp = new RegExp('^' + timeRegExpString + '\\s+--\\s+Mode ([^ ]+) \\[([^\\]]+)\\] by (.+)$');
+    var joinPartRegExp = new RegExp('^' + timeRegExpString + '\\s+(<--|-->)\\s+([^ ]+) \\(([^)]+)\\) has (joined|left) ');
+    var nickChangeRegExp = new RegExp('^' + timeRegExpString + '\\s+--\\s+([^ ]+) is now known as (.+)$');
+    var quitRegExp = new RegExp('^' + timeRegExpString + '\\s+<--\\s+([^ ]+) \\(([^)]+)\\) has quit ');
+    var actionRegExp = new RegExp('^' + timeRegExpString + '\\s+\\*\\s+([^ ]+) (.*)$');
+    var topicRegExp = new RegExp('^' + timeRegExpString + '\\s+--\\s+([^ ]+) has changed topic for ([^ ]+) from \"(.*)\" to "(.*)"$')
+    var kickRegExp = new RegExp('^' + timeRegExpString + '\\s+<--\\s+([^ ]+) has kicked ([^ ]+) \\(([^)]+)\\)$')
 
     this.tzData = channelConfig.logTimezone;
 

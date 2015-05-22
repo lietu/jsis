@@ -16,12 +16,12 @@ var MostActiveTimes = function(statsAnalyzer, channelConfig) {
 
 	// Our variables
 	this.timezone = channelConfig.statsTimezoneText;
+	this.tooltipData = [];
 	this.hourList = [];
 	this.graphData = {
 		words: [],
 		lines: []
 	};
-	this.tooltipData = [];
 
 
 	/**

@@ -50,7 +50,8 @@ var MostActiveTimes = function(statsAnalyzer, channelConfig) {
 		// Convert some of the data to JSON for easier JS insertion
 		this.hourList = JSON.stringify( this.hourList );
 		this.tooltipData = JSON.stringify( this.tooltipData );
-		this.graphData = JSON.stringify( this.graphData );
+		this.graphData.words = JSON.stringify( this.graphData.words );
+		this.graphData.lines = JSON.stringify( this.graphData.lines );
 
 	};
 

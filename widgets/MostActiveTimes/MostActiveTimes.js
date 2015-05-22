@@ -17,7 +17,10 @@ var MostActiveTimes = function(statsAnalyzer, channelConfig) {
 	// Our variables
 	this.timezone = channelConfig.statsTimezoneText;
 	this.hourList = [];
-	this.graphData = [];
+	this.graphData = {
+		words: [],
+		lines: []
+	};
 	this.tooltipData = [];
 
 
@@ -36,9 +39,11 @@ var MostActiveTimes = function(statsAnalyzer, channelConfig) {
 		for( var hour in stats.linesByHour ) {
 
 			// Push the data point
-			this.graphData.push( stats.linesByHour[ hour ] );
+			this.graphData.words.push( stats.wordsByHour[ hour ] );
+			this.graphData.lines.push( stats.linesByHour[ hour ] );
 
 			// And the tooltip
+			this.tooltipData.push( stats.wordsByHour[ hour ] + ' @ ' + hour + ':00 - ' + hour + ':59' );
 			this.tooltipData.push( stats.linesByHour[ hour ] + ' @ ' + hour + ':00 - ' + hour + ':59' );
 		}
 

@@ -724,6 +724,7 @@ var LogData = function(channelConfig) {
 
 		// Check the word list for real words, process them, and get the count
 		var wordCount = this.checkWordList(currentTime, nick, words);
+		stats.wordsByHour[ hour ] += wordCount;
 
 		// Update average words per line and chars per line
 		stats.averageWordsPerLine = Utils.average(stats.averageWordsPerLine, wordCount, stats.lines);

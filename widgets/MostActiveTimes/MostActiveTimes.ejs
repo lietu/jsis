@@ -10,8 +10,11 @@
 $(document).ready(function() {
 	try {
 
-	// Create a new line graph with 4 lines containing
-	var dataPoints = <%- widget.graphData %>;
+	// Create a new line graph with 2 lines containing
+	var dataPoints = {
+		words: <%- widget.graphData.words %>,
+		lines: <%- widget.graphData.lines %>
+	}
 
 	var graph = new RGraph.Line('mostActiveTimesGraph', dataPoints);
 
@@ -57,7 +60,7 @@ $(document).ready(function() {
 		graph.Set('chart.key.position.gutter.boxed', false);
 
 		// Setup the tooltips
-		if( dataPoints.length<=250 ) {
+		if( (dataPoints.words.length + dataPoints.lines.length)<=250 ) {
 			graph.Set('chart.tooltips.effect', 'fade');
 			graph.Set('chart.tooltips', <%- widget.tooltipData %>);
 		}

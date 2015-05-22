@@ -16,7 +16,7 @@ $(document).ready(function() {
 		lines: <%- widget.graphData.lines %>
 	}
 
-	var graph = new RGraph.Line('mostActiveTimesGraph', dataPoints);
+	var graph = new RGraph.Line('mostActiveTimesGraph', dataPoints.words, dataPoints.lines);
 
 	// Set the horizontal labels
 	graph.Set('chart.labels', <%- widget.hourList %>);

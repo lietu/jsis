@@ -48,9 +48,9 @@ $(document).ready(function() {
 			graph.Set('chart.shadow.offsety', 0);
 
 			// If we've got an old user-agent, do a plain draw
-			if (RGraph.isOld()) {
+			/*if (RGraph.isOld()) {
 				graph.Draw();
-			} else {
+			} else {*/
 
 				// For more recent onces, add goodies
 				graph.Set('chart.key', ['Words', 'Lines']);
@@ -67,7 +67,7 @@ $(document).ready(function() {
 				// Trace the lines in
 				RGraph.Effects.Line.jQuery.Trace(graph);
 
-			}
+			//}
 		});
 
 	} catch( e ) {}

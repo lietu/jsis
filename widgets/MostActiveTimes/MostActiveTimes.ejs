@@ -15,7 +15,31 @@ $(document).ready(function() {
 			// Create a new line graph with 2 lines containing
 			var dataPoints = data["MostActiveTimes"].graphData;
 			console.log(data["MostActiveTimes"], data["DailyActivity"]);
-			var graph = new RGraph.Line('mostActiveTimesGraph', dataPoints.words, dataPoints.lines);
+			var line = new RGraph.Line({
+				id: 'mostActiveTimesGraph',
+				data: [ dataPoints.words, dataPoints.lines ],
+				options: {
+					Background: {
+						barcolor2: 'blue',
+						barcolor2: 'green',
+						grid: {
+							color: 'rgba(238,238,238,1)'
+						}
+					},
+					colors: ['rgba(0,0,0,0)'],
+					linewidth: 3,
+					filles: true,
+					fillstyle: ['red','blue','#0f0'],
+	                hmargin: 5,
+	                shadow: false,
+	                tickmarks: false,
+	                labels: data["MostActiveTimes"].hourList,
+	                gutter: {
+	                    left: 40
+	                }
+				}
+			}).draw();
+			/*var graph = new RGraph.Line('mostActiveTimesGraph', dataPoints.words, dataPoints.lines);
 
 			// Set the horizontal labels
 			graph.Set('chart.labels', data["MostActiveTimes"].hourList);
@@ -53,7 +77,7 @@ $(document).ready(function() {
 			} else {*/
 
 				// For more recent onces, add goodies
-				graph.Set('chart.key', ['Words', 'Lines']);
+			/*	graph.Set('chart.key', ['Words', 'Lines']);
 				graph.Set('chart.key.position', 'gutter');
 				graph.Set('chart.key.position.y', 15);
 				graph.Set('chart.key.position.gutter.boxed', false);
@@ -67,7 +91,7 @@ $(document).ready(function() {
 				// Trace the lines in
 				RGraph.Effects.Line.jQuery.Trace(graph);
 
-			//}
+			//}*/
 		});
 
 	} catch( e ) {}

@@ -140,7 +140,7 @@ var MostActiveNicksByHour = function(statsAnalyzer, channelConfig) {
 	 * Get the JSON Data
 	 */
 	this.getJSON = function() {
-		return groupList;
+		return this.groupList;
 	};
 
 	/**

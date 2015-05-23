@@ -68,7 +68,7 @@ var MostReferencedURLs = function(statsAnalyzer, channelConfig) {
 	 * Get the JSON Data
 	 */
 	this.getJSON = function() {
-		return lines;
+		return this.lines;
 	};
 
 	/**

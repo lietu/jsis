@@ -95,7 +95,7 @@ var MostActiveNicks = function(statsAnalyzer, channelConfig) {
 	 * Get the JSON Data
 	 */
 	this.getJSON = function() {
-		return nickList;
+		return this.nickList;
 	};
 
 	/**

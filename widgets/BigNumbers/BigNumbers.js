@@ -147,7 +147,7 @@ var BigNumbers = function(statsAnalyzer, channelConfig) {
 	 * Get the JSON Data
 	 */
 	this.getJSON = function() {
-		return itemList;
+		return this.itemList;
 	};
 
 	/**

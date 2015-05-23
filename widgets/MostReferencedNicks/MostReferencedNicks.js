@@ -16,7 +16,7 @@ var MostReferencedNicks = function(statsAnalyzer, channelConfig) {
 
 	// Our variables
 	// TODO: Nothing here
-	var nicks = {};
+	this.nicks = {};
 
 	/**
 	 * Initialize widget, collect data in a format useful for showing it
@@ -53,7 +53,7 @@ var MostReferencedNicks = function(statsAnalyzer, channelConfig) {
 	 * Get the JSON Data
 	 */
 	this.getJSON = function() {
-		return nicks;
+		return this.nicks;
 	};
 
 	/**

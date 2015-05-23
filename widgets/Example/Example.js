@@ -53,7 +53,7 @@ var Example = function(statsAnalyzer, channelConfig) {
 	 * Get the JSON Data
 	 */
 	this.getJSON = function() {
-		return someData;
+		return this.someData;
 	};
 
 	/**

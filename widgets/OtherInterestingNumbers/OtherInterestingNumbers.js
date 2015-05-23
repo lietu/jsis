@@ -16,7 +16,7 @@ var OtherInterestingNumbers = function(statsAnalyzer, channelConfig) {
 
 	// Our variables
 	// TODO: Nothing here
-	var numbers = [];
+	this.numbers = [];
 
 	/**
 	 * Initialize widget, collect data in a format useful for showing it
@@ -53,7 +53,7 @@ var OtherInterestingNumbers = function(statsAnalyzer, channelConfig) {
 	 * Get the JSON Data
 	 */
 	this.getJSON = function() {
-		return numbers;
+		return this.numbers;
 	};
 
 	/**

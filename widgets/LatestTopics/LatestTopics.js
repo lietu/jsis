@@ -67,7 +67,7 @@ var LatestTopics = function(statsAnalyzer, channelConfig) {
 	 * Get the JSON Data
 	 */
 	this.getJSON = function() {
-		return topics;
+		return this.topics;
 	};
 
 	/**

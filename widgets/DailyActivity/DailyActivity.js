@@ -99,12 +99,12 @@ var DailyActivity = function(statsAnalyzer, channelConfig) {
 		}
 
 		// Convert some of the data to JSON for easier JS insertion
-		this.dateList = JSON.stringify( this.dateList );
+		/*this.dateList = JSON.stringify( this.dateList );
 		this.tooltipData = JSON.stringify( this.tooltipData );
 		this.graphData.night = JSON.stringify( this.graphData.night );
 		this.graphData.day = JSON.stringify( this.graphData.day );
 		this.graphData.morning = JSON.stringify( this.graphData.morning );
-		this.graphData.evening = JSON.stringify( this.graphData.evening );
+		this.graphData.evening = JSON.stringify( this.graphData.evening );*/
 	};
 
 

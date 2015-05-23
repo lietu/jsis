@@ -10,8 +10,8 @@
 		</tr>
 
 	</thead>
-	<tbody>
-		<% for( var i=0, count=widget.lines.length; i < count; ++i ) { %>
+	<tbody id="<%= widget.getId() %>">
+		<!--<% for( var i=0, count=widget.lines.length; i < count; ++i ) { %>
 
 			<tr class="<%= i%2===0?'odd':'even' %>">
 				<td class="pos">
@@ -28,12 +28,37 @@
 				</td>
 			</tr>
 
-		<% } %>
+		<% } %>-->
 
 	</tbody>
 
 </table>
 
 <p>The table simply shows some commonly used words in the channel. The list is limited to words of a minimum length of <%= widget.wordMinLength %> characters.</p>
+
+<script type="text/javascript">
+// Wait until the document has finished loading
+$(document).ready(function() {
+	try {
+
+		//$.getJSON("data.json", function(data) { $("head").trigger("nircla", data); });
+
+		$("head").on("nircla", function (_, data) {
+			if (typeof data !== "object") return;
+			$("tbody#<%= widget.getId() %>").empty();
+			$.each(data["MostUsedWords"], function(i, item) {
+				$tr = $("<tr>").addClass(i%2==0?'odd':'even').append(
+					$("<td>").addClass("pos").text(i+1),
+					$("<td>").text(item.word),
+					$("<td>").text(item.uses),
+					$("<td>").text(item.by)
+				).appendTo("tbody#<%= widget.getId() %>");
+			});
+		});
+
+	} catch( e ) {}
+});
+
+</script>
 
 <!-- /MostUsedWords -->

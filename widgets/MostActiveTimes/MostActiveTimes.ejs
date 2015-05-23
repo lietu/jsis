@@ -3,69 +3,72 @@
 <div class="graphContainer"><canvas id="mostActiveTimesGraph" width="960" height="250"><span class="error">[A modern browser is required to view the charts.]</span></canvas></div>
 
 <p>This is a sum of all the spoken lines grouped by hour.</p>
-<p>The graph should give you some kind of an idea of when people usually talk, and when would be a good time to join. Just don't forget that these times are in <%= widget.timezone %>.</p>
+<p>The graph should give you some kind of an idea of when people usually talk, and when would be a good time to join.</p>
 
 <script type="text/javascript">
 // Wait until the document has finished loading
 $(document).ready(function() {
 	try {
 
-	// Create a new line graph with 4 lines containing
-	var dataPoints = <%- widget.graphData %>;
+		$("head").on("nircla", function (_, data) {
 
-	var graph = new RGraph.Line('mostActiveTimesGraph', dataPoints);
+			// Create a new line graph with 2 lines containing
+			var dataPoints = data["MostActiveTimes"].graphData;
+			console.log(data["MostActiveTimes"], data["DailyActivity"]);
+			var graph = new RGraph.Line('mostActiveTimesGraph', dataPoints.words, dataPoints.lines);
 
-	// Set the horizontal labels
-	graph.Set('chart.labels', <%- widget.hourList %>);
+			// Set the horizontal labels
+			graph.Set('chart.labels', data["MostActiveTimes"].hourList);
 
-	// Set some gitter around the graph
-	graph.Set('chart.gutter.left', 60);
-	graph.Set('chart.gutter.top', 35);
-	graph.Set('chart.gutter.right', 45);
-	graph.Set('chart.gutter.bottom', 20);
+			// Set some gitter around the graph
+			graph.Set('chart.gutter.left', 60);
+			graph.Set('chart.gutter.top', 35);
+			graph.Set('chart.gutter.right', 45);
+			graph.Set('chart.gutter.bottom', 20);
 
-	// Line settings
-	graph.Set('chart.colors', ['#00FF00']);
-	graph.Set('chart.linewidth', 3);
+			// Line settings
+			graph.Set('chart.colors', ['#FF0000', '#00FF00']);
+			graph.Set('chart.linewidth', 3);
 
-	// Add a bit of margin to the edges of the chart (inside the axises)
-	graph.Set('chart.hmargin', 5);
+			// Add a bit of margin to the edges of the chart (inside the axises)
+			graph.Set('chart.hmargin', 5);
 
-	// Set font properties
-	graph.Set('chart.text.color', '#333');
-	graph.Set('chart.text.font', 'Trebuchet MS');
+			// Set font properties
+			graph.Set('chart.text.color', '#333');
+			graph.Set('chart.text.font', 'Trebuchet MS');
 
-	// Grid settings
-	graph.Set('chart.background.grid.autofit', true);
-	graph.Set('chart.background.grid.autofit.numvlines', 30);
+			// Grid settings
+			graph.Set('chart.background.grid.autofit', true);
+			graph.Set('chart.background.grid.autofit.numvlines', 30);
 
-	// Extra effects
-	graph.Set('chart.shadow', true);
-	graph.Set('chart.shadow.blur', 5);
-	graph.Set('chart.shadow.offsetx', 0);
-	graph.Set('chart.shadow.offsety', 0);
+			// Extra effects
+			graph.Set('chart.shadow', true);
+			graph.Set('chart.shadow.blur', 5);
+			graph.Set('chart.shadow.offsetx', 0);
+			graph.Set('chart.shadow.offsety', 0);
 
-	// If we've got an old user-agent, do a plain draw
-	if (RGraph.isOld()) {
-		graph.Draw();
-	} else {
+			// If we've got an old user-agent, do a plain draw
+			if (RGraph.isOld()) {
+				graph.Draw();
+			} else {
 
-		// For more recent onces, add goodies
-		graph.Set('chart.key', ['Lines']);
-		graph.Set('chart.key.position', 'gutter');
-		graph.Set('chart.key.position.y', 15);
-		graph.Set('chart.key.position.gutter.boxed', false);
+				// For more recent onces, add goodies
+				graph.Set('chart.key', ['Words', 'Lines']);
+				graph.Set('chart.key.position', 'gutter');
+				graph.Set('chart.key.position.y', 15);
+				graph.Set('chart.key.position.gutter.boxed', false);
 
-		// Setup the tooltips
-		if( dataPoints.length<=250 ) {
-			graph.Set('chart.tooltips.effect', 'fade');
-			graph.Set('chart.tooltips', <%- widget.tooltipData %>);
-		}
+				// Setup the tooltips
+				if( (dataPoints.words.length + dataPoints.lines.length)<=250 ) {
+					graph.Set('chart.tooltips.effect', 'fade');
+					graph.Set('chart.tooltips', data["MostActiveTimes"].tooltipData);
+				}
 
-		// Trace the lines in
-		RGraph.Effects.Line.jQuery.Trace(graph);
+				// Trace the lines in
+				RGraph.Effects.Line.jQuery.Trace(graph);
 
-	}
+			}
+		});
 
 	} catch( e ) {}
 });

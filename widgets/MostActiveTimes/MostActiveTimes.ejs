@@ -15,7 +15,7 @@ $(document).ready(function() {
 			// Create a new line graph with 2 lines containing
 			var dataPoints = data["MostActiveTimes"].graphData;
 			console.log(data["MostActiveTimes"], data["DailyActivity"]);
-			var graph = new RGraph.Line('mostActiveTimesGraph'/*, dataPoints.words*/, dataPoints.lines);
+			var graph = new RGraph.Line('mostActiveTimesGraph', dataPoints.words, dataPoints.lines);
 
 			// Set the horizontal labels
 			graph.Set('chart.labels', data["MostActiveTimes"].hourList);
@@ -27,7 +27,7 @@ $(document).ready(function() {
 			graph.Set('chart.gutter.bottom', 20);
 
 			// Line settings
-			graph.Set('chart.colors', ['#FF0000'/*, '#00FF00'*/]);
+			graph.Set('chart.colors', ['#FF0000', '#00FF00']);
 			graph.Set('chart.linewidth', 3);
 
 			// Add a bit of margin to the edges of the chart (inside the axises)

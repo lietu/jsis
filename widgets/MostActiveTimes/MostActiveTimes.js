@@ -47,7 +47,7 @@ var MostActiveTimes = function(statsAnalyzer, channelConfig) {
 			this.tooltipData.push( stats.wordsByHour[ hour ] + ' @ ' + hour + ':00 - ' + hour + ':59' );
 			otherTooltips.push( stats.linesByHour[ hour ] + ' @ ' + hour + ':00 - ' + hour + ':59' );
 		}
-		//this.tooltipData = this.tooltipData.concat(otherTooltips);
+		this.tooltipData = this.tooltipData.concat(otherTooltips);
 
 	};
 

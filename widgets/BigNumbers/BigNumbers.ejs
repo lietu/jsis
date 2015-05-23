@@ -31,8 +31,7 @@ $(document).ready(function() {
 			$("tbody#<%= widget.getId() %>").empty();
 			$.each(data["BigNumbers"], function(i, item) {
 				$tr = $("<tr>").addClass(i%2==0?'odd':'even').append(
-					$("<td>").text(item.big),
-					$("<td>").text(item.nick).append($("<br/>"), $("<span>").addClass("small").text(item.small))
+					$("<td>").text(item.big).append($("<br/>"), $("<span>").addClass("small").text(item.small))
 				).appendTo("tbody#<%= widget.getId() %>");
 			});
 		});

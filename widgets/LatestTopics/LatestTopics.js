@@ -64,6 +64,13 @@ var LatestTopics = function(statsAnalyzer, channelConfig) {
 	};
 
 	/**
+	 * Get the JSON Data
+	 */
+	this.getJSON = function() {
+		return topics;
+	};
+
+	/**
 	 * Set the content HTML
 	 */
 	this.setContent = function(html) {

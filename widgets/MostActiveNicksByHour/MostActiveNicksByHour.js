@@ -137,6 +137,13 @@ var MostActiveNicksByHour = function(statsAnalyzer, channelConfig) {
 	};
 
 	/**
+	 * Get the JSON Data
+	 */
+	this.getJSON = function() {
+		return groupList;
+	};
+
+	/**
 	 * Set the content HTML
 	 */
 	this.setContent = function(html) {

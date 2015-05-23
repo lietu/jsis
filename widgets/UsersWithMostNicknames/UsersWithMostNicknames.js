@@ -16,6 +16,7 @@ var UsersWithMostNicknames = function(statsAnalyzer, channelConfig) {
 
 	// Our variables
 	// TODO: Nothing here
+	var nicks = {};
 
 	/**
 	 * Initialize widget, collect data in a format useful for showing it
@@ -46,6 +47,14 @@ var UsersWithMostNicknames = function(statsAnalyzer, channelConfig) {
 	 */
 	this.getContent = function() {
 		return contentHTML;
+	};
+
+
+	/**
+	 * Get the JSON Data
+	 */
+	this.getJSON = function() {
+		return nicks;
 	};
 
 	/**

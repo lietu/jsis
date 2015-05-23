@@ -78,6 +78,18 @@ var MostActiveTimes = function(statsAnalyzer, channelConfig) {
 	};
 
 	/**
+	 * Get the JSON Data
+	 */
+	this.getJSON = function() {
+		return {
+			timezone: this.timezone,
+			tooltipData: this.tooltipData,
+			hourList: this.hourList,
+			graphData: this.graphData
+		};
+	};
+
+	/**
 	 * Set the content HTML
 	 */
 	this.setContent = function(html) {

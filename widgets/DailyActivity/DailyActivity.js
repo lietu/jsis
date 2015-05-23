@@ -130,6 +130,18 @@ var DailyActivity = function(statsAnalyzer, channelConfig) {
 	};
 
 	/**
+	 * Get the JSON Data
+	 */
+	this.getJSON = function() {
+		return {
+			dateList: this.dateList,
+			hourList: this.hourList,
+			tooltipData: this.tooltipData,
+			graphData: this.graphData
+		};
+	};
+
+	/**
 	 * Set the content HTML
 	 */
 	this.setContent = function(html) {

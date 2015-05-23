@@ -144,6 +144,13 @@ var BigNumbers = function(statsAnalyzer, channelConfig) {
 	};
 
 	/**
+	 * Get the JSON Data
+	 */
+	this.getJSON = function() {
+		return itemList;
+	};
+
+	/**
 	 * Set the content HTML
 	 */
 	this.setContent = function(html) {

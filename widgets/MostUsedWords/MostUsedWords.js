@@ -64,6 +64,16 @@ var MostUsedWords = function(statsAnalyzer, channelConfig) {
 	};
 
 	/**
+	 * Get the JSON Data
+	 */
+	this.getJSON = function() {
+		return {
+			wordMinLength: this.wordMinLength,
+			lines: this.lines
+		};
+	};
+
+	/**
 	 * Set the content HTML
 	 */
 	this.setContent = function(html) {

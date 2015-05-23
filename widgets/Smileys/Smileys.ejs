@@ -48,7 +48,7 @@ $(document).ready(function() {
 			$.each(data["Smileys"], function(i, item) {
 				console.log(i, item);
 				$tr = $("<tr>").append(
-					$("<td>").addClass("pos").text(i),
+					$("<td>").addClass("pos").text(i+1),
 					$("<td>").text(item.smiley),
 					$("<td>").text(item.uses),
 					$("<td>").text(item.by)

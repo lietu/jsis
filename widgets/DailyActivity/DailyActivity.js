@@ -135,7 +135,7 @@ var DailyActivity = function(statsAnalyzer, channelConfig) {
 	this.getJSON = function() {
 		return {
 			dateList: this.dateList,
-			hourList: this.hourList,
+			//hourList: this.hourList,
 			tooltipData: this.tooltipData,
 			graphData: this.graphData
 		};

@@ -14,7 +14,7 @@ $(document).ready(function() {
 
 			// Create a new line graph with 2 lines containing
 			var dataPoints = data["MostActiveTimes"].graphData;
-			var graph = new RGraph.Line('mostActiveTimesGraph', dataPoints.words, /*dataPoints.lines*/);
+			var graph = new RGraph.Line('mostActiveTimesGraph', dataPoints.words/*, dataPoints.lines*/);
 
 			// Set the horizontal labels
 			graph.Set('chart.labels', data["MostActiveTimes"].hourList);

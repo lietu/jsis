@@ -363,7 +363,7 @@ var LogData = function(channelConfig) {
 	 * A RegExp to select all URLs in a line
 	 * Source: http://codegolf.stackexchange.com/a/480
  	 */
-	var urlRegex = /(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/gi;
+	var urlRegex = /(^|\s)((https?:\/\/)?[\w-]+(\.[\w-]+)+\.?(:\d+)?(\/\S*)?)/gi;
 
 	// Regular expression to check for words
 	var wordRegex = /[a-z]+/;

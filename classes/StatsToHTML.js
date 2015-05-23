@@ -233,10 +233,10 @@ var StatsToHTML = function(statsAnalyzer, channelConfig, startTime, version) {
 			// Give the widget it's HTML
 			widget.setContent(html);
 			try {
-				console.log(widget.getJSON());
+				//console.log(widget.getJSON());
 			}
 			catch(err) {
-				console.log("Doesn't exist");
+				console.log(widget.id, "Doesn't exist");
 			}
 
 			// Render it in a container

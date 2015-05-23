@@ -42,7 +42,7 @@ $(document).ready(function() {
 	try {
 
 		$.getJSON("data.json", function(data) {
-			$.each(data, function(i, item) {
+			$.each(data[Smileys], function(i, item) {
 				console.log(i, item);
 			});
 		});

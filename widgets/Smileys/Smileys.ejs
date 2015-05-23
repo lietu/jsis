@@ -36,4 +36,23 @@
 
 <p>The table describes the most commonly used smileys in the channel.</p>
 
+<script type="text/javascript">
+// Wait until the document has finished loading
+$(document).ready(function() {
+	try {
+
+		$.getJSON("data.json", function(data) {
+			$.each(data, function(i, item) {
+				console.log(i, item);
+			});
+		});
+		$("tbody#<%= widget.id %>").
+
+	}
+
+	} catch( e ) {}
+});
+
+</script>
+
 <!-- /Smileys -->

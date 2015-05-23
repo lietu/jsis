@@ -49,7 +49,7 @@ $(document).ready(function() {
 			$.each(data["MostReferencedURLs"], function(i, item) {
 				$tr = $("<tr>").addClass(i%2==0?'odd':'even').append(
 					$("<td>").addClass("pos").text(i+1),
-					$("<td>").addClass("url").append($("a").attr("href", item.url).text(item.url)),
+					//$("<td>").addClass("url").append($("a").attr("href", item.url).text(item.url)),
 					$("<td>").text(item.uses),
 					$("<td>").text(item.by)
 				).appendTo("tbody#<%= widget.getId() %>");

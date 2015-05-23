@@ -232,6 +232,7 @@ var StatsToHTML = function(statsAnalyzer, channelConfig, startTime, version) {
 
 			// Give the widget it's HTML
 			widget.setContent(html);
+			console.log(widget.getJSON());
 
 			// Render it in a container
 			EJS.renderFile( 'themes/' + this.channelConfig.theme + '/widgetContainer.ejs', {widget: widget}, function(err, html) {

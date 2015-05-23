@@ -12,7 +12,7 @@ var Smileys = function(statsAnalyzer, channelConfig) {
 
 	// Our ID and name, very important details
 	var id = 'smileys';
-	var name = 'Smiley usage';
+	var name = 'Smiley Usage';
 
 	// The content HTML
 	var contentHTML = null;
@@ -64,6 +64,13 @@ var Smileys = function(statsAnalyzer, channelConfig) {
 	this.getContent = function() {
 		return contentHTML;
 	};
+
+	/**
+	 * Get the JSON Data
+	 */
+	this.getJSON = function() {
+		return lines;
+	}
 
 	/**
 	 * Set the content HTML

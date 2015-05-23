@@ -13,11 +13,7 @@ $(document).ready(function() {
 		$("head").on("nircla", function (_, data) {
 
 			// Create a new line graph with 2 lines containing
-			var dataPoints = {
-				words: data["MostActiveTimes"].graphData.words,
-				lines: data["MostActiveTimes"].graphData.lines
-			}
-
+			var dataPoints = data["MostActiveTimes"].graphData;
 			var graph = new RGraph.Line('mostActiveTimesGraph', dataPoints.words, dataPoints.lines);
 
 			// Set the horizontal labels

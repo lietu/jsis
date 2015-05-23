@@ -41,9 +41,10 @@
 $(document).ready(function() {
 	try {
 
-		$.getJSON("data.json", function(data) { $("head").trigger("nircla"); });
+		$.getJSON("data.json", function(data) { $("head").trigger("nircla", data); });
 
 		$("head").on("nircla", function (_, data) {
+			if (typeof data !== "object") return;
 			$.each(data["Smileys"], function(i, item) {
 				console.log(i, item);
 				$tr = $("<tr>").append(

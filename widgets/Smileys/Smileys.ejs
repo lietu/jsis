@@ -46,8 +46,7 @@ $(document).ready(function() {
 		$("head").on("nircla", function (_, data) {
 			if (typeof data !== "object") return;
 			$.each(data["Smileys"], function(i, item) {
-				console.log(i, item);
-				$tr = $("<tr>").append(
+				$tr = $("<tr>").addClass(i%2==0?'odd':'even').append(
 					$("<td>").addClass("pos").text(i+1),
 					$("<td>").text(item.smiley),
 					$("<td>").text(item.uses),
@@ -55,7 +54,6 @@ $(document).ready(function() {
 				).appendTo("tbody#<%= widget.getId() %>");
 			});
 		});
-		//$("tbody#<%= widget.getId() %>");
 
 	} catch( e ) {}
 });

@@ -1,7 +1,7 @@
 <!-- BigNumbers -->
 
 <table>
-	<tbody>
+	<tbody id="<%= widget.getId() %>">
 		<% for( var i=0, count=widget.itemList.length; i < count; ++i ) { %>
 
 			<tr class="<%= i%2===0?'odd':'even' %>">
@@ -18,5 +18,28 @@
 </table>
 
 <p>The list contains other interesting numbers, that might or might not give you more insight into the channel and it's active users.</p>
+
+<script type="text/javascript">
+// Wait until the document has finished loading
+$(document).ready(function() {
+	try {
+
+		//$.getJSON("data.json", function(data) { $("head").trigger("nircla", data); });
+
+		$("head").on("nircla", function (_, data) {
+			if (typeof data !== "object") return;
+			$("tbody#<%= widget.getId() %>").empty();
+			$.each(data["BigNumbers"], function(i, item) {
+				$tr = $("<tr>").addClass(i%2==0?'odd':'even').append(
+					$("<td>").text(item.big),
+					$("<td>").text(item.nick).append($("<br/>"), $("<span>").addClass("small").text(item.small))
+				).appendTo("tbody#<%= widget.getId() %>");
+			});
+		});
+
+	} catch( e ) {}
+});
+
+</script>
 
 <!-- /BigNumbers -->

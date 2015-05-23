@@ -61,8 +61,8 @@ $(document).ready(function() {
 				// Setup the tooltips
 				// I found 1500 data points to still be pretty responsive, but at some point it can just be way too much
 				if( dataPointCount<=1500 ) {
-					graph.Set('chart.tooltips.effect', 'fade');
-					graph.Set('chart.tooltips', data["DailyActivity"].tooltipData);
+					//graph.Set('chart.tooltips.effect', 'fade');
+					//graph.Set('chart.tooltips', data["DailyActivity"].tooltipData);
 				} else if( typeof console!=='undefined' && console.log ) {
 					console.log('Skipping tooltips, we have ' + dataPointCount + ' data points');
 				}

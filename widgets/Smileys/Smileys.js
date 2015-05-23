@@ -70,7 +70,7 @@ var Smileys = function(statsAnalyzer, channelConfig) {
 	 */
 	this.getJSON = function() {
 		return lines;
-	}
+	};
 
 	/**
 	 * Set the content HTML

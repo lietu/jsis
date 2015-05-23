@@ -19,6 +19,7 @@ var StatsToHTML = function(statsAnalyzer, channelConfig, startTime, version) {
 	this.channelConfig = channelConfig;
 	this.startTime = startTime;
 	this.version = version;
+	this.JSONData = {};
 	this.templateData = null;
 
 	this.copyTemplateFiles = function(onReadyCallback) {
@@ -115,8 +116,10 @@ var StatsToHTML = function(statsAnalyzer, channelConfig, startTime, version) {
 					// Write the rendered HTML in the index.html file there
 					fs.writeFile( this.channelConfig.destination + '/index.html', html, 'utf8', function() {
 
+						fs.writeFile( this.channelConfig.destination + '/data.json', this.JSONData, 'utf8' function() {
+							this.copyTemplateFiles.bind(this)(onReadyCallback);
+						}).bind(this) );
 						// Once that's done, copy the rest of the template files
-						this.copyTemplateFiles.bind(this)(onReadyCallback);
 
 					}.bind(this) );
 
@@ -232,14 +235,9 @@ var StatsToHTML = function(statsAnalyzer, channelConfig, startTime, version) {
 
 			// Give the widget it's HTML
 			widget.setContent(html);
-			//try {
-				widget.getJSON();
-				//console.log(widget.getJSON());
-			//}
-			//catch(err) {
-			//	console.log(widgetClass, "Doesn't exist");
-			//	console.log(widget);
-			//}
+			try {
+				this.JSONData[widgetClass] = widget.getJSON();
+			} catch(err) {}
 
 			// Render it in a container
 			EJS.renderFile( 'themes/' + this.channelConfig.theme + '/widgetContainer.ejs', {widget: widget}, function(err, html) {

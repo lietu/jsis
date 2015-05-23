@@ -36,6 +36,7 @@ var MostActiveTimes = function(statsAnalyzer, channelConfig) {
 		for( var i=0; i < 24; ++i ) { this.hourList.push(i); }
 
 		// And dates
+		var otherTooltips = [];
 		for( var hour in stats.linesByHour ) {
 
 			// Push the data point
@@ -44,8 +45,9 @@ var MostActiveTimes = function(statsAnalyzer, channelConfig) {
 
 			// And the tooltip
 			this.tooltipData.push( stats.wordsByHour[ hour ] + ' @ ' + hour + ':00 - ' + hour + ':59' );
-			this.tooltipData.push( stats.linesByHour[ hour ] + ' @ ' + hour + ':00 - ' + hour + ':59' );
+			otherTooltips.push( stats.linesByHour[ hour ] + ' @ ' + hour + ':00 - ' + hour + ':59' );
 		}
+		this.tooltipData = this.tooltipData.concat(otherTooltips);
 
 		// Convert some of the data to JSON for easier JS insertion
 		this.hourList = JSON.stringify( this.hourList );

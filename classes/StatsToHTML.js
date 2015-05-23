@@ -238,6 +238,7 @@ var StatsToHTML = function(statsAnalyzer, channelConfig, startTime, version) {
 			}
 			catch(err) {
 				console.log(widgetClass, "Doesn't exist");
+				console.log(widget);
 			}
 
 			// Render it in a container

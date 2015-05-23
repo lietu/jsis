@@ -84,7 +84,7 @@ var MostActiveTimes = function(statsAnalyzer, channelConfig) {
 	 */
 	this.getJSON = function() {
 		return {
-			timezone: this.timezone,
+			//timezone: this.timezone,
 			tooltipData: this.tooltipData,
 			hourList: this.hourList,
 			graphData: this.graphData

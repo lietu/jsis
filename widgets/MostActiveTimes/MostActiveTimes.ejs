@@ -19,6 +19,7 @@ $(document).ready(function() {
 				id: 'mostActiveTimesGraph',
 				data: [ dataPoints.words, dataPoints.lines ],
 				options: {
+					spline: true,
 					Background: {
 						barcolor2: 'blue',
 						barcolor2: 'green',
@@ -27,7 +28,7 @@ $(document).ready(function() {
 						}
 					},
 					colors: ['rgba(0,0,0,0)'],
-					linewidth: 3,
+					linewidth: 2,
 					filles: true,
 					fillstyle: ['red','blue','#0f0'],
 	                hmargin: 5,

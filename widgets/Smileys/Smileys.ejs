@@ -10,7 +10,7 @@
 		</tr>
 
 	</thead>
-	<tbody id="<%= widget.id %>">
+	<tbody id="<%= widget.getId() %>">
 		<!--<% for( var i=0, count=widget.lines.length; i < count; ++i ) { %>
 
 			<tr class="<%= i%2===0?'odd':'even' %>">
@@ -44,9 +44,15 @@ $(document).ready(function() {
 		$.getJSON("data.json", function(data) {
 			$.each(data["Smileys"], function(i, item) {
 				console.log(i, item);
+				$tr = $("<tr>").append(
+					$("<td>").addClass("pos").text(i),
+					$("<td>").text(item.smiley),
+					$("<td>").text(item.uses),
+					$("<td>").text(item.by)
+				).appendTo("tbody#<%= widget.getId() %>");
 			});
 		});
-		//$("tbody#<%= widget.id %>");
+		//$("tbody#<%= widget.getId() %>");
 
 	} catch( e ) {}
 });

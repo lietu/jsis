@@ -233,6 +233,7 @@ var StatsToHTML = function(statsAnalyzer, channelConfig, startTime, version) {
 			// Give the widget it's HTML
 			widget.setContent(html);
 			try {
+				widget.getJSON();
 				//console.log(widget.getJSON());
 			}
 			catch(err) {

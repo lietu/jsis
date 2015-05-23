@@ -116,7 +116,7 @@ var StatsToHTML = function(statsAnalyzer, channelConfig, startTime, version) {
 					// Write the rendered HTML in the index.html file there
 					fs.writeFile( this.channelConfig.destination + '/index.html', html, 'utf8', function() {
 
-						fs.writeFile( this.channelConfig.destination + '/data.json', this.JSONData, 'utf8', function() {
+						fs.writeFile( this.channelConfig.destination + '/data.json', JSON.stringify(this.JSONData), 'utf8', function() {
 							Logger.log('MESSAGE', '## ## ## Written DATA JSON!');
 							this.copyTemplateFiles.bind(this)(onReadyCallback);
 						}.bind(this) );

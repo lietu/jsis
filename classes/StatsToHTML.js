@@ -119,7 +119,7 @@ var StatsToHTML = function(statsAnalyzer, channelConfig, startTime, version) {
 						fs.writeFile( this.channelConfig.destination + '/data.json', this.JSONData, 'utf8', function() {
 							Logger.log('MESSAGE', '## ## ## Written DATA JSON!');
 							this.copyTemplateFiles.bind(this)(onReadyCallback);
-						}).bind(this) );
+						}.bind(this) );
 						// Once that's done, copy the rest of the template files
 
 					}.bind(this) );

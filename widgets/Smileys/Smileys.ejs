@@ -25,6 +25,7 @@ $(document).ready(function() {
 
 		$("head").on("nircla", function (_, data) {
 			if (typeof data !== "object") return;
+			$("tbody#<%= widget.getId() %>").empty();
 			$.each(data["Smileys"], function(i, item) {
 				$tr = $("<tr>").addClass(i%2==0?'odd':'even').append(
 					$("<td>").addClass("pos").text(i+1),

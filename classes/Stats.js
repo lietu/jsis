@@ -131,7 +131,7 @@ var Stats = function() {
 	this.initDay = (function() {
 		// List of initialized days
 		var daysInitialized = {};
-		this.numDays++;
+
 		return function(day) {
 			// If this day is not yet initialized, do so
 			if( !daysInitialized[day] ) {

@@ -150,6 +150,7 @@ var StatsAnalyzer = function(stats) {
 		this.statsTo = to.toString('yyyy-MM-dd');
 		this.numNicks = numNicks;
 		this.numDays = Math.ceil( (maxDate.timestamp - minDate.timestamp) / 1000 / 60 / 60 / 24 ) + 1;
+		stats.numDays = this.numDays;
 
 		var endTime = new Date().getTime();
 

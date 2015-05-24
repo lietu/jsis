@@ -4,7 +4,7 @@ IRC statistics generator powered by JavaScript
 
 ## What's the status currently?
 
-[![Build Status](https://travis-ci.org/lietu/jsis.svg?branch=master)](https://travis-ci.org/lietu/jsis)
+[![Build Status](https://travis-ci.org/Web-Development-Guru/jsis.svg?branch=master)](https://travis-ci.org/Web-Development-Guru/jsis)
 
 
 ## What is this?

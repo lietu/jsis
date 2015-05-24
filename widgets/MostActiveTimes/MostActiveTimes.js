@@ -16,9 +16,12 @@ var MostActiveTimes = function(statsAnalyzer, channelConfig) {
 
 	// Our variables
 	this.timezone = channelConfig.statsTimezoneText;
-	this.hourList = [];
-	this.graphData = [];
 	this.tooltipData = [];
+	this.hourList = [];
+	this.graphData = {
+		words: [],
+		lines: []
+	};
 
 
 	/**
@@ -33,19 +36,18 @@ var MostActiveTimes = function(statsAnalyzer, channelConfig) {
 		for( var i=0; i < 24; ++i ) { this.hourList.push(i); }
 
 		// And dates
+		var otherTooltips = [];
 		for( var hour in stats.linesByHour ) {
 
 			// Push the data point
-			this.graphData.push( stats.linesByHour[ hour ] );
+			this.graphData.words.push( stats.wordsByHour[ hour ] );
+			this.graphData.lines.push( stats.linesByHour[ hour ] );
 
 			// And the tooltip
-			this.tooltipData.push( stats.linesByHour[ hour ] + ' @ ' + hour + ':00 - ' + hour + ':59' );
+			this.tooltipData.push( stats.wordsByHour[ hour ] + ' @ ' + hour + ':00 - ' + hour + ':59' );
+			otherTooltips.push( stats.linesByHour[ hour ] + ' @ ' + hour + ':00 - ' + hour + ':59' );
 		}
-
-		// Convert some of the data to JSON for easier JS insertion
-		this.hourList = JSON.stringify( this.hourList );
-		this.tooltipData = JSON.stringify( this.tooltipData );
-		this.graphData = JSON.stringify( this.graphData );
+		this.tooltipData = this.tooltipData.concat(otherTooltips);
 
 	};
 
@@ -69,6 +71,18 @@ var MostActiveTimes = function(statsAnalyzer, channelConfig) {
 	 */
 	this.getContent = function() {
 		return contentHTML;
+	};
+
+	/**
+	 * Get the JSON Data
+	 */
+	this.getJSON = function() {
+		return {
+			//timezone: this.timezone,
+			tooltipData: this.tooltipData,
+			hourList: this.hourList,
+			graphData: this.graphData
+		};
 	};
 
 	/**

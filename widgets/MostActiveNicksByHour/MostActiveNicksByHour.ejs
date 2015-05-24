@@ -11,33 +11,36 @@
 		</tr>
 
 	</thead>
-	<tbody>
-		<% for( var i=0; i < 10; ++i ) { %>
-
-			<tr class="<%= i%2===0?'odd':'even' %>">
-				<td class="pos">
-					<%= i+1 %>
-				</td>
-				<td>
-					<%= widget.groupList.night[i] %>
-				</td>
-				<td>
-					<%= widget.groupList.morning[i] %>
-				</td>
-				<td>
-					<%= widget.groupList.day[i] %>
-				</td>
-				<td>
-					<%= widget.groupList.evening[i] %>
-				</td>
-			</tr>
-
-		<% } %>
-
-	</tbody>
+	<tbody id="<%= widget.getId() %>"></tbody>
 
 </table>
 
 <p>The table should give you an idea of when do the most active people talk the most.</p>
+
+<script type="text/javascript">
+// Wait until the document has finished loading
+$(document).ready(function() {
+	try {
+
+		//$.getJSON("data.json", function(data) { $("head").trigger("nircla", data); });
+
+		$("head").on("nircla", function (_, data) {
+			if (typeof data !== "object") return;
+			$("tbody#<%= widget.getId() %>").empty();
+			for (var i=0; i < 10; ++i) {
+				$tr = $("<tr>").addClass(i%2==0?'odd':'even').append(
+					$("<td>").addClass("pos").text(i+1),
+					$("<td>").text(data["MostActiveNicksByHour"].night[i]),
+					$("<td>").text(data["MostActiveNicksByHour"].morning[i]),
+					$("<td>").text(data["MostActiveNicksByHour"].day[i]),
+					$("<td>").text(data["MostActiveNicksByHour"].evening[i])
+				).appendTo("tbody#<%= widget.getId() %>");
+			}
+		});
+
+	} catch( e ) {}
+});
+
+</script>
 
 <!-- /MostActiveNicksByHour -->

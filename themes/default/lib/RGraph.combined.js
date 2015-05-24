@@ -308,7 +308,7 @@ obj.Get('chart.title.size') ? obj.Get('chart.title.size') : obj.Get('chart.text.
 context.stroke();}
 RGraph.GetDays = function (obj)
 {
-var year = obj.getFullYear();var days = obj.getDate();var month = obj.getMonth();if(month == 0) return days;if(month >= 1) days += 31; 
+var year = obj.getFullYear();var days = obj.getDate();var month = obj.getMonth();if(month == 0) return days;if(month >= 1) days += 31;
 if(month >= 2) days += 28;if(year >= 2008 && year % 4 == 0) days += 1;if(month >= 3) days += 31;if(month >= 4) days += 30;if(month >= 5) days += 31;if(month >= 6) days += 30;if(month >= 7) days += 31;if(month >= 8) days += 31;if(month >= 9) days += 30;if(month >= 10) days += 31;if(month >= 11) days += 30;return days;}
 function pd(variable){RGraph.pr(variable);}
 function p(variable){RGraph.pr(variable);}
@@ -406,7 +406,7 @@ typeof(labels_processed[i]) == 'object' &&
 typeof(labels_processed[i][3]) == 'number' &&
 labels_processed[i][3] == -1
 ){
-context.moveTo(x, y + 5);context.lineTo(x, y + 5 + length);context.stroke();context.beginPath();                                
+context.moveTo(x, y + 5);context.lineTo(x, y + 5 + length);context.stroke();context.beginPath();
 context.moveTo(x, y + 5);context.lineTo(x - 3, y + 10);context.lineTo(x + 3, y + 10);context.closePath();var text_x = x;var text_y = y + 5 + length;} else {
 var text_x = x;var text_y = y - 5 - length;context.moveTo(x, y - 5);context.lineTo(x, y - 5 - length);context.stroke();context.beginPath();context.moveTo(x, y - 5);context.lineTo(x - 3, y - 10);context.lineTo(x + 3, y - 10);context.closePath();}
 context.fill();}
@@ -689,7 +689,7 @@ alert('[ERROR] There was an error with the background image that you specified: 
 }
 RGraph.Reset=function(canvas){canvas.width = canvas.width;}
 function AA (obj, value)
-{            
+{
 var value = String(value).replace(/^(\d+)\.\d+/, '$1');var newvalue = Number(value) + 0.5;return (newvalue - value) >= 0 ? newvalue : Math.floor(value);}
 RGraph.InstallUserClickListener = function (obj, func)
 {
@@ -838,7 +838,7 @@ var div = document.createElement('DIV');div.className = obj.Get('chart.tooltips.
 RGraph.HideTooltip = function ()
 {
 var tooltip = RGraph.Registry.Get('chart.tooltip');if(tooltip){
-tooltip.parentNode.removeChild(tooltip);tooltip.style.display = 'none';                
+tooltip.parentNode.removeChild(tooltip);tooltip.style.display = 'none';
 tooltip.style.visibility = 'hidden';RGraph.Registry.Set('chart.tooltip', null);}
 }
 RGraph.InstallWindowMousedownTooltipListener = function (obj)
@@ -877,7 +877,7 @@ return;}
 RGraph.Registry.Get('__rgraph_event_listeners__')[obj.canvas.id + '_mousemove'] = true;RGraph.AddCustomEventListener(obj, 'onclear', function (obj){RGraph.Registry.Get('__rgraph_event_listeners__')[obj.canvas.id + '_mousemove'] = false})
 rgraph_canvas_mousemove_func = function (e)
 {
-var objects = RGraph.ObjectRegistry.getObjectsByCanvasID(e.target.id);            
+var objects = RGraph.ObjectRegistry.getObjectsByCanvasID(e.target.id);
 for (var i=0; i<objects.length; ++i){
 var shape = objects[i].getShape(e);if(shape && shape['object']){
 if(objects[i].type == 'scatter' && shape['dataset'] > 0){
@@ -1051,7 +1051,7 @@ var hpos = obj.radius + gutterLeft;} else if(obj.Get('chart.align') == 'right'){
 var hpos = obj.canvas.width - obj.radius - gutterRight;} else {
 hpos = canvas.width / 2;}
 }
-  
+
 hpos -= (length / 2);if(typeof(obj.Get('chart.key.position.x')) == 'number'){
 hpos = obj.Get('chart.key.position.x');}
 if(typeof(obj.Get('chart.key.position.y')) == 'number'){
@@ -2672,7 +2672,7 @@ obj.value = obj.currentValue + increment;RGraph.Clear(obj.canvas);RGraph.RedrawC
 callback(obj);}
 }
 RGraph.Effects.UpdateCanvas(Grow_vprogress_inner);}
-        
+
 RGraph.Effects.Pie.Wave = function (obj)
 {
 var max = RGraph.array_max(obj.data);var scale = RGraph.getScale(max);obj.Set('chart.ymax', scale[4]);original_pie_data = RGraph.array_clone(obj.data);
@@ -2732,28 +2732,28 @@ events[i][j][1] = (currentFrame / numFrames) * original_events[i][j][1];}
 } else {
 events[i][1] = (currentFrame / numFrames) * original_events[i][1];}
 }
-obj.Set('chart.events', events);RGraph.Clear(obj.canvas);RGraph.RedrawCanvas(obj.canvas);currentFrame++;RGraph.Effects.UpdateCanvas(Grow_gantt_inner);} else if(callback){            
+obj.Set('chart.events', events);RGraph.Clear(obj.canvas);RGraph.RedrawCanvas(obj.canvas);currentFrame++;RGraph.Effects.UpdateCanvas(Grow_gantt_inner);} else if(callback){
 callback(obj);}
 }
 RGraph.Effects.UpdateCanvas(Grow_gantt_inner);}
-if(!Function.prototype.bind){  
-Function.prototype.bind = function (oThis){  
-if(typeof this !== "function"){  
-throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");  
-}  
-var aArgs = Array.prototype.slice.call(arguments, 1),   
-fToBind = this,   
-fNOP = function (){},  
-fBound = function (){  
-return fToBind.apply(this instanceof fNOP  
-? this  
-: oThis || window,  
-aArgs.concat(Array.prototype.slice.call(arguments)));  
-};  
-fNOP.prototype = this.prototype;  
-fBound.prototype = new fNOP();  
-return fBound;  
-};  
+if(!Function.prototype.bind){
+Function.prototype.bind = function (oThis){
+if(typeof this !== "function"){
+throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+}
+var aArgs = Array.prototype.slice.call(arguments, 1),
+fToBind = this,
+fNOP = function (){},
+fBound = function (){
+return fToBind.apply(this instanceof fNOP
+? this
+: oThis || window,
+aArgs.concat(Array.prototype.slice.call(arguments)));
+};
+fNOP.prototype = this.prototype;
+fBound.prototype = new fNOP();
+return fBound;
+};
 }
 RGraph.Effects.Rose.Explode = function (obj)
 {

@@ -363,7 +363,7 @@ var LogData = function(channelConfig) {
 	 * A RegExp to select all URLs in a line
 	 * Source: http://codegolf.stackexchange.com/a/480
  	 */
-	var urlRegex = /(^|\s)((https?:\/\/)?[\w-]+(\.[\w-]+)+\.?(:\d+)?(\/\S*)?)/gi;
+	var urlRegex = /(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/gi;
 
 	// Regular expression to check for words
 	var wordRegex = /[a-z]+/;
@@ -724,6 +724,7 @@ var LogData = function(channelConfig) {
 
 		// Check the word list for real words, process them, and get the count
 		var wordCount = this.checkWordList(currentTime, nick, words);
+		stats.wordsByHour[ hour ] += wordCount;
 
 		// Update average words per line and chars per line
 		stats.averageWordsPerLine = Utils.average(stats.averageWordsPerLine, wordCount, stats.lines);

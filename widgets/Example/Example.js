@@ -50,6 +50,13 @@ var Example = function(statsAnalyzer, channelConfig) {
 	};
 
 	/**
+	 * Get the JSON Data
+	 */
+	this.getJSON = function() {
+		return this.someData;
+	};
+
+	/**
 	 * Set the content HTML
 	 */
 	this.setContent = function(html) {

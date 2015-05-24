@@ -10,30 +10,35 @@
 		</tr>
 
 	</thead>
-	<tbody>
-		<% for( var i=0, count=widget.lines.length; i < count; ++i ) { %>
-
-			<tr class="<%= i%2===0?'odd':'even' %>">
-				<td class="pos">
-					<%= i+1 %>
-				</td>
-				<td>
-					<%= widget.lines[i].smiley %>
-				</td>
-				<td>
-					<%= widget.lines[i].uses %>
-				</td>
-				<td>
-					<%= widget.lines[i].by %>
-				</td>
-			</tr>
-
-		<% } %>
-
-	</tbody>
+	<tbody id="<%= widget.getId() %>"></tbody>
 
 </table>
 
 <p>The table describes the most commonly used smileys in the channel.</p>
+
+<script type="text/javascript">
+// Wait until the document has finished loading
+$(document).ready(function() {
+	try {
+
+		$.getJSON("data.json", function(data) { $("head").trigger("nircla", data); });
+
+		$("head").on("nircla", function (_, data) {
+			if (typeof data !== "object") return;
+			$("tbody#<%= widget.getId() %>").empty();
+			$.each(data["Smileys"], function(i, item) {
+				$tr = $("<tr>").addClass(i%2==0?'odd':'even').append(
+					$("<td>").addClass("pos").text(i+1),
+					$("<td>").text(item.smiley),
+					$("<td>").text(item.uses),
+					$("<td>").text(item.by)
+				).appendTo("tbody#<%= widget.getId() %>");
+			});
+		});
+
+	} catch( e ) {}
+});
+
+</script>
 
 <!-- /Smileys -->

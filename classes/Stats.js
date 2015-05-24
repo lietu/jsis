@@ -164,7 +164,9 @@ var Stats = function() {
 
 	this.lines = 0; // Total lines spoken
 	this.modes = 0; // Total mode changes
+	this.numDays = 0;
 
+	this.wordsByHour = zeroHourStats(); // Total words, per hour
 	this.linesByHour = zeroHourStats(); // Total lines, per hour
 	this.linesByDay = {}; // Total lines, per date
 	this.linesByDayByHour = {}; // Total lines, per date, per hour

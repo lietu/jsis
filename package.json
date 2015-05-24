@@ -17,16 +17,16 @@
     },
     "repository": {
         "type": "git",
-        "url": "git://github.com/lietu/jsis.git"
+        "url": "git://github.com/Web-Development-Guru/jsis.git"
     },
     "keywords": [
         "irc",
         "stats"
     ],
-    "author": "Janne Enberg aka. Lietu",
+    "author": "Janne Enberg aka. Web-Development-Guru",
     "license": "Short answer: new BSD, and MIT. Long answer: Read the LICENSE -file",
     "bugs": {
-        "url": "https://github.com/lietu/jsis/issues"
+        "url": "https://github.com/Web-Development-Guru/jsis/issues"
     },
     "homepage": "http://jsis.name"
 }

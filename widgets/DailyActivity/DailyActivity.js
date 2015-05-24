@@ -52,6 +52,7 @@ var DailyActivity = function(statsAnalyzer, channelConfig) {
 			fullDateList.push(date);
 
 			// Include the first and last item, as well as a few in between
+			console.log(i, stats.numDays);
 			if( i===0 || i===stats.numDays-1 || i%mod===0 ) {
 				this.dateList.push( date );
 			}
@@ -97,14 +98,6 @@ var DailyActivity = function(statsAnalyzer, channelConfig) {
 				this.tooltipData.push( text );
 			}
 		}
-
-		// Convert some of the data to JSON for easier JS insertion
-		this.dateList = JSON.stringify( this.dateList );
-		this.tooltipData = JSON.stringify( this.tooltipData );
-		this.graphData.night = JSON.stringify( this.graphData.night );
-		this.graphData.day = JSON.stringify( this.graphData.day );
-		this.graphData.morning = JSON.stringify( this.graphData.morning );
-		this.graphData.evening = JSON.stringify( this.graphData.evening );
 	};
 
 
@@ -127,6 +120,18 @@ var DailyActivity = function(statsAnalyzer, channelConfig) {
 	 */
 	this.getContent = function() {
 		return contentHTML;
+	};
+
+	/**
+	 * Get the JSON Data
+	 */
+	this.getJSON = function() {
+		return {
+			dateList: this.dateList,
+			//hourList: this.hourList,
+			tooltipData: this.tooltipData,
+			graphData: this.graphData
+		};
 	};
 
 	/**

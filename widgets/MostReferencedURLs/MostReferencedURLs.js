@@ -12,7 +12,7 @@ var MostReferencedURLs = function(statsAnalyzer, channelConfig) {
 
 	// Our ID and name, very important details
 	var id = 'mostReferencedURLs';
-	var name = 'Most referenced URLs';
+	var name = 'Most Referenced URLs';
 
 	// The content HTML
 	var contentHTML = null;
@@ -62,6 +62,13 @@ var MostReferencedURLs = function(statsAnalyzer, channelConfig) {
 	 */
 	this.getContent = function() {
 		return contentHTML;
+	};
+
+	/**
+	 * Get the JSON Data
+	 */
+	this.getJSON = function() {
+		return this.lines;
 	};
 
 	/**

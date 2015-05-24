@@ -6,10 +6,7 @@
 			<th>#</th>
 			<th>Nick</th>
 			<th>Lines</th>
-			<!--
-			Not yet done
 			<th>When</th>
-			-->
 			<th>Words</th>
 			<th>Words per line</th>
 			<th>Chars per line</th>
@@ -18,48 +15,40 @@
 		</tr>
 
 	</thead>
-	<tbody>
-		<% for( var i=0, count=widget.nickList.length; i < count; ++i ) { %>
-
-			<tr class="<%= i%2===0?'odd':'even' %>">
-				<td class="pos">
-					<%= i+1 %>
-				</td>
-				<td class="nick">
-					<%= widget.nickList[i].nick %>
-				</td>
-				<td>
-					<%= widget.nickList[i].lines %>
-				</td>
-				<!--
-				Not yet done
-				<td>
-					<%= widget.nickList[i].when %>
-				</td>
-				-->
-				<td>
-					<%= widget.nickList[i].words %>
-				</td>
-				<td>
-					<%= widget.nickList[i].wordsPerLine %>
-				</td>
-				<td>
-					<%= widget.nickList[i].charsPerLine %>
-				</td>
-				<td class="lastSeen">
-					<%= widget.nickList[i].lastSeen %>
-				</td>
-				<td class="quote">
-					<%= widget.nickList[i].randomQuote %>
-				</td>
-			</tr>
-
-		<% } %>
-
-	</tbody>
+	<tbody id="<%= widget.getId() %>"></tbody>
 
 </table>
 
 <p>The table should give you an idea of who are the active people, and maybe a bit of insight into their personalities via the random quote.</p>
+
+<script type="text/javascript">
+// Wait until the document has finished loading
+$(document).ready(function() {
+	try {
+
+		//$.getJSON("data.json", function(data) { $("head").trigger("nircla", data); });
+
+		$("head").on("nircla", function (_, data) {
+			if (typeof data !== "object") return;
+			$("tbody#<%= widget.getId() %>").empty();
+			$.each(data["MostActiveNicks"], function(i, item) {
+				$tr = $("<tr>").addClass(i%2==0?'odd':'even').append(
+					$("<td>").addClass("pos").text(i+1),
+					$("<td>").text(item.nick),
+					$("<td>").text(item.lines),
+					$("<td>").text(item.when),
+					$("<td>").text(item.words),
+					$("<td>").text(item.wordsPerLine),
+					$("<td>").text(item.charsPerLine),
+					$("<td>").addClass("lastSeen").text(item.lastSeen),
+					$("<td>").addClass("quote").text(item.randomQuote)
+				).appendTo("tbody#<%= widget.getId() %>");
+			});
+		});
+
+	} catch( e ) {}
+});
+
+</script>
 
 <!-- /MostActiveNicks -->

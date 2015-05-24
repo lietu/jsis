@@ -15,7 +15,7 @@ $(document).ready(function() {
 			var dataPoints = data["DailyActivity"].graphData;
 			var dataPointCount = dataPoints.night.length + dataPoints.morning.length + dataPoints.day.length + dataPoints.evening.length;
 
-			/*var graph = new RGraph.Line('dailyActivityGraph', dataPoints.night, dataPoints.morning, dataPoints.day, dataPoints.evening);
+			var graph = new RGraph.Line('dailyActivityGraph', dataPoints.night, dataPoints.morning, dataPoints.day, dataPoints.evening);
 
 			// Set the horizontal labels
 			graph.Set('chart.labels', data["DailyActivity"].dateList);
@@ -53,7 +53,7 @@ $(document).ready(function() {
 			} else {*/
 
 				// For more recent onces, add goodies
-			/*	graph.Set('chart.key', ['Night time', 'Morning', 'Day time', 'Evening']);
+				graph.Set('chart.key', ['Night time', 'Morning', 'Day time', 'Evening']);
 				graph.Set('chart.key.position', 'gutter');
 				graph.Set('chart.key.position.y', 15);
 				graph.Set('chart.key.position.gutter.boxed', false);
@@ -70,7 +70,7 @@ $(document).ready(function() {
 				// Trace the lines in
 				RGraph.Effects.Line.jQuery.Trace(graph);
 
-			//}*/
+			//}
 		});
 
 	} catch( e ) {}

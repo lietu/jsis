@@ -131,7 +131,7 @@ var Stats = function() {
 	this.initDay = (function() {
 		// List of initialized days
 		var daysInitialized = {};
-
+		this.numDays++;
 		return function(day) {
 			// If this day is not yet initialized, do so
 			if( !daysInitialized[day] ) {
@@ -164,6 +164,7 @@ var Stats = function() {
 
 	this.lines = 0; // Total lines spoken
 	this.modes = 0; // Total mode changes
+	this.numDays = 0;
 
 	this.wordsByHour = zeroHourStats(); // Total words, per hour
 	this.linesByHour = zeroHourStats(); // Total lines, per hour

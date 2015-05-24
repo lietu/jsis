@@ -52,7 +52,7 @@ var DailyActivity = function(statsAnalyzer, channelConfig) {
 			fullDateList.push(date);
 
 			// Include the first and last item, as well as a few in between
-			console.log(i, stats.numDays, mod);
+			console.log(i, stats);
 			if( i===0 || i===stats.numDays-1 || i%mod===0 ) {
 				this.dateList.push( date );
 			}

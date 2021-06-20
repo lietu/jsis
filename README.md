@@ -64,3 +64,9 @@ Yes! While it is small, it exists. [#jsis](https://webchat.freenode.net/?channel
 ## Thanks to
 
 [Dave Hibberd (Hibby)](https://github.com/Hibby/) for his contributions to the project
+
+
+# Financial support
+
+This project has been made possible thanks to [Cocreators](https://cocreators.ee) and [Lietu](https://lietu.net). You can help us continue our open source work by supporting us on [Buy me a coffee](https://www.buymeacoffee.com/cocreators).
+
